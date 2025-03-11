@@ -9,26 +9,13 @@ const Settings = lazy(() => import('../pages/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
-const UserProfile= lazy(() => import('../pages/Users/Profile'));
 const Demo= lazy(() => import('../pages/Demo'));
-
-const ListUsers= lazy(() => import('../pages/Users/List'));
 
 const coreRoutes = [
   {
     path: '/demo',
     title: 'Demo',
     component: Demo,
-  },
-  {
-    path: '/list-users',
-    title: 'ListUsers',
-    component: ListUsers,
-  },
-  {
-    path: '/user-profile',
-    title: 'User Profile',
-    component: UserProfile,
   },
   {
     path: '/calendar',
