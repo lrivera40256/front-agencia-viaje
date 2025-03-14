@@ -1,68 +1,55 @@
+import axios from "axios";
 import { User } from "../models/User";
 
 const API_URL = import.meta.env.VITE_API_URL + "/users" || "";
 
 class UserService {
     async getUsers(): Promise<User[]> {
-        console.log("Fetching users from: " + API_URL);
         try {
-            const response = await fetch(API_URL);
-            if (!response.ok) throw new Error("Error al obtener usuarios");
-            return await response.json();
+            const response = await axios.get<User[]>(API_URL);
+            return response.data;
         } catch (error) {
-            console.error(error);
+            console.error("Error al obtener usuarios:", error);
             return [];
         }
     }
 
     async getUserById(id: number): Promise<User | null> {
         try {
-            const response = await fetch(`${API_URL}/${id}`);
-            if (!response.ok) throw new Error("Usuario no encontrado");
-            return await response.json();
+            const response = await axios.get<User>(`${API_URL}/${id}`);
+            return response.data;
         } catch (error) {
-            console.error(error);
+            console.error("Usuario no encontrado:", error);
             return null;
         }
     }
 
     async createUser(user: Omit<User, "id">): Promise<User | null> {
         try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(user),
-            });
-            if (!response.ok) throw new Error("Error al crear usuario");
-            return await response.json();
+            const response = await axios.post<User>(API_URL, user);
+            return response.data;
         } catch (error) {
-            console.error(error);
+            console.error("Error al crear usuario:", error);
             return null;
         }
     }
 
     async updateUser(id: number, user: Partial<User>): Promise<User | null> {
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(user),
-            });
-            if (!response.ok) throw new Error("Error al actualizar usuario");
-            return await response.json();
+            const response = await axios.put<User>(`${API_URL}/${id}`, user);
+            return response.data;
         } catch (error) {
-            console.error(error);
+            console.error("Error al actualizar usuario:", error);
             return null;
         }
     }
 
     async deleteUser(id: number): Promise<boolean> {
         try {
-            const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-            if (!response.ok) throw new Error("Error al eliminar usuario");
+            await axios.delete(`${API_URL}/${id}`);
             return true;
         } catch (error) {
-            console.error(error);
+            console.error("Error al eliminar usuario:", error);
             return false;
         }
     }
