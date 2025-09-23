@@ -34,11 +34,13 @@ const Table:React.FC<tableProps> = (props:tableProps) => {
             <tbody className="divide-y divide-gray-200">
               {props.data.map((row, i) => (
                 <tr key={i} className="hover:bg-blue-50 transition-colors">
-                  {Object.entries(row).map(([k, value]) => (
-                    <td key={k} className="px-6 py-4 text-sm text-white">
-                      {String(value)}
-                    </td>
-                  ))}
+                  {Object.entries(row).map(([k, value]) =>
+                    k === "_id" ? null : (
+                      <td key={k} className="px-6 py-4 text-sm text-white">
+                        {String(value)}
+                      </td>
+                    )
+                  )}
 
                   {props.actions && props.actions.length > 0 && (
                     <td className="px-6 py-4 space-x-2">
