@@ -1,40 +1,33 @@
 import React, { useState, useEffect } from "react";
+import Table from "../components/Table";
+
 const Demo: React.FC = () => {
     //Aquí es la lógica
-    let [name, setName] = useState("Felipe")
-    let colores=["rojo","verde","azul"];
-    let flag = true;
-    useEffect(() => {
-        console.log("Se montó el componente");
-        //Llamar a backend solicitando información
-    }, []);
+    const titles = ["id","nombre","email"]
 
+    const users = [
+        { id: 1, name: "Ana", email: "ana@example.com" },
+        { id: 2, name: "Carlos", email: "carlos@example.com" },
+    ];
 
-
-    // Función para manejar los cambios en la caja de texto
-    const manejarCambio = (event: any) => {
-        setName(event.target.value); // Actualizar el estado con el valor del input
-    };
+    const actions = [
+        {
+            label: "Editar",
+            onClick: (row: Record<string, any>) => {
+            console.log("Editando: " + row.name);
+            },
+        },
+        {
+            label: "Eliminar",
+            onClick: (row: Record<string, any>) => {
+            console.log("Eliminando: " + row.email);
+            },
+        },
+    ];
 
     //Es el html
     return <div>
-        <h1>Hello World {name}</h1>
-        {   flag? 
-                <h2>Flag es verdadero</h2>
-            :
-                <h2>Flag es falso</h2>
-        }
-        <input
-            type="text"
-            value={name} // El valor del input está ligado al estado 'texto'
-            onChange={manejarCambio} // Se actualiza el estado cada vez que el usuario escribe
-        />
-        <ul>
-            {colores.map((color) => (
-                <li>{color}</li>
-            ))}
-        </ul>
+        <Table tableName={"Usuarios"} titles={titles} data={users} actions={actions}></Table> 
     </div>
-        ;
 }
 export default Demo;
