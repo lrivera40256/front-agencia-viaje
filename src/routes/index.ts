@@ -1,12 +1,12 @@
 import { lazy } from 'react';
-const TestPrueba = lazy(() => import('../pages/demo'))
+const RolePage = lazy(() => import('../pages/roles'));
 
 const coreRoutes = [
 
     {
         path: '/test',
         title: 'test',
-        component:TestPrueba ,
+        component:RolePage ,
     }
 ]
 const routes = [...coreRoutes];
