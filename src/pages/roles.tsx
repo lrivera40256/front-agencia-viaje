@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getRoles } from "../services/roleService";
 import type { Role } from "../models/Role";
-import Table from "../components/table";
+import Table from "../components/Table";
 
 const RolePage: React.FC = () => {
     const [roles, setRoles] = useState<Role[]>([]);

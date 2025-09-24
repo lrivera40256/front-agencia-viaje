@@ -2,14 +2,14 @@ import React from 'react';
 
 interface TableAction<T = any> {
   label: string;
-  onClick: (row: T) => void;   
+  onClick: (row: T) => Promise<void>;
 }
 
 interface tableProps {
   tableName:string
   titles: string[];
   data: Record<string, any>[];
-  actions?: TableAction<Record<string, any>>[]
+  actions?: TableAction[]
 }
 
 const Table:React.FC<tableProps> = (props:tableProps) => {
