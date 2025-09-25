@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 interface SocialButtonProps {
   provider: 'google' | 'microsoft' | 'github';
-  onClick: () => void;
+  onClick: (type:string) => void;
   className?: string;
 }
 
@@ -71,7 +71,7 @@ export function SocialButton({ provider, onClick, className }: SocialButtonProps
     <Button
       type="button"
       variant="outline"
-      onClick={onClick}
+      onClick={() => onClick(config.name.toLowerCase())}
       className={cn(
         "h-12 font-medium transition-all duration-300 transform hover:scale-105 relative overflow-hidden group",
         config.bgColor,

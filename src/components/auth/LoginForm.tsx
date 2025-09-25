@@ -6,13 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SocialButton } from "./SocialButton";
 import { Mail, Lock, Eye, EyeOff, MapPin, Plane } from "lucide-react";
 import travelHeroBg from "@/assets/travel-hero-bg.jpg";
+import { on } from "events";
 
-interface LoginFormProps {
-  onEmailLogin: (email: string, password: string) => void;
-  onSocialLogin: (provider: 'google' | 'microsoft' | 'github') => void;
-}
 
-export function LoginForm({ onEmailLogin, onSocialLogin }: LoginFormProps) {
+
+export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +31,9 @@ export function LoginForm({ onEmailLogin, onSocialLogin }: LoginFormProps) {
     // Validation
     let hasErrors = false;
     const newErrors = { email: "", password: "" };
-    
+    const onSocialLogin = (login: string) => {
+      console.log("Logging in with provider:", login);
+    };
     if (!email) {
       newErrors.email = "El email es requerido";
       hasErrors = true;
@@ -56,16 +56,21 @@ export function LoginForm({ onEmailLogin, onSocialLogin }: LoginFormProps) {
     }
     
     setIsLoading(true);
-    
+    const onEmailLogin = (email: string, password: string) => {
+      console.log("Logging in with  email:", email, "and password:", password);
+    }
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
       onEmailLogin(email, password);
     }, 1500);
   };
+  const onSocialLogin = (login: string) => {
+    console.log("Logging in with provider:", login);
+  } 
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center p-4 overflow-hidden">
       {/* Hero Background */}
       <div 
         className="absolute inset-0 travel-hero-bg"
@@ -107,17 +112,17 @@ export function LoginForm({ onEmailLogin, onSocialLogin }: LoginFormProps) {
           <div className="space-y-3">
             <SocialButton
               provider="google"
-              onClick={() => onSocialLogin('google')}
+              onClick={() => onSocialLogin("google")}
               className="w-full"
             />
             <SocialButton
               provider="microsoft"
-              onClick={() => onSocialLogin('microsoft')}
+              onClick={() => onSocialLogin("microsoft")}
               className="w-full"
             />
             <SocialButton
               provider="github"
-              onClick={() => onSocialLogin('github')}
+              onClick={() => onSocialLogin("github")}
               className="w-full"
             />
           </div>
@@ -205,11 +210,7 @@ export function LoginForm({ onEmailLogin, onSocialLogin }: LoginFormProps) {
             </Button>
           </form>
           
-          <div className="text-center">
-            <button className="text-sm text-travel-ocean hover:text-travel-navy transition-colors">
-              ¿Olvidaste tu contraseña?
-            </button>
-          </div>
+        
           
           <div className="text-center text-xs text-muted-foreground border-t pt-4">
             <p>🌍 Descubre lugares increíbles • ✈️ Viaja con confianza</p>
