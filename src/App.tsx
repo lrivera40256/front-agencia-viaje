@@ -1,74 +1,38 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import { DashboardLayout } from "./components/layout/DashboardLayout";
-import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css'
+import { Suspense, useState } from 'react';
+import routes from './routes/index';
+import { DashboardLayout } from './components/layout/DashboardLayout';
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={
-            <DashboardLayout>
-              <Dashboard />
-            </DashboardLayout>
-          } />
-          <Route path="/destinos" element={
-            <DashboardLayout>
-              <div className="p-6"><h1 className="text-2xl font-bold">Explorar Destinos</h1></div>
-            </DashboardLayout>
-          } />
-          <Route path="/mis-viajes" element={
-            <DashboardLayout>
-              <div className="p-6"><h1 className="text-2xl font-bold">Mis Viajes</h1></div>
-            </DashboardLayout>
-          } />
-          <Route path="/reservas" element={
-            <DashboardLayout>
-              <div className="p-6"><h1 className="text-2xl font-bold">Reservas</h1></div>
-            </DashboardLayout>
-          } />
-          <Route path="/ofertas" element={
-            <DashboardLayout>
-              <div className="p-6"><h1 className="text-2xl font-bold">Ofertas Especiales</h1></div>
-            </DashboardLayout>
-          } />
-          <Route path="/favoritos" element={
-            <DashboardLayout>
-              <div className="p-6"><h1 className="text-2xl font-bold">Favoritos</h1></div>
-            </DashboardLayout>
-          } />
-          <Route path="/tickets" element={
-            <DashboardLayout>
-              <div className="p-6"><h1 className="text-2xl font-bold">Tickets</h1></div>
-            </DashboardLayout>
-          } />
-          <Route path="/perfil" element={
-            <DashboardLayout>
-              <div className="p-6"><h1 className="text-2xl font-bold">Mi Perfil</h1></div>
-            </DashboardLayout>
-          } />
-          <Route path="/configuracion" element={
-            <DashboardLayout>
-              <div className="p-6"><h1 className="text-2xl font-bold">Configuración</h1></div>
-            </DashboardLayout>
-          } />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  const [count, setCount] = useState(0)
 
-export default App;
+  return (
+    <Router>
+      <Routes>
+        {/* <Route path="/login" element={<Login />} /> */}
+        
+        {/* Rutas del dashboard */}
+        <Route  element={<DashboardLayout />}>
+          {routes.map((route, index) => {
+            const { path, component: Component } = route;
+            return (
+              <Route
+                key={index}
+                path={path}
+                element={
+                  <Suspense fallback={<div>Cargando...</div>}>
+                    <Component />
+                  </Suspense>
+                }
+              />
+            );
+          })}
+        </Route>
+      </Routes>
+    </Router>
+  )
+}
+
+export default App

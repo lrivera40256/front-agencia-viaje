@@ -4,6 +4,8 @@ import type { Role } from "../models/Role";
 export const getRoles = async () :Promise<Role[]>=> {
     try {
         const response=await api.get('/roles')
+        console.log(response.data);
+        
         return response.data;
         
     } catch (error) {
