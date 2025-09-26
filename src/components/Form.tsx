@@ -5,6 +5,7 @@ export interface FormField {
   label: string;
   type?: string;
   placeholder?: string;
+  options?: { value: string; label: string }[]; // Para select
 }
 
 export interface FormProps<T = any> {
@@ -26,7 +27,7 @@ const Form = <T extends Record<string, any>>({
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setValues((prev) => ({
       ...prev,
@@ -53,7 +54,21 @@ const Form = <T extends Record<string, any>>({
             <label className="block mb-2 font-semibold text-gray-700">
               {field.label}
             </label>
-            {field.type === "textarea" ? (
+            {field.type === "select" && field.options ? (
+              <select
+                name={field.name}
+                value={values[field.name] ?? ""}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border rounded focus:outline-none focus:ring border-gray-300 focus:ring-blue-200"
+              >
+                <option value="">Seleccione una opción</option>
+                {field.options.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : field.type === "textarea" ? (
               <textarea
                 name={field.name}
                 placeholder={field.placeholder}
@@ -87,14 +102,39 @@ const Form = <T extends Record<string, any>>({
 
 export default Form;
 
+// Ejemplo de uso:
 // <Form
 //   title="Crear usuario"
 //   fields={[
 //     { name: "nombre", label: "Nombre" },
 //     { name: "email", label: "Email", type: "email" },
+//     { name: "rol", label: "Rol", type: "select", options: [
+//         { value: "admin", label: "Administrador" },
+//         { value: "user", label: "Usuario" },
+//       ]
+//     },
 //     { name: "descripcion", label: "Descripción", type: "textarea" },
 //   ]}
-//   initialValues={{ nombre: "", email: "" }}
+//   initialValues={{ nombre: "", email: "", rol: "", descripcion: "" }}
 //   onSubmit={async (values) => { /* lógica de submit */ }}
 //   submitText="Crear"
 // />
+
+// Otro ejemplo con diferentes tipos de campos:
+// const fields: FormField[] = [
+//     { name: "nombre", label: "Nombre" },
+//     { name: "departamento", label: "Departamento", type: "select", options: departamentos },
+//     { name: "email", label: "Email", type: "email" },
+//   ];
+
+//   return (
+//     <Form
+//       title="Crear usuario"
+//       fields={fields}
+//       initialValues={{ nombre: "", departamento: "", email: "" }}
+//       onSubmit={async (values) => {
+//         // lógica de submit
+//       }}
+//       submitText="Crear"
+//     />
+//   );
