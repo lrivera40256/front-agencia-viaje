@@ -20,6 +20,11 @@ export const deleteRole = async (id: string) :Promise<void>=> {
         throw error;
     }
 }
-
-        
-   
+export const createRole = async (role: Role) :Promise<Role>=> {
+    try {
+        const response = await api.post('/roles', role);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}
