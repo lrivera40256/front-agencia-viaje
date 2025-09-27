@@ -112,6 +112,7 @@ const RolePage: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-3 w-full max-w-xs my-12">
             <Form
+              onCancel={() => {setShowForm(false); setIsEditRole(false); setRoleToEdit({ name: "", description: "" })}}
               title="Agregar Rol"
               fields={userFields}
               onSubmit={onSubmit}
