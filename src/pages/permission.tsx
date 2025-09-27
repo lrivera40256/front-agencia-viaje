@@ -3,7 +3,7 @@ import { Permission } from "../models/Permission";
 import { deletePermissionById, getPermissions, modifiedPermission } from "../services/permissionService";
 import Table from "../components/Table";
 
-const permissionPage: React.FC = () => {
+const PermissionPage: React.FC = () => {
     const [permissions, setPermissions] =useState<Permission[]>([]);
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
@@ -55,4 +55,4 @@ const permissionPage: React.FC = () => {
         />      
     );
 }
-export default permissionPage;
+export default PermissionPage;

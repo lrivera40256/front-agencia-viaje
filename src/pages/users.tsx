@@ -9,12 +9,6 @@ import {
 import Form, { FormField } from "../components/Form";
 import Table from "../components/Table";
 
-type UserForm = {
-  name: string;
-  email: string;
-  password?: string;
-};
-
 const userFields: FormField[] = [
   { name: "name", label: "Nombre", placeholder: "Ingresa el nombre", required: true },
   {
@@ -32,7 +26,7 @@ const userFields: FormField[] = [
   },
 ];
 
-const initialValues: UserForm = {
+const initialValues: User = {
   name: "",
   email: "",
   password: "",
@@ -86,7 +80,7 @@ const UserPage: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleSubmit = async (values: UserForm) => {
+  const handleSubmit = async (values: User) => {
     // Validaciones mínimas
     if (!values.name?.trim()) { alert("El nombre es obligatorio"); return; }
     if (!values.email?.trim()) { alert("El email es obligatorio"); return; }
@@ -122,7 +116,7 @@ const UserPage: React.FC = () => {
     loadData();
   }, []);
 
-  const currentInitialValues: UserForm = editingUser
+  const currentInitialValues: User = editingUser
     ? { name: editingUser.name, email: editingUser.email }
     : initialValues;
 

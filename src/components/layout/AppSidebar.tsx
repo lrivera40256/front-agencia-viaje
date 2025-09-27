@@ -11,29 +11,22 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { 
-  Home, 
-  MapPin, 
   Plane, 
-  Calendar, 
   Star, 
   User, 
   Settings,
-  Compass,
-  Ticket,
-  Heart
+  Shield
 } from "lucide-react";
 
 const mainItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Explorar Destinos", url: "/destinos", icon: Compass },
-  { title: "Mis Viajes", url: "/mis-viajes", icon: Plane },
-  { title: "Reservas", url: "/reservas", icon: Calendar },
+  { title: "Seguridad", url: "/seguridad", icon: Shield },
+
 ];
 
 const quickItems = [
   { title: "Ofertas Especiales", url: "/ofertas", icon: Star },
-  { title: "Favoritos", url: "/favoritos", icon: Heart },
-  { title: "Tickets", url: "/tickets", icon: Ticket },
+  // { title: "Favoritos", url: "/favoritos", icon: Heart },
+  // { title: "Tickets", url: "/tickets", icon: Ticket },
 ];
 
 const accountItems = [
