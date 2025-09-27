@@ -5,7 +5,8 @@ export interface FormField {
   label: string;
   type?: string;
   placeholder?: string;
-  options?: { value: string; label: string }[]; // Para select
+  options?: { value: string; label: string }[];
+  required?: boolean;
 }
 
 export interface FormProps<T = any> {
@@ -14,6 +15,8 @@ export interface FormProps<T = any> {
   initialValues?: Partial<T>;
   onSubmit: (values: T) => Promise<void>;
   submitText?: string;
+  onCancel?: () => void;          // <-- nuevo
+  cancelText?: string;            // <-- nuevo
 }
 
 const Form = <T extends Record<string, any>>({
@@ -22,6 +25,8 @@ const Form = <T extends Record<string, any>>({
   initialValues = {},
   onSubmit,
   submitText = "Guardar",
+  onCancel,                        // <-- nuevo
+  cancelText = "Cancelar",         // <-- nuevo
 }: FormProps<T>) => {
   const [values, setValues] = useState<Partial<T>>(initialValues);
   const [loading, setLoading] = useState(false);
@@ -57,8 +62,9 @@ const Form = <T extends Record<string, any>>({
             {field.type === "select" && field.options ? (
               <select
                 name={field.name}
-                value={values[field.name] ?? ""}
+                value={(values as any)[field.name] ?? ""}
                 onChange={handleChange}
+                required={field.required}
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring border-gray-300 focus:ring-blue-200"
               >
                 <option value="">Seleccione una opción</option>
@@ -72,8 +78,9 @@ const Form = <T extends Record<string, any>>({
               <textarea
                 name={field.name}
                 placeholder={field.placeholder}
-                value={values[field.name] ?? ""}
+                value={(values as any)[field.name] ?? ""}
                 onChange={handleChange}
+                required={field.required}
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring border-gray-300 focus:ring-blue-200"
               />
             ) : (
@@ -81,20 +88,34 @@ const Form = <T extends Record<string, any>>({
                 type={field.type || "text"}
                 name={field.name}
                 placeholder={field.placeholder}
-                value={values[field.name] ?? ""}
+                value={(values as any)[field.name] ?? ""}
                 onChange={handleChange}
+                required={field.required}
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring border-gray-300 focus:ring-blue-200"
               />
             )}
           </div>
         ))}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition mb-2"
-        >
-          {loading ? "Procesando..." : submitText}
-        </button>
+
+        <div className="flex gap-2">
+          {onCancel && (
+            <button
+              type="button"
+              disabled={loading}
+              onClick={onCancel}
+              className="w-1/2 bg-gray-200 text-gray-700 py-2 rounded font-semibold hover:bg-gray-300 transition"
+            >
+              {cancelText}
+            </button>
+          )}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`${onCancel ? "w-1/2" : "w-full"} bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition`}
+          >
+            {loading ? "Procesando..." : submitText}
+          </button>
+        </div>
       </form>
     </div>
   );
