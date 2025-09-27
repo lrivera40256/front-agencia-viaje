@@ -9,13 +9,20 @@ import {
 import Form, { FormField } from "../components/Form";
 import Table from "../components/Table";
 
+type UserForm = {
+  name: string;
+  email: string;
+  password?: string;
+};
+
 const userFields: FormField[] = [
-  { name: "name", label: "Nombre", placeholder: "Ingresa el nombre" },
+  { name: "name", label: "Nombre", placeholder: "Ingresa el nombre", required: true },
   {
     name: "email",
     label: "Email",
     type: "email",
     placeholder: "correo@ejemplo.com",
+    required: true,
   },
   {
     name: "password",
@@ -25,7 +32,7 @@ const userFields: FormField[] = [
   },
 ];
 
-const initialValues: Partial<User> = {
+const initialValues: UserForm = {
   name: "",
   email: "",
   password: "",
@@ -79,24 +86,45 @@ const UserPage: React.FC = () => {
     setShowForm(true);
   };
 
-  const handleSubmit = async (values: User) => {
+  const handleSubmit = async (values: UserForm) => {
+    // Validaciones mínimas
+    if (!values.name?.trim()) { alert("El nombre es obligatorio"); return; }
+    if (!values.email?.trim()) { alert("El email es obligatorio"); return; }
+
     if (editingUser) {
-      const { password, ...payload } = values as any;
-      await updateUser({ _id: editingUser._id, ...payload });
+      await updateUser({
+        _id: editingUser._id,
+        name: values.name,
+        email: values.email,
+      });
     } else {
-      await createUser(values);
+      if (!values.password || !values.password.trim()) {
+        alert("La contraseña es obligatoria");
+        return;
+      }
+      const payload = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      };
+      await createUser(payload);
     }
     closeForm();
     loadData();
   };
 
+  // Campos según modo
   const formFields = editingUser
     ? userFields.filter((f) => f.name !== "password")
-    : userFields;
+    : userFields.map((f) => (f.name === "password" ? { ...f, required: true } : f));
 
   useEffect(() => {
     loadData();
   }, []);
+
+  const currentInitialValues: UserForm = editingUser
+    ? { name: editingUser.name, email: editingUser.email }
+    : initialValues;
 
   return (
     <div>
@@ -116,29 +144,19 @@ const UserPage: React.FC = () => {
         emptyMessage={loading ? "Cargando..." : "No hay usuarios"}
         className="mt-4"
       />
+
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-lg p-3 w-full max-w-xs my-12">
             <Form
+              key={editingUser?._id ?? "new"}
               title={editingUser ? "Modificar usuario" : "Crear usuario"}
               fields={formFields}
-              initialValues={
-                editingUser
-                  ? {
-                      name: editingUser.name,
-                      email: editingUser.email,
-                    }
-                  : initialValues
-              }
+              initialValues={currentInitialValues}
               onSubmit={handleSubmit}
+              onCancel={closeForm}                    
               submitText={editingUser ? "Guardar cambios" : "Crear"}
             />
-            <button
-              className="mt-1 w-full py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold"
-              onClick={closeForm}
-            >
-              Cancelar
-            </button>
           </div>
         </div>
       )}
