@@ -2,6 +2,7 @@ import rolePermissionPage from '@/pages/rolePermission';
 import { lazy } from 'react';
 const RolePage = lazy(() => import('../pages/roles'));
 const PermissionPage = lazy(() => import('../pages/permission'))
+const UserPage = lazy(() => import('../pages/users'))
 
 const coreRoutes = [
     {
@@ -18,6 +19,11 @@ const coreRoutes = [
         path: '/roles-permisos',
         title: 'roles-permisos',
         component:rolePermissionPage ,
+    },
+    {
+        path: '/usuarios',
+        title: 'usuarios',
+        component: UserPage,
     }
 ]
 const routes = [...coreRoutes];
