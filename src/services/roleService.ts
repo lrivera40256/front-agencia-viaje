@@ -27,4 +27,12 @@ export const createRole = async (role: Role) :Promise<Role>=> {
     } catch (error) {
         throw error;
     }
+}       
+export const updateRole = async ( role: Role) :Promise<Role>=> {
+    try {
+        const response = await api.put(`/roles/${role._id}`, role);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }   
 }
