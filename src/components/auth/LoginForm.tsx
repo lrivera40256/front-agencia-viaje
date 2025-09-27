@@ -8,6 +8,7 @@ import { Mail, Lock, Eye, EyeOff, MapPin, Plane } from "lucide-react";
 import travelHeroBg from "@/assets/travel-hero-bg.jpg";
 import { on } from "events";
 import { TwoFactorAuth } from "./TwoFactorAuth";
+import { loginWithGithub, loginWithGoogle, loginWithMicrosoft } from "./AuthProvider";
 
 
 
@@ -68,9 +69,7 @@ export function LoginForm() {
     onEmailLogin(email, password);
     setShowTwoFactor(true);
   };
-  const onSocialLogin = (login: string) => {
-    console.log("Logging in with provider:", login);
-  } 
+ 
 
   return (
     <>
@@ -110,17 +109,17 @@ export function LoginForm() {
               <div className="space-y-2">
                 <SocialButton
                   provider="google"
-                  onClick={() => onSocialLogin("google")}
+                  onClick={() => loginWithGoogle()}
                   className="w-full py-2 text-sm"
                 />
                 <SocialButton
                   provider="microsoft"
-                  onClick={() => onSocialLogin("microsoft")}
+                  onClick={() => loginWithMicrosoft()}
                   className="w-full py-2 text-sm"
                 />
                 <SocialButton
                   provider="github"
-                  onClick={() => onSocialLogin("github")}
+                  onClick={() => loginWithGithub()}
                   className="w-full py-2 text-sm"
                 />
               </div>
