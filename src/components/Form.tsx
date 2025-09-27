@@ -43,7 +43,7 @@ const Form = <T extends Record<string, any>>({
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#f0f4fa]">
+    <div className="flex justify-center items-center bg-[#f0f4fa]">
       <form
         className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm"
         onSubmit={handleSubmit}
