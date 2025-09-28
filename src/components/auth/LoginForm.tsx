@@ -10,6 +10,7 @@ import { on } from 'events';
 import { TwoFactorAuth } from './TwoFactorAuth';
 import { loginWithGithub, loginWithGoogle, loginWithMicrosoft } from './AuthProvider';
 import { login, validate2FA, saveToken } from '@/services/securityService';
+import { useNavigate } from 'react-router-dom';
 
 export function LoginForm() {
 	const [email, setEmail] = useState('');
@@ -19,6 +20,8 @@ export function LoginForm() {
 	const [errors, setErrors] = useState({ email: '', password: '' });
 	const [showTwoFactor, setShowTwoFactor] = useState(false);
 	const [sessionId, setSessionId] = useState('');
+	const navigate = useNavigate();
+
 
 	const validateEmail = (email: string) => {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -60,7 +63,7 @@ export function LoginForm() {
 		setIsLoading(true);
 		try {
 			const res = await login(email, password);
-
+			console.log(res);
 			if (res?.['2fa_required'] && res.sessionId) {
 				setSessionId(res.sessionId);
 				setShowTwoFactor(true); // muestra el componente de 2FA
@@ -85,9 +88,12 @@ export function LoginForm() {
 					onBack={() => setShowTwoFactor(false)}
 					onVerify={async (code: string) => {
 						const res = await validate2FA(sessionId, code);
+						console.log(res);
+
 						if (res.valid) {
 							saveToken(res.token);
 							setShowTwoFactor(false);
+							navigate('/seguridad');
 						} else {
 							throw new Error('Código inválido');
 						}
