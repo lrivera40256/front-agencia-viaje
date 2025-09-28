@@ -1,0 +1,40 @@
+# dependencias
+node_modules
+
+# builds y salidas
+build
+dist
+coverage
+
+# lockfiles
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# archivos de configuración que no necesitas formatear
+.eslintrc.js
+.eslintrc.cjs
+.eslintrc.json
+vite.config.js
+vite.config.ts
+webpack.config.js
+
+# datos de git
+.git
+.gitignore
+
+# assets estáticos (imágenes, íconos, fuentes, etc.)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.eot
+*.ttf
+*.woff
+*.woff2
+
+# otros que no quieres tocar
+*.md
+*.log
