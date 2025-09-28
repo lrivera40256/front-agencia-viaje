@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { createRole, deleteRole, getRoles, updateRole } from '../services/roleService';
 import type { Role } from '../models/Role';
-import Table from '../components/Table';
+import Table, { TableAction } from '../components/Table';
 import { Trash2, Plus } from 'lucide-react';
 import Form, { FormField } from '@/components/Form';
 import { toast } from 'sonner';
 import { useParams } from 'react-router-dom';
-import { getRolesByUserId } from '@/services/userRoleService';
+import { createUserRole, deleteUserRole, getRolesByUserId, getRolesToAddUser } from '@/services/userRoleService';
 
 const RolePage: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -15,6 +15,7 @@ const RolePage: React.FC = () => {
   const [isEditRole, setIsEditRole] = useState<boolean>(false);
   const [roleToEdit, setRoleToEdit] = useState<Role>({ name: '', description: '' });
   const { id } = useParams<{ id: string }>();
+  const [rolesToAdd, setRolesToAdd] = useState<{ value: string; label: string }[]>([]);
   const userFields: FormField[] = [
     {
       name: 'name',
@@ -46,16 +47,46 @@ const RolePage: React.FC = () => {
         setLoading(false);
       }
     }
-  };
+  }
+  const loadRolesToAdd = async () => {
+    setLoading(true);
+    try {
+      const data = await getRolesToAddUser(id);
+      console.log(data);
+
+
+      const roles = data.map((r) => ({
+        value: r._id,
+        label: r.name,
+      }));
+      setRolesToAdd(roles);
+    } catch (error) {
+      toast.error('Error al cargar los roles para agregar');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const deleteRoleById = async (row: Role) => {
     if (!confirm(`Eliminar rol "${row.name}"?`)) return;
-    try {
-      await deleteRole(row._id);
-      toast.success('Rol eliminado exitosamente');
-      loadData();
-    } catch (error) {
-      toast.error('Error al eliminar rol');
+    if (id) {
+      try {
+        await deleteUserRole(id, row._id);
+        toast.success('Rol eliminado del usuario exitosamente');
+      } catch (error) {
+        toast.error('Error al eliminar rol del usuario');
+      } finally {
+        loadData();
+        loadRolesToAdd();
+      }
+    } else {
+      try {
+        await deleteRole(row._id);
+        toast.success('Rol eliminado exitosamente');
+        loadData();
+      } catch (error) {
+        toast.error('Error al eliminar rol');
+      }
     }
   };
   const validateForm = (values: Role) => {
@@ -90,10 +121,53 @@ const RolePage: React.FC = () => {
     setIsEditRole(false);
     loadData();
   };
+  const fieldToAddRole: FormField[] = [
+    {
+      name: 'role',
+      label: 'Rol',
+      placeholder: 'Selecciona un rol',
+      type: 'select',
+      options: rolesToAdd,
+    }
+  ]
+  const addRoleToUser = async (values) => {
+    try {
+      await createUserRole(id, values.role);
+      toast.success('Rol agregado al usuario exitosamente');
 
+    } catch (error) {
+      toast.error('Error al agregar rol al usuario');
+    } finally {
+      setShowForm(false);
+      loadData();
+      loadRolesToAdd();
+
+    }
+  };
   useEffect(() => {
     loadData();
+    if (id) loadRolesToAdd();
   }, []);
+  function getActions(): TableAction[] {
+    const actions: TableAction[] = [
+      {
+        label: 'Editar',
+        onClick: editRole,
+        variant: 'primary',
+      },
+      {
+        label: 'Eliminar',
+        onClick: deleteRoleById,
+        variant: 'danger',
+      }
+
+    ];
+    if (id) {
+      actions.shift();
+    }
+    return actions;
+
+  }
 
   return (
     <div>
@@ -102,18 +176,7 @@ const RolePage: React.FC = () => {
         titles={['Nombre', 'Descripción']}
         data={roles}
         onAdd={addRole}
-        actions={[
-          {
-            label: 'Eliminar',
-            onClick: deleteRoleById,
-            variant: 'danger',
-          },
-          {
-            label: 'Editar',
-            onClick: editRole,
-            variant: 'primary',
-          },
-        ]}
+        actions={getActions()}
         emptyMessage={loading ? 'Cargando...' : 'No hay roles'}
         className="mt-4"
       />
@@ -126,10 +189,10 @@ const RolePage: React.FC = () => {
                 setIsEditRole(false);
                 setRoleToEdit({ name: '', description: '' });
               }}
-              title="Agregar Rol"
-              fields={userFields}
-              onSubmit={onSubmit}
-              initialValues={roleToEdit}
+              title={id ? "Agregar Rol" : "Crear Rol"}
+              fields={id ? fieldToAddRole : userFields}
+              onSubmit={id ? addRoleToUser : onSubmit}
+              initialValues={id ? { role: "" } : roleToEdit}
               submitText={isEditRole ? 'Actualizar' : 'Crear'}
             />
           </div>

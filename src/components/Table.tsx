@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface TableAction<T = any> {
+export interface TableAction<T = any> {
 	label: string;
 	onClick: (row: T) => Promise<void> | void;
 	variant?: 'primary' | 'danger' | 'neutral';

@@ -12,7 +12,7 @@ export interface FormField {
 export interface FormProps<T = any> {
 	title: string;
 	fields: FormField[];
-	initialValues?: Partial<T>;
+	initialValues?: T;
 	onSubmit: (values: T) => Promise<void>;
 	submitText?: string;
 	onCancel?: () => void; // <-- nuevo
@@ -22,7 +22,7 @@ export interface FormProps<T = any> {
 const Form = <T extends Record<string, any>>({
 	title,
 	fields,
-	initialValues = {},
+	initialValues = {} as T,
 	onSubmit,
 	submitText = 'Guardar',
 	onCancel, // <-- nuevo
