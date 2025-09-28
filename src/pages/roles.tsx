@@ -172,7 +172,7 @@ const RolePage: React.FC = () => {
   return (
     <div>
       <Table
-        tableName="Roles"
+        tableName={id?"Roles del usuario "+id:"Roles"}
         titles={['Nombre', 'Descripción']}
         data={roles}
         onAdd={addRole}

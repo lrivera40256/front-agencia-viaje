@@ -148,14 +148,14 @@ const PermissionPage: React.FC = () => {
 				tableName="Permisos"
 				actions={[
 					{
+						onClick: handleUpdatePermission,
+						label: 'Editar',
+						variant: 'primary',
+					},
+					{
 						label: 'Eliminar',
 						onClick: handleDelete,
 						variant: 'danger',
-					},
-					{
-						onClick: handleUpdatePermission,
-						label: 'Modificar',
-						variant: 'primary',
 					},
 				]}
 				onAdd={handleAddPermission}

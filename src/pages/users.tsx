@@ -137,8 +137,8 @@ const UserPage: React.FC = () => {
         }))}
         onAdd={handleAddUser}
         actions={[
+          { label: 'Editar', onClick: handleUpdateUser, variant: 'primary' },
           { label: 'Eliminar', onClick: handleDelete, variant: 'danger' },
-          { label: 'Modificar', onClick: handleUpdateUser, variant: 'primary' },
           { label: 'Roles', onClick: handleViewRoles, variant: 'neutral' },
         ]}
         emptyMessage={loading ? 'Cargando...' : 'No hay usuarios'}
@@ -147,7 +147,7 @@ const UserPage: React.FC = () => {
 
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-lg p-3 w-full max-w-xs my-12">
+          <div className="bg-white r  ounded-xl shadow-lg p-3 w-full max-w-xs my-12">
             <Form
               key={editingUser?._id ?? 'new'}
               title={editingUser ? 'Modificar usuario' : 'Crear usuario'}
