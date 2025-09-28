@@ -5,6 +5,8 @@ import Table from "../components/Table";
 import { Trash2, Plus } from "lucide-react";
 import Form, { FormField } from "@/components/Form";
 import { toast } from "sonner";
+import { useParams } from "react-router-dom";
+import { getRolesByUserId } from "@/services/userRoleService";
 
 const RolePage: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -12,7 +14,7 @@ const RolePage: React.FC = () => {
   const [showForm, setShowForm] = useState<boolean>(false);
   const [isEditRole, setIsEditRole] = useState<boolean>(false);
   const [roleToEdit, setRoleToEdit] = useState<Role>({ name: "", description: "" });
-
+  const { id } = useParams<{ id: string }>();
   const userFields: FormField[] = [
     {
       name: "name",
@@ -27,12 +29,24 @@ const RolePage: React.FC = () => {
   ];
   const loadData = async () => {
     setLoading(true);
-    try {
-      const data = await getRoles();
-      setRoles(data);
-    } finally {
-      setLoading(false);
+    if (!id) {
+      try {
+        const data = await getRoles();
+        setRoles(data);
+      } finally {
+        setLoading(false);
+      }
+    }else{
+      try{
+        const data=await getRolesByUserId(id);
+        setRoles(data);
+      }catch(error){
+        toast.error("Error al cargar los roles del usuario");
+      }finally{
+        setLoading(false);
+      }
     }
+      
   };
 
   const deleteRoleById = async (row: Role) => {
@@ -83,6 +97,8 @@ const RolePage: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log(id);
+    
     loadData();
   }, []);
 

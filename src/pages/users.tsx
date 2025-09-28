@@ -8,6 +8,7 @@ import {
 } from "../services/userService";
 import Form, { FormField } from "../components/Form";
 import Table from "../components/Table";
+import { useNavigate } from "react-router-dom";
 
 const userFields: FormField[] = [
   { name: "name", label: "Nombre", placeholder: "Ingresa el nombre", required: true },
@@ -38,7 +39,7 @@ const UserPage: React.FC = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-
+  const navigate = useNavigate();
   const closeForm = () => {
     setShowForm(false);
     setEditingUser(null);
@@ -65,7 +66,7 @@ const UserPage: React.FC = () => {
       setDeletingId(null);
     }
   };
-
+  
   const handleAddUser = () => {
     setShowForm(true);
   };
@@ -106,6 +107,9 @@ const UserPage: React.FC = () => {
     closeForm();
     loadData();
   };
+  const handleViewRoles = (row:User) => {
+    navigate(`/roles/${row._id}`);
+  }
 
   // Campos según modo
   const formFields = editingUser
@@ -134,6 +138,7 @@ const UserPage: React.FC = () => {
         actions={[
           { label: "Eliminar", onClick: handleDelete, variant: "danger" },
           { label: "Modificar", onClick: handleUpdateUser, variant: "primary" },
+          { label: "Roles", onClick: handleViewRoles, variant: "neutral" },
         ]}
         emptyMessage={loading ? "Cargando..." : "No hay usuarios"}
         className="mt-4"

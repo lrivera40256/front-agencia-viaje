@@ -7,7 +7,7 @@ const UserPage = lazy(() => import('../pages/users'))
 
 const coreRoutes = [
     {
-        path: '/roles',
+        path: '/roles/:id?',
         title: 'roles',
         component:RolePage ,
     },
