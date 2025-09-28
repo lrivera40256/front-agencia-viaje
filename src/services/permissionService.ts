@@ -21,7 +21,7 @@ export const getPermissionById = async (id:string): Promise<Permission> => {
 
 export const createPermission = async (permission:Permission): Promise<void> => {
     try {
-        const response = await api.post(`permissions/`,permission);
+        const response = await api.post(`permissions`,permission);
         return response.data;
     } catch (error) {
         throw error;
@@ -30,7 +30,8 @@ export const createPermission = async (permission:Permission): Promise<void> => 
 
 export const modifiedPermission = async (permission:Permission): Promise<void> => {
     try {
-        const response = await api.put(`permissions/`,permission);
+        const response = await api.put(`permissions/${permission._id}`,permission);
+        console.log(response.data);
         return response.data;
     } catch (error) {
         throw error;
