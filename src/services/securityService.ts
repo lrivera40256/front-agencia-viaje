@@ -28,3 +28,8 @@ export function saveToken(token: string) {
 		Authorization: `Bearer ${token}`,
 	};
 }
+export async function loginOAuth(idToken: string) {
+	const { data } = await api.post('/public/security/oauth-login', { idToken });
+	return data;
+}	
+

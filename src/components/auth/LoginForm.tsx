@@ -129,17 +129,17 @@ export function LoginForm() {
 							<div className="space-y-2">
 								<SocialButton
 									provider="google"
-									onClick={() => loginWithGoogle()}
+									onClick={() => loginWithGoogle(navigate)}
 									className="w-full py-2 text-sm"
 								/>
 								<SocialButton
 									provider="microsoft"
-									onClick={() => loginWithMicrosoft()}
+									onClick={() => loginWithMicrosoft(navigate)}
 									className="w-full py-2 text-sm"
 								/>
 								<SocialButton
 									provider="github"
-									onClick={() => loginWithGithub()}
+									onClick={() => loginWithGithub(navigate)}
 									className="w-full py-2 text-sm"
 								/>
 							</div>
