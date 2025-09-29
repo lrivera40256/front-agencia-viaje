@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Lista de rutas que no deben ser interceptadas
-
+const EXCLUDED_ROUTES = ["/public"];
 const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 	headers: { 'Content-Type': 'application/json' },
@@ -10,9 +10,11 @@ const api = axios.create({
 // Interceptor de solicitud
 api.interceptors.request.use(
 	(config) => {
-		const token = localStorage.getItem('google_token');
+		const token = localStorage.getItem('token');
 		console.log(token);
-
+		 if (EXCLUDED_ROUTES.some((route) => config.url?.includes(route)) || !token) {
+            return config;
+        }
 		// Agrega el token si la ruta no está excluida
 		if (token) {
 			config.headers.Authorization = `Bearer ${token}`;
