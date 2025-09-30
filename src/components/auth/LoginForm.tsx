@@ -9,7 +9,7 @@ import { Mail, Lock, Eye, EyeOff, MapPin, Plane } from 'lucide-react';
 import travelHeroBg from '@/assets/travel-hero-bg.jpg';
 import { TwoFactorAuth } from './TwoFactorAuth';
 import { loginWithGithub, loginWithGoogle, loginWithMicrosoft } from './AuthProvider';
-import { login, validate2FA, saveToken } from '@/services/securityService';
+import { login, validate2FA } from '@/services/securityService';
 import { useNavigate } from 'react-router-dom';
 
 export function LoginForm() {
@@ -105,7 +105,7 @@ export function LoginForm() {
             if (!res.valid) throw new Error("Código inválido");
             // Log del token para verificar que llega
             console.log("Token recibido (JWT):", res.token);
-            saveToken(res.token);
+			localStorage.setItem('token', res.token);
             setShowTwoFactor(false);
             navigate('/seguridad', { replace: true });
           } catch (err) {
