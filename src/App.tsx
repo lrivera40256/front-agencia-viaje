@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import { Suspense, useState } from 'react';
 import routes from './routes/index';
@@ -33,6 +33,7 @@ function App() {
 					})}
 					</Route>
 				</Route>
+				<Route path="*" element={<Navigate to="/seguridad" replace />} />
 			</Routes>
 		</Router>
 	);
