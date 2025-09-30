@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from "axios";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -6,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { SocialButton } from './SocialButton';
 import { Mail, Lock, Eye, EyeOff, MapPin, Plane } from 'lucide-react';
 import travelHeroBg from '@/assets/travel-hero-bg.jpg';
-import { on } from 'events';
 import { TwoFactorAuth } from './TwoFactorAuth';
 import { loginWithGithub, loginWithGoogle, loginWithMicrosoft } from './AuthProvider';
 import { login, validate2FA, saveToken } from '@/services/securityService';
@@ -27,6 +27,18 @@ export function LoginForm() {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		return emailRegex.test(email);
 	};
+
+	const extractAxiosMessage = (err: unknown): string => {
+  if (axios.isAxiosError(err)) {
+    const data = err.response?.data as any;
+    if (typeof data === 'string' && data.trim()) return data;
+    if (data && typeof data === 'object') return data.message || data.error || JSON.stringify(data);
+    const text = typeof (err.request as any)?.responseText === 'string' ? (err.request as any).responseText : '';
+    if (text) return text;
+    return err.response?.statusText || err.message || 'Error de autenticación';
+  }
+  return (err as any)?.message || 'Error de autenticación';
+};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -71,9 +83,10 @@ export function LoginForm() {
 				setErrors({ email: 'No se pudo iniciar sesión', password: '' });
 			}
 		} catch (err: any) {
+			const msg = extractAxiosMessage(err);
 			setErrors({
 				email: 'Credenciales inválidas',
-				password: err?.message || 'Error de autenticación',
+				password: msg,
 			});
 		} finally {
 			setIsLoading(false);
@@ -83,21 +96,40 @@ export function LoginForm() {
 	return (
 		<>
 			{showTwoFactor ? (
-				<TwoFactorAuth
-					email={email}
-					onBack={() => setShowTwoFactor(false)}
-					onVerify={async (code: string) => {
-						const res = await validate2FA(sessionId, code);
-						console.log(res);
+      <TwoFactorAuth
+        email={email}
+        onBack={() => setShowTwoFactor(false)}
+        onVerify={async (code: string) => {
+          try {
+            const res = await validate2FA(sessionId, code);
+            if (!res.valid) throw new Error("Código inválido");
+            // Log del token para verificar que llega
+            console.log("Token recibido (JWT):", res.token);
+            saveToken(res.token);
+            setShowTwoFactor(false);
+            navigate('/seguridad', { replace: true });
+          } catch (err) {
+            const msg = extractAxiosMessage(err);
+            const m = msg.toLowerCase();
 
-						if (res.valid) {
-							saveToken(res.token);
-							setShowTwoFactor(false);
-							navigate('/seguridad');
-						} else {
-							throw new Error('Código inválido');
-						}
-					}}
+            // Si expiró o se excedieron intentos (o sesión inválida), cerrar 2FA y volver al login
+            if (
+              m.includes('expirad') ||          // "expirada"
+              m.includes('excedid') ||          // "excedidos"
+              (m.includes('sesión') && m.includes('no encontr')) || // "Sesión no encontrada"
+              (m.includes('session') && m.includes('not found'))
+            ) {
+              setShowTwoFactor(false);
+              setSessionId('');
+              // mostrar el mensaje en el login
+              setErrors({ email: '', password: msg });
+              return; // no propagar al 2FA
+            }
+
+            // Para otros errores (código incorrecto con intentos restantes), mostrar en el 2FA
+            throw new Error(msg);
+          }
+        }}
 				/>
 			) : (
 				<div className="w-screen h-screen flex items-center justify-center px-4 py-2 relative overflow-hidden travel-gradient">

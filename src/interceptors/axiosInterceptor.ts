@@ -3,8 +3,8 @@ import axios from 'axios';
 // Lista de rutas que no deben ser interceptadas
 const EXCLUDED_ROUTES = ["/public"];
 const api = axios.create({
-	baseURL: import.meta.env.VITE_API_URL,
-	headers: { 'Content-Type': 'application/json' },
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: { 'Content-Type': 'application/json' },
 });
 
 // Interceptor de solicitud
@@ -28,16 +28,18 @@ api.interceptors.request.use(
 
 // Interceptor de respuesta
 api.interceptors.response.use(
-	(response) => {
-		return response;
-	},
-	(error) => {
-		if (error.response?.status === 401) {
-			console.log('No autorizado, redirigiendo a login...');
-			window.location.href = '/login';
-		}
-		return Promise.reject(error);
-	}
+  (response) => response,
+  (error) => {
+    const endpoint: string = error?.config?.url ?? '';
+    const isAuthEndpoint = EXCLUDED_ROUTES.some((route) => endpoint.includes(route)) 
+   
+
+    if (error?.response?.status === 401 && !isAuthEndpoint) {
+      console.log('No autorizado, redirigiendo a login...');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default api;
