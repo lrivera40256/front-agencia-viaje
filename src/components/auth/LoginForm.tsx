@@ -11,6 +11,7 @@ import { TwoFactorAuth } from './TwoFactorAuth';
 import { loginWithGithub, loginWithGoogle, loginWithMicrosoft } from './AuthProvider';
 import { login, validate2FA } from '@/services/securityService';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export function LoginForm() {
 	const [email, setEmail] = useState('');
@@ -74,12 +75,13 @@ export function LoginForm() {
 
 		setIsLoading(true);
 		try {
-			const res = await login(email, password);
+			const res = await login({ email, password });
 			console.log(res);
 			if (res?.['2fa_required'] && res.sessionId) {
 				setSessionId(res.sessionId);
 				setShowTwoFactor(true); // muestra el componente de 2FA
 			} else {
+				toast.error("No se pudo iniciar sesión");
 				setErrors({ email: 'No se pudo iniciar sesión', password: '' });
 			}
 		} catch (err: any) {

@@ -2,7 +2,7 @@ import api from '../interceptors/axiosInterceptor';
 import axios from 'axios';
 
 export type LoginResponse = {
-    '2fa_required': boolean;
+    fa_required: boolean;
     message?: string;
     sessionId?: string;
 };
@@ -38,10 +38,14 @@ const toFriendlyError = (err: unknown): Error => {
   return new Error((err as any)?.message || 'Error de autenticación');
 };
 
-export async function login(email: string, password: string): Promise<LoginResponse> {
+export async function login(user?: { email: string; password: string }, idToken?: string) {
     try {
-        const { data } = await api.post('/public/security/login', { email, password });
-        return data;
+      const body = {};
+      if (user) body["user"] = user;
+      if (idToken) body["token"] = idToken;
+      const { data } = await api.post('/public/security/login', body);
+      
+      return data;
     } catch (err) {
         throw toFriendlyError(err);
     }
