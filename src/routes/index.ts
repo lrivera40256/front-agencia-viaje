@@ -5,6 +5,7 @@ const PermissionPage = lazy(() => import('../pages/permission'));
 const rolePermissionPage = lazy(() => import('../pages/rolePermission'));
 const UserPage = lazy(() => import('../pages/users'));
 const UserRolePage = lazy(() => import('../pages/userRole'));
+const ProfilePage = lazy(() => import('../pages/profile'));
 
 const coreRoutes = [
 	{
@@ -12,7 +13,7 @@ const coreRoutes = [
 		title: 'roles',
 		component: RolePage,
 	},
-		{
+	{
 		path: '/permisos/:id?',
 		title: 'permisos',
 		component: PermissionPage,
@@ -41,6 +42,11 @@ const coreRoutes = [
 		path: '/usuarios-roles',
 		title: 'usuarios-roles',
 		component: UserRolePage,
+	},
+	{
+		path: '/perfil',
+		title: 'Perfil',
+		component: ProfilePage,
 	},
 ];
 const routes = [...coreRoutes];
