@@ -4,15 +4,16 @@ import {
 	GoogleAuthProvider,
 	GithubAuthProvider,
 	OAuthProvider,
+	signOut,
 } from 'firebase/auth';
 import { auth } from '../../utils/firebase';
-import { loginOAuth } from '@/services/securityService';
+import { login, loginOAuth } from '@/services/securityService';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 
 export const loginWithGoogle = async (navigate: NavigateFunction) => {
 	const result = await signInWithPopup(auth, new GoogleAuthProvider());
 	console.log('🔥 Result Google:', result);
-	exchangeFirebaseTokenForAppJwt(navigate)
+	logi(navigate)
 	return result;
 };
 // Microsoft
@@ -21,7 +22,7 @@ export const loginWithMicrosoft = async (navigate: NavigateFunction) => {
 	provider.addScope('User.Read');
 	const result = await signInWithPopup(auth, provider);
 	console.log('🔥 Result Microsoft:', result);
-	exchangeFirebaseTokenForAppJwt(navigate)
+	logi(navigate)
 	return result;
 };
 
@@ -30,7 +31,7 @@ export const loginWithGithub = (navigate: NavigateFunction) => {
 	const provider = new GithubAuthProvider();
 	provider.addScope('read:user');
 	provider.addScope('user:email');
-	exchangeFirebaseTokenForAppJwt(navigate)
+	logi(navigate)
 	return signInWithPopup(auth, provider);
 };
 async function getFreshFirebaseIdToken() {
@@ -41,14 +42,23 @@ async function getFreshFirebaseIdToken() {
 }
 
 // Llama a tu backend para convertir el ID token de Firebase en tu JWT
-async function exchangeFirebaseTokenForAppJwt(navigate: NavigateFunction) {
+async function logi(navigate: NavigateFunction) {
 
 	const idToken = await getFreshFirebaseIdToken();
 	console.log(idToken);
-	const response = await loginOAuth(idToken);
-	console.log(response);
-	localStorage.setItem('token', response.token);
+	const response = await login(null, idToken);
+	if(response.status=="200" )localStorage.setItem("token", idToken!);
 	navigate('/seguridad');
 	if (!idToken) throw new Error("No Firebase user session");
 
+}
+export const logout = async () => {
+  try {
+    // 1) Cerrar sesión en Firebase (esto invalida la sesión del SDK en el navegador)
+    const response=await signOut(auth);
+	console.log(response);
+	
+  } catch (e) {
+    console.error('Error al cerrar sesión de Firebase:', e);
+  }
 }
