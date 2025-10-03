@@ -12,6 +12,11 @@ const coreRoutes = [
 		title: 'roles',
 		component: RolePage,
 	},
+		{
+		path: '/permisos/:id?',
+		title: 'permisos',
+		component: PermissionPage,
+	},
 	{
 		path: '/permisos',
 		title: 'permisos',

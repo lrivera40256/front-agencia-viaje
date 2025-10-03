@@ -1,3 +1,4 @@
+import { Permission } from '@/models/Permission';
 import api from '../interceptors/axiosInterceptor';
 import type { RolePermission } from '../models/RolePermission';
 
@@ -36,6 +37,27 @@ export const createRolePermission = async (
 export const deleteRolePermissionById = async (id: string): Promise<void> => {
 	try {
 		const response = await api.delete(`/role-permission/${id}`);
+		return response.data;
+	} catch (error) {
+		throw error;
+	}
+};
+
+export const deleteRolePermissionByRoleAndPermission = async (id_role: String, id_permission: String): Promise<void> => {
+	try {
+		const response = await api.delete(`/role-permission/role/${id_role}/permission/${id_permission}`)
+		console.log(response.data);
+		
+		return response.data
+	} catch (error) {
+		throw error
+	}
+};
+export const getPermissionsToAddRole = async (roleId: string): Promise<Permission[]> => {
+	try {
+		const response = await api.get(`/role-permission/permissionsToAdd/${roleId}`);
+		console.log(response.data);
+		
 		return response.data;
 	} catch (error) {
 		throw error;

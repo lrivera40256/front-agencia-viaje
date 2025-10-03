@@ -4,10 +4,18 @@ import {
 	createPermission,
 	deletePermissionById,
 	getPermissions,
+	getPermissionsByRoleId,
 	modifiedPermission,
 } from '../services/permissionService';
-import Table from '../components/Table';
+import Table, { TableAction } from '../components/Table';
 import Form, { FormField } from '../components/Form';
+import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import {
+	createRolePermission,
+	deleteRolePermissionByRoleAndPermission,
+	getPermissionsToAddRole,
+} from '@/services/rolePermissionService';
 
 const initialValues: Permission = {
 	url: '',
@@ -50,6 +58,8 @@ const PermissionPage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
 	const [editingPermission, setEditingPermission] = useState<Permission | null>(null);
+	const [permissionToAdd, setPermissionToAdd] = useState<{ value: string; label: string }[]>([]);
+	const { id } = useParams<{ id: string }>();
 
 	const currentInitialValues: Permission = editingPermission
 		? {
@@ -65,28 +75,68 @@ const PermissionPage: React.FC = () => {
 	};
 
 	const loadData = async () => {
+		setLoading(true);
+		if (id) {
+			try {
+				const data = await getPermissionsByRoleId(id);
+				setPermissions(data);
+			} catch (error) {
+				toast.error('Error al cargar los roles del usuario');
+			} finally {
+				setLoading(false);
+			}
+		} else {
+			try {
+				const permissions = await getPermissions();
+				setPermissions(permissions);
+			} catch (error) {
+				throw error;
+			}
+		}
+	};
+
+	const loadPermissionToAdd = async () => {
+		setLoading(true);
 		try {
-			const permissions = await getPermissions();
-			setPermissions(permissions);
+			const data = await getPermissionsToAddRole(id);
+
+			const permissions = data.map((p) => ({
+				value: p._id,
+				label: `${p.method}: ${p.url}`,
+			}));
+			setPermissionToAdd(permissions);
 		} catch (error) {
-			throw error;
+			toast.error('Error al cargar los permisos para agregar');
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleDelete = async (permission: Permission) => {
 		loadData();
 		if (!confirm(`¿Eliminar permiso "${permission.method}: ${permission.url}"?`)) return;
-		try {
-			await deletePermissionById(permission._id);
-			setPermissions((prev) => prev.filter((u) => u._id !== permission._id));
-		} catch (error) {
-			throw error;
+		if (id) {
+			try {
+				await deleteRolePermissionByRoleAndPermission(id, permission._id);
+				toast.success('Permiso eliminado del rol exitosamente');
+			} catch (error) {
+				toast.error('Error al eliminar permiso del rol');
+			} finally {
+				loadData();
+				loadPermissionToAdd();
+			}
+		} else {
+			try {
+				await deletePermissionById(permission._id);
+				setPermissions((prev) => prev.filter((u) => u._id !== permission._id));
+			} catch (error) {
+				throw error;
+			}
 		}
 	};
 
 	const handleAddPermission = () => {
 		setShowForm(true);
-		console.log('Agregar permiso');
 	};
 
 	const handleUpdatePermission = async (row: Permission) => {
@@ -136,44 +186,105 @@ const PermissionPage: React.FC = () => {
 		loadData();
 	};
 
+	const fieldToAddPermission: FormField[] = [
+		{
+			name: 'permission',
+			label: 'Permiso',
+			placeholder: 'Selecciona un permiso',
+			type: 'select',
+			options: permissionToAdd,
+		},
+	];
+
+	function getActions(): TableAction[] {
+		const actions: TableAction[] = [
+			{
+				onClick: handleUpdatePermission,
+				label: 'Editar',
+				variant: 'primary',
+			},
+			{
+				label: 'Eliminar',
+				onClick: handleDelete,
+				variant: 'danger',
+			},
+		];
+		if (id) {
+			actions.shift();
+		}
+		return actions;
+	}
+
+	const addPermissionToRole = async (values) => {
+		try {
+			await createRolePermission(id, values.permission);
+			toast.success('Permiso agregado al rol exitosamente');
+		} catch (error) {
+			toast.error('Error al agregar permiso al rol');
+		} finally {
+			setShowForm(false);
+			loadData();
+			loadPermissionToAdd();
+		}
+	};
+
 	useEffect(() => {
 		loadData();
+		if (id) loadPermissionToAdd;
 	}, []);
 
 	return (
 		<div>
 			<Table
+				tableName={id ? 'Permisos del rol ' + id : 'Roles'}
 				data={permissions}
 				titles={['Url', 'Método', 'Modelo']}
-				tableName="Permisos"
-				actions={[
-					{
-						onClick: handleUpdatePermission,
-						label: 'Editar',
-						variant: 'primary',
-					},
-					{
-						label: 'Eliminar',
-						onClick: handleDelete,
-						variant: 'danger',
-					},
-				]}
+				actions={getActions()}
 				onAdd={handleAddPermission}
 				emptyMessage={loading ? 'Cargando...' : 'No hay permisos'}
 				className="mt-4"
 			/>
 			{showForm && (
-				<div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-					<div className="bg-white rounded-xl shadow-lg p-3 w-full max-w-xs my-12">
-						<Form
-							key={editingPermission?._id ?? 'new'}
-							title={editingPermission ? 'Modificar permiso' : 'Crear permiso'}
-							fields={permissionFields}
-							initialValues={currentInitialValues}
-							onSubmit={handleSubmit}
-							onCancel={closeForm}
-							submitText={editingPermission ? 'Guardar cambios' : 'Crear'}
-						/>
+				<div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+					<div className="bg-white rounded-xl shadow-lg p-4 w-full max-w-sm my-12">
+						{id && permissionToAdd.length === 0 ? (
+							<div className="text-center space-y-3 py-6">
+								<h3 className="text-lg font-semibold">
+									No hay permisos disponibles
+								</h3>
+								<p className="text-sm text-gray-600">
+									Este rol ya tiene asignados todos los permisos.
+								</p>
+								<button
+									onClick={closeForm}
+									className="px-4 py-2 rounded-lg border text-sm hover:bg-gray-50"
+								>
+									Cerrar
+								</button>
+							</div>
+						) : (
+							<Form
+								key={editingPermission?._id ?? 'new'}
+								title={
+									editingPermission
+										? 'Modificar permiso'
+										: id
+											? 'Agregar permiso al rol'
+											: 'Crear permiso'
+								}
+								fields={id ? fieldToAddPermission : permissionFields}
+								initialValues={currentInitialValues}
+								onSubmit={id ? addPermissionToRole : handleSubmit}
+								onCancel={closeForm}
+								submitText={
+									editingPermission
+										? 'Guardar cambios'
+										: id
+											? 'Agregar'
+											: 'Crear'
+								}
+							/>
+						)}
 					</div>
 				</div>
 			)}
