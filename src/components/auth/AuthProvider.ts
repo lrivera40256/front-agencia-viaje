@@ -56,6 +56,7 @@ export const logout = async () => {
   try {
     // 1) Cerrar sesión en Firebase (esto invalida la sesión del SDK en el navegador)
     const response=await signOut(auth);
+	localStorage.removeItem('token');
 	console.log(response);
 	
   } catch (e) {
