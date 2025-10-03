@@ -4,10 +4,14 @@ import {
 	createPermission,
 	deletePermissionById,
 	getPermissions,
+	getPermissionsByRoleId,
 	modifiedPermission,
 } from '../services/permissionService';
-import Table from '../components/Table';
+import Table, { TableAction } from '../components/Table';
 import Form, { FormField } from '../components/Form';
+import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
+import { deleteRolePermissionByRoleAndPermission } from '@/services/rolePermissionService';
 
 const initialValues: Permission = {
 	url: '',
@@ -50,6 +54,7 @@ const PermissionPage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const [showForm, setShowForm] = useState(false);
 	const [editingPermission, setEditingPermission] = useState<Permission | null>(null);
+	const { id } = useParams<{ id: string }>();
 
 	const currentInitialValues: Permission = editingPermission
 		? {
@@ -65,28 +70,51 @@ const PermissionPage: React.FC = () => {
 	};
 
 	const loadData = async () => {
-		try {
-			const permissions = await getPermissions();
-			setPermissions(permissions);
-		} catch (error) {
-			throw error;
+		setLoading(true);
+		if (id) {
+			try {
+				const data = await getPermissionsByRoleId(id);
+				setPermissions(data);
+			} catch (error) {
+				toast.error('Error al cargar los roles del usuario');
+			} finally {
+				setLoading(false);
+			}
+		} else {
+			try {
+				const permissions = await getPermissions();
+				setPermissions(permissions);
+			} catch (error) {
+				throw error;
+			}
 		}
 	};
 
 	const handleDelete = async (permission: Permission) => {
 		loadData();
 		if (!confirm(`¿Eliminar permiso "${permission.method}: ${permission.url}"?`)) return;
-		try {
-			await deletePermissionById(permission._id);
-			setPermissions((prev) => prev.filter((u) => u._id !== permission._id));
-		} catch (error) {
-			throw error;
+		if (id) {
+			try {
+				await deleteRolePermissionByRoleAndPermission(id, permission._id);
+				toast.success('Permiso eliminado del rol exitosamente');
+			} catch (error) {
+				toast.error('Error al eliminar permiso del rol');
+			} finally {
+				loadData();
+				// loadRolesToAdd();
+			}
+		} else {
+			try {
+				await deletePermissionById(permission._id);
+				setPermissions((prev) => prev.filter((u) => u._id !== permission._id));
+			} catch (error) {
+				throw error;
+			}
 		}
 	};
 
 	const handleAddPermission = () => {
 		setShowForm(true);
-		console.log('Agregar permiso');
 	};
 
 	const handleUpdatePermission = async (row: Permission) => {
@@ -136,6 +164,25 @@ const PermissionPage: React.FC = () => {
 		loadData();
 	};
 
+	function getActions(): TableAction[] {
+		const actions: TableAction[] = [
+			{
+				onClick: handleUpdatePermission,
+				label: 'Editar',
+				variant: 'primary',
+			},
+			{
+				label: 'Eliminar',
+				onClick: handleDelete,
+				variant: 'danger',
+			},
+		];
+		if (id) {
+			actions.shift();
+		}
+		return actions;
+	}
+
 	useEffect(() => {
 		loadData();
 	}, []);
@@ -143,21 +190,10 @@ const PermissionPage: React.FC = () => {
 	return (
 		<div>
 			<Table
+				tableName="Permisos"
 				data={permissions}
 				titles={['Url', 'Método', 'Modelo']}
-				tableName="Permisos"
-				actions={[
-					{
-						onClick: handleUpdatePermission,
-						label: 'Editar',
-						variant: 'primary',
-					},
-					{
-						label: 'Eliminar',
-						onClick: handleDelete,
-						variant: 'danger',
-					},
-				]}
+				actions={getActions()}
 				onAdd={handleAddPermission}
 				emptyMessage={loading ? 'Cargando...' : 'No hay permisos'}
 				className="mt-4"

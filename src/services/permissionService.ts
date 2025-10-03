@@ -38,7 +38,7 @@ export const modifiedPermission = async (permission: Permission): Promise<void> 
 	}
 };
 
-export const deletePermissionById = async (id: string): Promise<void> => {
+export const deletePermissionById = async (id: string): Promise<void> => {	
 	try {
 		const response = await api.delete(`/permissions/${id}`);
 		console.log(response);
@@ -46,5 +46,15 @@ export const deletePermissionById = async (id: string): Promise<void> => {
 		return response.data;
 	} catch (error) {
 		throw error;
+	};
+}
+
+export const getPermissionsByRoleId = async (id: String): Promise<Permission[]> => {
+	try{
+		const response = await api.get(`/role-permission/role/${id}`);
+		console.log(response.data);
+		return response.data
+	} catch (error){
+		throw error
 	}
-};
+}

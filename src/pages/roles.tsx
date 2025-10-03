@@ -5,7 +5,7 @@ import Table, { TableAction } from '../components/Table';
 import { Trash2, Plus } from 'lucide-react';
 import Form, { FormField } from '@/components/Form';
 import { toast } from 'sonner';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { createUserRole, deleteUserRole, getRolesByUserId, getRolesToAddUser } from '@/services/userRoleService';
 
 const RolePage: React.FC = () => {
@@ -16,6 +16,8 @@ const RolePage: React.FC = () => {
   const [roleToEdit, setRoleToEdit] = useState<Role>({ name: '', description: '' });
   const { id } = useParams<{ id: string }>();
   const [rolesToAdd, setRolesToAdd] = useState<{ value: string; label: string }[]>([]);
+  const navigate = useNavigate();
+
   const userFields: FormField[] = [
     {
       name: 'name',
@@ -103,6 +105,10 @@ const RolePage: React.FC = () => {
   };
   const addRole = () => setShowForm(true);
 
+  const handleViewRoles = (role: Role) => {
+    navigate(`/permisos/${role._id}`);
+  };
+
   const onSubmit = async (role: Role) => {
     if (!validateForm(role)) return;
     if (isEditRole) {
@@ -148,6 +154,7 @@ const RolePage: React.FC = () => {
     loadData();
     if (id) loadRolesToAdd();
   }, []);
+  
   function getActions(): TableAction[] {
     const actions: TableAction[] = [
       {
@@ -159,8 +166,12 @@ const RolePage: React.FC = () => {
         label: 'Eliminar',
         onClick: deleteRoleById,
         variant: 'danger',
+      },
+      {
+        label: 'Permisos',
+        onClick: handleViewRoles,
+        variant: 'neutral'
       }
-
     ];
     if (id) {
       actions.shift();
