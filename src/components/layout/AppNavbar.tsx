@@ -12,10 +12,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Search, Bell, User, Settings, LogOut, Plane, MapPin } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../auth/AuthProvider';
 
 export function AppNavbar() {
 	const [notifications, setNotifications] = useState(3);
-
+	const navigate = useNavigate();
 	return (
 		<header className="h-16 border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50">
 			<div className="flex items-center justify-between h-full px-4">
@@ -101,7 +103,12 @@ export function AppNavbar() {
 								<span>Configuración</span>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+							<DropdownMenuItem
+								onClick={async () => {
+									await logout();
+									navigate('/login');
+								}}
+							className="cursor-pointer text-destructive focus:text-destructive">
 								<LogOut className="mr-2 h-4 w-4" />
 								<span>Cerrar Sesión</span>
 							</DropdownMenuItem>
