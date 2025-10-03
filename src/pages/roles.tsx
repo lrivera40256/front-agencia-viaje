@@ -7,6 +7,7 @@ import Form, { FormField } from '@/components/Form';
 import { toast } from 'sonner';
 import { useParams } from 'react-router-dom';
 import { createUserRole, deleteUserRole, getRolesByUserId, getRolesToAddUser } from '@/services/userRoleService';
+import { getUserById } from '@/services/userService';
 
 const RolePage: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -15,6 +16,8 @@ const RolePage: React.FC = () => {
   const [isEditRole, setIsEditRole] = useState<boolean>(false);
   const [roleToEdit, setRoleToEdit] = useState<Role>({ name: '', description: '' });
   const { id } = useParams<{ id: string }>();
+  const [userName, setUserName] = useState('');
+
   const [rolesToAdd, setRolesToAdd] = useState<{ value: string; label: string }[]>([]);
   const userFields: FormField[] = [
     {
@@ -33,7 +36,10 @@ const RolePage: React.FC = () => {
     if (id) {
       try {
         const data = await getRolesByUserId(id);
+        const name =await getUserById(id);
+        setUserName(name.name);
         setRoles(data);
+
       } catch (error) {
         toast.error('Error al cargar los roles del usuario');
       } finally {
@@ -172,7 +178,7 @@ const RolePage: React.FC = () => {
   return (
     <div>
       <Table
-        tableName={id?"Roles del usuario "+id:"Roles"}
+        tableName={id?"Roles del usuario "+userName:"Roles"}
         titles={['Nombre', 'Descripción']}
         data={roles}
         onAdd={addRole}
