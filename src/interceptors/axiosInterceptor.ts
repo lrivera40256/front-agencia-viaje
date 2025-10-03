@@ -11,7 +11,6 @@ const api = axios.create({
 api.interceptors.request.use(
 	(config) => {
 		const token = localStorage.getItem('token');
-		console.log(token);
 		 if (EXCLUDED_ROUTES.some((route) => config.url?.includes(route)) || !token) {
             return config;
         }
@@ -32,10 +31,9 @@ api.interceptors.response.use(
   (error) => {
     const endpoint: string = error?.config?.url ?? '';
     const isAuthEndpoint = EXCLUDED_ROUTES.some((route) => endpoint.includes(route)) 
-   
-
-    if (error?.response?.status === 401 && !isAuthEndpoint) {
-      console.log('No autorizado, redirigiendo a login...');
+    
+    if (error.status === 401 && !isAuthEndpoint) {
+      localStorage.removeItem('token');
       window.location.href = '/login';
     }
     return Promise.reject(error);
