@@ -9,6 +9,7 @@ import {
 import { auth } from '../../utils/firebase';
 import { login, loginOAuth } from '@/services/securityService';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export const loginWithGoogle = async (navigate: NavigateFunction) => {
 	const result = await signInWithPopup(auth, new GoogleAuthProvider());
@@ -47,19 +48,23 @@ async function logi(navigate: NavigateFunction) {
 	const idToken = await getFreshFirebaseIdToken();
 	console.log(idToken);
 	const response = await login(null, idToken);
-	if(response.status=="200" )localStorage.setItem("token", idToken!);
-	navigate('/seguridad');
+	if (response.status == "200") {
+		localStorage.setItem("token", idToken!);
+		navigate('/seguridad');
+	} else {
+		toast.error("No se pudo iniciar sesión");
+	}
 	if (!idToken) throw new Error("No Firebase user session");
 
 }
 export const logout = async () => {
-  try {
-    // 1) Cerrar sesión en Firebase (esto invalida la sesión del SDK en el navegador)
-    const response=await signOut(auth);
-	localStorage.removeItem('token');
-	
+	try {
+		// 1) Cerrar sesión en Firebase (esto invalida la sesión del SDK en el navegador)
+		const response = await signOut(auth);
+		localStorage.removeItem('token');
 
-  } catch (e) {
-    console.error('Error al cerrar sesión de Firebase:', e);
-  }
+
+	} catch (e) {
+		console.error('Error al cerrar sesión de Firebase:', e);
+	}
 }
