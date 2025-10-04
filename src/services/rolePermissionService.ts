@@ -67,7 +67,7 @@ export const getPermissionsToAddRole = async (roleId: string): Promise<Permissio
 	
 export const getPermissionsForCheck = async (roleId: string) : Promise<PermissionsByModel> => {
 	try {
-		const response = await api.get(`/role/${roleId}/permissions`)
+		const response = await api.get(`/role-permission/role/${roleId}/permissions`)	
 		return response.data
 	} catch (error) {
 		throw error

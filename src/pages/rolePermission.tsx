@@ -25,7 +25,7 @@ const rolePermissionPage: React.FC = () => {
 			const data = rolesPermissions.map((rp) => ({
 				...rp,
 				role: rp.role.name,
-				permission: rp.permission.url,
+				permission: `${rp.permission.method}: ${rp.permission.url}`,
 			}));
 			setRolesPermissions(data);
 		} catch (error) {
