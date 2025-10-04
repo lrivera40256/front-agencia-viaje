@@ -236,7 +236,7 @@ const PermissionPage: React.FC = () => {
 	return (
 		<div>
 			<Table
-				tableName={id ? 'Permisos del rol ' + id : 'Roles'}
+				tableName={id ? 'Permisos del rol ' + id : 'Permisos'}
 				data={permissions}
 				titles={['Url', 'Método', 'Modelo']}
 				actions={getActions()}
