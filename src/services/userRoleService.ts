@@ -37,3 +37,11 @@ export const deleteUserRole = async (userId: string, roleId: string): Promise<vo
         throw error;
     }
 };
+export const getUserRole = async (): Promise<any[]> => {
+    try {
+        const response = await api.get('/user-role');
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

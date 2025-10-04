@@ -49,8 +49,8 @@ api.interceptors.response.use(
 
     if (status === 401 && !isExcluded) {
       // Mantengo limpieza de token que ya tenías
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      // localStorage.removeItem('token');
+      window.location.href = '/';
     }
 
     return Promise.reject(error);

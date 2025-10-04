@@ -100,7 +100,7 @@ export function LoginForm() {
 				if (res.permissions) {
 					localStorage.setItem('permissions', JSON.stringify(res.permissions));
 				}
-				navigate('/profile', { replace: true });
+				navigate('/', { replace: true });
 				return;
 			}
 
@@ -138,7 +138,7 @@ export function LoginForm() {
 								);
 							}
 							setShowTwoFactor(false);
-							navigate('/profile', { replace: true });
+							navigate('/', { replace: true });
 						} catch (err) {
 							const msg = extractAxiosMessage(err);
 							const m = msg.toLowerCase();

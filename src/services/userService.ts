@@ -17,6 +17,16 @@ export const getUsers = async (): Promise<User[]> => {
 	}
 };
 
+export const getUserByEmail = async (email: string): Promise<User> => {
+	try {
+		const response = await api.get(`/users/email/${email}`);
+		return response.data;
+	} catch (error) {
+		console.error('Error fetching user by email:', error);
+		throw error;
+	}
+};
+
 export const getUserById = async (id: string): Promise<User> => {
 	try {
 		const response = await api.get(`/users/${id}`);

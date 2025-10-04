@@ -25,7 +25,8 @@ const rolePermissionPage: React.FC = () => {
 			const data = rolesPermissions.map((rp) => ({
 				...rp,
 				role: rp.role.name,
-				permission: `${rp.permission.method}: ${rp.permission.url}`,
+				permission: rp.permission.url,
+				method: rp.permission.method,
 			}));
 			setRolesPermissions(data);
 		} catch (error) {
@@ -88,7 +89,7 @@ const rolePermissionPage: React.FC = () => {
 		<>
 			<Table
 				tableName="Roles - Permisos"
-				titles={['Rol', 'Permiso']}
+				titles={['Rol', 'Permiso','Metodo']}
 				data={rolesPermissions}
 				onAdd={addRolePermission}
 				actions={[

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
 
 export interface TableAction<T = any> {
 	label: string;
@@ -14,6 +15,14 @@ interface TableProps {
 	onAdd?: () => void;
 	emptyMessage?: string;
 	className?: string;
+
+	search?: {
+		onSearch: (query: string) => void;
+		placeholder?: string;
+		debounceMs?: number;
+		hideButton?: boolean;
+		initialQuery?: string;
+	};
 }
 
 const btnBase =
@@ -32,7 +41,29 @@ const Table: React.FC<TableProps> = ({
 	onAdd,
 	emptyMessage = 'No hay datos disponibles',
 	className = '',
+	search,
 }) => {
+	const [query, setQuery] = useState(search?.initialQuery ?? '');
+
+	useEffect(() => {
+		if (!search?.debounceMs) return;
+		const id = setTimeout(() => {
+			search.onSearch(query.trim());
+		}, search.debounceMs);
+		return () => clearTimeout(id);
+	}, [query, search]);
+
+	const runSearch = () => {
+		if (search) search.onSearch(query.trim());
+	};
+
+	const handleSearchKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === 'Enter' && search) {
+			e.preventDefault();
+			runSearch();
+		}
+	};
+
 	return (
 		<div className={`space-y-5 ${className}`}>
 			{/* Header */}
@@ -45,14 +76,43 @@ const Table: React.FC<TableProps> = ({
 						</h2>
 					</div>
 				</div>
-				{onAdd && (
-					<button
-						onClick={onAdd}
-						className="inline-flex items-center rounded-md bg-blue-600 px-4 h-9 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-1"
-					>
-						+ Agregar
-					</button>
-				)}
+
+				<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+					{/* Buscador (opcional) */}
+					{search && (
+						<div className="flex items-center gap-2">
+							<div className="flex items-stretch h-9">
+								<input
+									type="text"
+									placeholder={search.placeholder || 'Buscar...'}
+									value={query}
+									onChange={(e) => setQuery(e.target.value)}
+									onKeyDown={handleSearchKey}
+									className="h-full rounded-l-md border border-slate-300 bg-white px-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+									aria-label="Buscar"
+								/>
+								{!search.hideButton && (
+									<button
+										type="button"
+										onClick={runSearch}
+										className="h-full rounded-r-md bg-blue-600 px-3 text-white text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-1 flex items-center gap-1"
+										aria-label="Ejecutar búsqueda"
+									>
+										<Search className="h-4 w-4" />
+									</button>
+								)}
+							</div>
+						</div>
+					)}
+					{onAdd && (
+						<button
+							onClick={onAdd}
+							className="inline-flex items-center rounded-md bg-blue-600 px-4 h-9 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-1"
+						>
+							+ Agregar
+						</button>
+					)}
+				</div>
 			</div>
 
 			{/* Tabla */}
@@ -91,11 +151,7 @@ const Table: React.FC<TableProps> = ({
 							{data.map((row, rowIndex) => (
 								<tr
 									key={rowIndex}
-									className={`
-                    odd:bg-white even:bg-slate-50/60
-                    border-b last:border-b-0 border-slate-100
-                    hover:bg-blue-50/60 transition-colors
-                  `}
+									className="odd:bg-white even:bg-slate-50/60 border-b last:border-b-0 border-slate-100 hover:bg-blue-50/60 transition-colors"
 								>
 									{Object.entries(row).map(([k, v], cellIndex) =>
 										k === '_id' ? null : (
@@ -125,7 +181,9 @@ const Table: React.FC<TableProps> = ({
 													<button
 														key={i}
 														onClick={() => a.onClick(row)}
-														className={`${btnBase} ${variants[a.variant || 'neutral']}`}
+														className={`${btnBase} ${
+															variants[a.variant || 'neutral']
+														}`}
 													>
 														{a.label}
 													</button>
