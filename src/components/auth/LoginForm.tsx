@@ -10,7 +10,7 @@ import travelHeroBg from '@/assets/travel-hero-bg.jpg';
 import { TwoFactorAuth } from './TwoFactorAuth';
 import { loginWithGithub, loginWithGoogle, loginWithMicrosoft } from './AuthProvider';
 import { login, validate2FA } from '@/services/securityService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export function LoginForm() {
@@ -169,9 +169,7 @@ export function LoginForm() {
 							<CardTitle className="text-xl text-gray-800 mb-1">
 								Explora el Mundo
 							</CardTitle>
-							<CardDescription className="text-sm text-gray-600 mb-2">
-								Inicia tu próxima aventura
-							</CardDescription>
+							
 							<div className="flex items-center justify-center text-xs text-gray-500">
 								<MapPin className="w-3 h-3 mr-1" />
 								Más de 150 destinos esperándote
@@ -249,6 +247,15 @@ export function LoginForm() {
 										)}
 									</button>
 								</div>
+
+								<div className="text-center mt-6">
+														<p className="text-sm text-muted-foreground">
+															¿Aun no tienes cuenta?{' '}
+															<Link to="/register" className="text-primary hover:underline font-medium">
+																Crea una cuenta
+															</Link>
+														</p>
+													</div>
 
 								<Button
 									type="submit"

@@ -1,11 +1,14 @@
 import axios from 'axios';
 
 // Lista de rutas que no deben ser interceptadas
-const EXCLUDED_ROUTES = ["/public"];
+const EXCLUDED_ROUTES = [
+  '/public/security/login',
+  '/public/security/validate-2fa',
+  '/public/security/register'
+];
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL
-  // (Quitamos el headers fijo para permitir multipart dinámico)
 });
 
 // Interceptor de solicitud

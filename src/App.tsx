@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react';
 import routes from './routes/index';
 import { DashboardLayout } from './components/layout/DashboardLayout';
 import { LoginForm } from './components/auth/LoginForm';
+import RegisterForm from './components/auth/RegisterForm';
 import ProtectedRoute from './auth/ProtectedRoute';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
 		<Router>
 			<Routes>
 				<Route path="/login" element={<LoginForm />} />
+				<Route path="/register" element={<RegisterForm />} />
 
 				{/* Rutas del dashboard */}
 				<Route element={<DashboardLayout />}>
