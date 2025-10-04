@@ -63,6 +63,6 @@ export function resolvePhotoUrl(p?: ProfileDto): string | undefined {
 }
 
 export async function toggle2FA(profileId: string, enable: boolean) {
-  const { data } = await api.patch(`/profiles/${profileId}/2fa`, { enable });
+  const { data } = await api.patch(`/profiles/${profileId}/twoFa`, { enable });
   return data as { twoFactorEnabled: boolean };
 }
