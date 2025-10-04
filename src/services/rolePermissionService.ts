@@ -73,3 +73,12 @@ export const getPermissionsForCheck = async (roleId: string) : Promise<Permissio
 		throw error
 	}
 };
+export const checkPermission = async (roleId: string,model:string,method:string,checked:boolean): Promise<void> => {
+	try {
+		const response = await api.patch(`/role-permission/check`,{ roleId, model, method, checked } )
+		console.log(response.data);	
+	} catch (error) {																
+		throw error;
+	}
+}
+
