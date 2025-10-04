@@ -1,6 +1,7 @@
 import { Permission } from '@/models/Permission';
 import api from '../interceptors/axiosInterceptor';
 import type { RolePermission } from '../models/RolePermission';
+import { PermissionsByModel } from '@/types/permisions';
 
 export const getRolePermission = async (): Promise<RolePermission[]> => {
 	try {
@@ -61,5 +62,14 @@ export const getPermissionsToAddRole = async (roleId: string): Promise<Permissio
 		return response.data;
 	} catch (error) {
 		throw error;
+	}
+};
+	
+export const getPermissionsForCheck = async (roleId: string) : Promise<PermissionsByModel> => {
+	try {
+		const response = await api.get(`/role/${roleId}/permissions`)
+		return response.data
+	} catch (error) {
+		throw error
 	}
 };
