@@ -230,7 +230,7 @@ const PermissionPage: React.FC = () => {
 
 	useEffect(() => {
 		loadData();
-		if (id) loadPermissionToAdd;
+		if (id) loadPermissionToAdd();
 	}, []);
 
 	return (
