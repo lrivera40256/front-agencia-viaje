@@ -18,14 +18,14 @@ const mainItems = [
 ];
 
 const quickItems = [
-	{ title: 'Ofertas Especiales', url: '/ofertas', icon: Star },
+	// { title: 'Ofertas Especiales', url: '/ofertas', icon: Star },
 	// { title: "Favoritos", url: "/favoritos", icon: Heart },
 	// { title: "Tickets", url: "/tickets", icon: Ticket },
 ];
 
 const accountItems = [
 	{ title: 'Mi Perfil', url: '/perfil', icon: User },
-	{ title: 'Configuración', url: '/configuracion', icon: Settings },
+	// { title: 'Configuración', url: '/configuracion', icon: Settings },
 ];
 
 export function AppSidebar() {
@@ -85,7 +85,7 @@ export function AppSidebar() {
 				</SidebarGroup>
 
 				{/* Quick Access */}
-				<SidebarGroup>
+				{/* <SidebarGroup>
 					<SidebarGroupLabel className="text-travel-navy font-semibold">
 						{!isCollapsed && 'Acceso Rápido'}
 					</SidebarGroupLabel>
@@ -103,7 +103,7 @@ export function AppSidebar() {
 							))}
 						</SidebarMenu>
 					</SidebarGroupContent>
-				</SidebarGroup>
+				</SidebarGroup> */}
 
 				{/* Account */}
 				<div className="mt-auto">
