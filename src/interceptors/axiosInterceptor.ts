@@ -47,11 +47,17 @@ api.interceptors.response.use(
     const isExcluded = EXCLUDED_ROUTES.some(route => endpoint.includes(route));
     const status = error?.response?.status;
 
-    if (status === 401 && !isExcluded) {
+    if (status === 403 && !isExcluded) {
       // Mantengo limpieza de token que ya tenías
       // localStorage.removeItem('token');
       window.location.href = '/';
     }
+        if (status === 401 && !isExcluded) {
+      // Mantengo limpieza de token que ya tenías
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+
 
     return Promise.reject(error);
   }
