@@ -5,6 +5,9 @@ import Form, { FormField } from '../components/Form';
 import Table from '../components/Table';
 import { useNavigate } from 'react-router-dom';
 import { Hand } from 'lucide-react';
+import { set } from 'date-fns';
+import { toast } from 'sonner';
+import { LoadingOverlay } from '@/components/Loader';
 
 const userFields: FormField[] = [
 	{ name: 'name', label: 'Nombre', placeholder: 'Ingresa el nombre', required: true },
@@ -35,7 +38,7 @@ const UserPage: React.FC = () => {
 	const [deletingId, setDeletingId] = useState<string | null>(null);
 	const [showForm, setShowForm] = useState(false);
 	const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [allUsers, setAllUsers] = useState<User[]>([]);
+	const [allUsers, setAllUsers] = useState<User[]>([]);
 	const [filter, setFilter] = useState('');
 	const navigate = useNavigate();
 	const closeForm = () => {
@@ -48,44 +51,44 @@ const UserPage: React.FC = () => {
 		try {
 			const data = await getUsers();
 			setUsers(data);
-      setAllUsers(data);
+			setAllUsers(data);
 			console.log(data);
 		} finally {
 			setLoading(false);
 		}
 	};
 
-  const handleSearch = async (q: string) => {
-    setFilter(q);
-    if (!q.trim()) {
-      // restaurar lista completa
-      setUsers(allUsers);
-      return;
-    }
-    // Si parece un email (contiene @) intenta llamada directa
-    if (q.includes('@')) {
-      setLoading(true);
-      try {
-        const found = await getUserByEmail(q.trim());
-        setUsers(found ? [found] : []);
-      } catch {
-        // No encontrado -> lista vacía
-        setUsers([]);
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-    // Filtro local por nombre o email
-    const lower = q.toLowerCase();
-    setUsers(
-      allUsers.filter(
-        u =>
-          u.name?.toLowerCase().includes(lower) ||
-          u.email?.toLowerCase().includes(lower)
-      )
-    );
-  };
+	const handleSearch = async (q: string) => {
+		setFilter(q);
+		if (!q.trim()) {
+			// restaurar lista completa
+			setUsers(allUsers);
+			return;
+		}
+		// Si parece un email (contiene @) intenta llamada directa
+		if (q.includes('@')) {
+			setLoading(true);
+			try {
+				const found = await getUserByEmail(q.trim());
+				setUsers(found ? [found] : []);
+			} catch {
+				// No encontrado -> lista vacía
+				setUsers([]);
+			} finally {
+				setLoading(false);
+			}
+			return;
+		}
+		// Filtro local por nombre o email
+		const lower = q.toLowerCase();
+		setUsers(
+			allUsers.filter(
+				u =>
+					u.name?.toLowerCase().includes(lower) ||
+					u.email?.toLowerCase().includes(lower)
+			)
+		);
+	};
 
 	const visibleUsers = useMemo(() => {
 		const q = filter.trim().toLowerCase();
@@ -98,11 +101,13 @@ const UserPage: React.FC = () => {
 	const handleDelete = async (user: User) => {
 		if (!confirm(`¿Eliminar usuario "${user.name}"?`)) return;
 		setDeletingId(user._id);
+		setLoading(true);
 		try {
 			await deleteUserById(user._id);
 			setUsers((prev) => prev.filter((u) => u._id !== user._id));
 		} finally {
 			setDeletingId(null);
+			setLoading(false);
 		}
 	};
 
@@ -147,7 +152,14 @@ const UserPage: React.FC = () => {
 				email: values.email,
 				password: values.password,
 			};
-			await createUser(payload);
+			try {
+				await createUser(payload);
+			} catch (error) {
+				toast.error('Error al crear el usuario. Es posible que el email ya exista.');
+
+			} finally {
+				setLoading(false);
+			}
 		}
 		closeForm();
 		loadData();
@@ -170,6 +182,7 @@ const UserPage: React.FC = () => {
 
 	return (
 		<div>
+			{loading && <LoadingOverlay />}
 			<Table
 				tableName="Usuarios"
 				titles={['Nombre', 'Email']}
@@ -190,7 +203,7 @@ const UserPage: React.FC = () => {
 					onSearch: handleSearch,
 					placeholder: 'Buscar usuario...',
 					debounceMs: 400,
-          hideButton: true
+					hideButton: true
 				}}
 			/>
 

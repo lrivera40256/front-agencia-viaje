@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createUserRole, deleteUserRole, getRolesByUserId, getRolesToAddUser } from '@/services/userRoleService';
 import { getUserById } from '@/services/userService';
+import { LoadingOverlay } from '@/components/Loader';
 
 const RolePage: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -77,6 +78,7 @@ const RolePage: React.FC = () => {
 
   const deleteRoleById = async (row: Role) => {
     if (!confirm(`Eliminar rol "${row.name}"?`)) return;
+    setLoading(true);
     if (id) {
       try {
         await deleteUserRole(id, row._id);
@@ -86,6 +88,7 @@ const RolePage: React.FC = () => {
       } finally {
         loadData();
         loadRolesToAdd();
+        setLoading(false);
       }
     } else {
       try {
@@ -94,6 +97,8 @@ const RolePage: React.FC = () => {
         loadData();
       } catch (error) {
         toast.error('Error al eliminar rol');
+      }finally{
+        setLoading(false);
       }
     }
   };
@@ -112,12 +117,14 @@ const RolePage: React.FC = () => {
   const addRole = () => setShowForm(true);
 
   const handleViewRoles = (role: Role) => {
-    navigate(`/permisos/${role._id}`);
+    if(id)navigate(`/permisos/${role._id}`);
+    else navigate(`/tablaPermiso/${role._id}`);
   };
 
   const onSubmit = async (role: Role) => {
     if (!validateForm(role)) return;
     if (isEditRole) {
+
       await updateRole(role);
       toast.success('Rol actualizado exitosamente');
     } else {
@@ -188,6 +195,7 @@ const RolePage: React.FC = () => {
 
   return (
     <div>
+      {loading && <LoadingOverlay />}
       <Table
         tableName={id?"Roles del usuario "+userName:"Roles"}
         titles={['Nombre', 'Descripción']}

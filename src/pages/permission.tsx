@@ -16,6 +16,8 @@ import {
 	deleteRolePermissionByRoleAndPermission,
 	getPermissionsToAddRole,
 } from '@/services/rolePermissionService';
+import { set } from 'date-fns';
+import { LoadingOverlay } from '@/components/Loader';
 
 const initialValues: Permission = {
 	url: '',
@@ -91,6 +93,8 @@ const PermissionPage: React.FC = () => {
 				setPermissions(permissions);
 			} catch (error) {
 				throw error;
+			}finally{
+				setLoading(false);
 			}
 		}
 	};
@@ -115,6 +119,7 @@ const PermissionPage: React.FC = () => {
 	const handleDelete = async (permission: Permission) => {
 		loadData();
 		if (!confirm(`¿Eliminar permiso "${permission.method}: ${permission.url}"?`)) return;
+		setLoading(true);
 		if (id) {
 			try {
 				await deleteRolePermissionByRoleAndPermission(id, permission._id);
@@ -124,6 +129,7 @@ const PermissionPage: React.FC = () => {
 			} finally {
 				loadData();
 				loadPermissionToAdd();
+				setLoading(false);
 			}
 		} else {
 			try {
@@ -131,6 +137,8 @@ const PermissionPage: React.FC = () => {
 				setPermissions((prev) => prev.filter((u) => u._id !== permission._id));
 			} catch (error) {
 				throw error;
+			}finally{
+				setLoading(false);
 			}
 		}
 	};
@@ -165,22 +173,35 @@ const PermissionPage: React.FC = () => {
 			alert('La URL es obligatoria');
 			return;
 		}
-
+		setLoading(true);
 		if (editingPermission) {
-			await modifiedPermission({
-				_id: editingPermission._id,
-				url: values.url,
-				method: values.method,
-				model: values.model,
-			});
+			try{
+				await modifiedPermission({
+					_id: editingPermission._id,
+					url: values.url,
+					method: values.method,
+					model: values.model,
+				});
+			} catch (error) {
+				toast.error('Error al modificar permiso');
+				throw error;
+			}finally{
+				setLoading(false);
+			}
 		} else {
 			const payload = {
 				url: values.url,
 				method: values.method,
 				model: values.model,
 			};
-			console.log(payload);
-			await createPermission(payload);
+			try {
+				await createPermission(payload);
+			} catch (error) {
+				toast.error('Error al crear permiso');
+				throw error;
+			}finally{
+				setLoading(false);
+			}
 		}
 		closeForm();
 		loadData();
@@ -216,6 +237,7 @@ const PermissionPage: React.FC = () => {
 	}
 
 	const addPermissionToRole = async (values) => {
+		setLoading(true);
 		try {
 			await createRolePermission(id, values.permission);
 			toast.success('Permiso agregado al rol exitosamente');
@@ -235,6 +257,7 @@ const PermissionPage: React.FC = () => {
 
 	return (
 		<div>
+			 {loading && <LoadingOverlay />}
 			<Table
 				tableName={id ? 'Permisos del rol ' + id : 'Permisos'}
 				data={permissions}
