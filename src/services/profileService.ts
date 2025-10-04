@@ -28,32 +28,11 @@ export async function changeProfilePassword(
   return api.patch(`/profiles/${profileId}/password`, { currentPassword, newPassword });
 }
 
-export function decodeJwt<T = any>(token: string): T | null {
-  try {
-    const parts = token.split('.');
-    if (parts.length !== 3) return null;
-    const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-    const json = decodeURIComponent(
-      atob(payload)
-        .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    );
-    return JSON.parse(json) as T;
-  } catch {
-    return null;
-  }
-}
 
-export function getUserIdFromToken(): { id?: string } {
-  const token = localStorage.getItem('token');
-  if (!token) return {};
-  const payload = decodeJwt<any>(token);
-  return { id: payload?._id || payload?.sub || payload?.id };
-}
 
-export async function fetchProfileByUserId(userId: string): Promise<ProfileDto | null> {
-  const { data } = await api.get(`/profiles/user/${userId}`);
+
+export async function fetchProfileByUserId(): Promise<ProfileDto | null> {
+  const { data } = await api.get(`/profiles/user`);
   return data ?? null;
 }
 

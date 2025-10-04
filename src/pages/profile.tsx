@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import {
 	fetchProfileByUserId,
-	getUserIdFromToken,
 	patchProfile,
 	uploadProfilePhoto,
 	saveOAuthPhotoUrl,
@@ -35,13 +34,9 @@ const Profile = () => {
 
 	useEffect(() => {
 		const load = async () => {
-			const { id } = getUserIdFromToken();
-			if (!id) {
-				setLoading(false);
-				return;
-			}
+			
 			try {
-				const prof = await fetchProfileByUserId(id);
+				const prof = await fetchProfileByUserId();
 				if (prof) {
 					setProfile(prof);
 					setEditedPhone(prof.phone || '');
