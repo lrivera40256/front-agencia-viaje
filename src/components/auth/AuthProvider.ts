@@ -51,7 +51,7 @@ async function logi(navigate: NavigateFunction) {
 	const response = await login(null, idToken);
 	if (response.status == "200") {
 		localStorage.setItem("token", idToken!);
-		navigate('/seguridad');
+		navigate('/');
 	} else {
 		toast.error("No se pudo iniciar sesión");
 	}
