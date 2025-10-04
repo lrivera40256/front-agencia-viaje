@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getUserRole, deleteUserRoleById, createUserRole } from '../services/userRoleService';
+import { getUserRole, deleteUserRole, createUserRole } from '../services/userRoleService';
 import { getUsers } from '../services/userService';
 import { getRoles } from '../services/roleService';
 import Table from '../components/Table';
@@ -52,7 +52,7 @@ const UserRolePage: React.FC = () => {
 	};
 
 	const handleDelete = async (row: any) => {
-		await deleteUserRoleById(row._id);
+		await deleteUserRole(row.userId, row.roleId); // servicio espera (id_user, id_role)
 		loadUserRoles();
 	};
 
