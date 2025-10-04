@@ -239,14 +239,16 @@ const PermissionPage: React.FC = () => {
 	const addPermissionToRole = async (values) => {
 		setLoading(true);
 		try {
+			setShowForm(false);
 			await createRolePermission(id, values.permission);
 			toast.success('Permiso agregado al rol exitosamente');
 		} catch (error) {
 			toast.error('Error al agregar permiso al rol');
 		} finally {
-			setShowForm(false);
 			loadData();
 			loadPermissionToAdd();
+			setLoading(false);
+			
 		}
 	};
 

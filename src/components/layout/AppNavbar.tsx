@@ -96,7 +96,7 @@ export function AppNavbar() {
                             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                                 <Avatar className="h-8 w-8">
                                     <AvatarImage 
-                                        src={profile?.photo.url || "/avatars/01.png"} 
+                                        src={profile?.photo?.url || "/avatars/01.png"} 
                                         alt={profile?.user.name || "Usuario"} 
                                     />
                                     <AvatarFallback className="bg-travel-ocean text-white">
