@@ -10,6 +10,7 @@ import { auth } from '../../utils/firebase';
 import { login, loginOAuth } from '@/services/securityService';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import api from '@/interceptors/axiosInterceptor';
 
 export const loginWithGoogle = async (navigate: NavigateFunction) => {
 	const result = await signInWithPopup(auth, new GoogleAuthProvider());
@@ -58,13 +59,12 @@ async function logi(navigate: NavigateFunction) {
 
 }
 export const logout = async () => {
-	try {
-		// 1) Cerrar sesión en Firebase (esto invalida la sesión del SDK en el navegador)
-		const response = await signOut(auth);
-		localStorage.removeItem('token');
-
-
-	} catch (e) {
-		console.error('Error al cerrar sesión de Firebase:', e);
-	}
-}
+  try {
+    await api.delete('/public/security/logout').catch(()=>{});
+    await signOut(auth); // Firebase
+  } catch (e) {
+    console.error('Error al cerrar sesión:', e);
+  } finally {
+    localStorage.removeItem('token');
+  }
+};
