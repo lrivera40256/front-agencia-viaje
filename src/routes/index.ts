@@ -1,5 +1,6 @@
 import SecurityPage from '@/pages/security';
 import { lazy } from 'react';
+const HomePage = lazy(() => import('../pages/Home'));
 const RolePage = lazy(() => import('../pages/roles'));
 const PermissionPage = lazy(() => import('../pages/permission'));
 const rolePermissionPage = lazy(() => import('../pages/rolePermission'));
@@ -8,6 +9,16 @@ const UserRolePage = lazy(() => import('../pages/userRole'));
 const ProfilePage = lazy(() => import('../pages/profile'));
 
 const coreRoutes = [
+	{
+		path: '/',
+		title: 'Inicio',
+		component: HomePage,
+	},
+	{
+		path: '/inicio',
+		title: 'Inicio',
+		component: HomePage,
+	},
 	{
 		path: '/roles/:id?',
 		title: 'roles',

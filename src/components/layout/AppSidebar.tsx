@@ -10,9 +10,12 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from '@/components/ui/sidebar';
-import { Plane, Star, User, Settings, Shield } from 'lucide-react';
+import { Plane, Star, User, Settings, Shield, Home } from 'lucide-react';
 
-const mainItems = [{ title: 'Seguridad', url: '/seguridad', icon: Shield }];
+const mainItems = [
+	{ title: 'Inicio', url: '/', icon: Home },
+	{ title: 'Seguridad', url: '/seguridad', icon: Shield }
+];
 
 const quickItems = [
 	{ title: 'Ofertas Especiales', url: '/ofertas', icon: Star },
@@ -49,7 +52,7 @@ export function AppSidebar() {
 								<Plane className="w-5 h-5 text-white" />
 							</div>
 							<div>
-								<h2 className="font-bold text-travel-navy">ViajaPlus</h2>
+								<h2 className="font-bold text-travel-navy">TravelPro</h2>
 								<p className="text-xs text-muted-foreground">Tu próxima aventura</p>
 							</div>
 						</div>
