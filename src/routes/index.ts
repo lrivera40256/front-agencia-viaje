@@ -11,7 +11,7 @@ const tablePermissionPage = lazy(()=> import('../pages/tablePermission'))
 
 const coreRoutes = [
 	{
-		path: '/tablaPermiso',
+		path: '/tablaPermiso/:id?',
 		title: 'tablaPermiso',
 		component: tablePermissionPage,
 	},
