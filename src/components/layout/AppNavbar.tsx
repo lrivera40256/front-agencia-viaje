@@ -94,10 +94,13 @@ export function AppNavbar() {
 								</div>
 							</DropdownMenuLabel>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem className="cursor-pointer">
+							<DropdownMenuItem
+								className="cursor-pointer"
+								onClick={() => navigate('/perfil')}
+							>
 								<User className="mr-2 h-4 w-4" />
 								<span>Mi Perfil</span>
-							</DropdownMenuItem>
+							</DropdownMenuItem> 
 							<DropdownMenuItem className="cursor-pointer">
 								<Settings className="mr-2 h-4 w-4" />
 								<span>Configuración</span>
@@ -108,7 +111,8 @@ export function AppNavbar() {
 									await logout();
 									navigate('/login');
 								}}
-							className="cursor-pointer text-destructive focus:text-destructive">
+								className="cursor-pointer text-destructive focus:text-destructive"
+							>
 								<LogOut className="mr-2 h-4 w-4" />
 								<span>Cerrar Sesión</span>
 							</DropdownMenuItem>
