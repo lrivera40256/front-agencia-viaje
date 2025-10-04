@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import {
-	fetchProfileByUserId,
+	getProfile,
 	patchProfile,
 	uploadProfilePhoto,
 	saveOAuthPhotoUrl,
@@ -36,7 +36,7 @@ const Profile = () => {
 		const load = async () => {
 			
 			try {
-				const prof = await fetchProfileByUserId();
+				const prof = await getProfile();
 				if (prof) {
 					setProfile(prof);
 					setEditedPhone(prof.phone || '');

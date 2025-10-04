@@ -31,7 +31,7 @@ export async function changeProfilePassword(
 
 
 
-export async function fetchProfileByUserId(): Promise<ProfileDto | null> {
+export async function getProfile(): Promise<ProfileDto | null> {
   const { data } = await api.get(`/profiles/user`);
   return data ?? null;
 }
