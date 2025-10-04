@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from "axios";
+import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,7 +10,7 @@ import travelHeroBg from '@/assets/travel-hero-bg.jpg';
 import { TwoFactorAuth } from './TwoFactorAuth';
 import { loginWithGithub, loginWithGoogle, loginWithMicrosoft } from './AuthProvider';
 import { login, validate2FA } from '@/services/securityService';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export function LoginForm() {
@@ -23,23 +23,26 @@ export function LoginForm() {
 	const [sessionId, setSessionId] = useState('');
 	const navigate = useNavigate();
 
-
 	const validateEmail = (email: string) => {
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		return emailRegex.test(email);
 	};
 
 	const extractAxiosMessage = (err: unknown): string => {
-  if (axios.isAxiosError(err)) {
-    const data = err.response?.data as any;
-    if (typeof data === 'string' && data.trim()) return data;
-    if (data && typeof data === 'object') return data.message || data.error || JSON.stringify(data);
-    const text = typeof (err.request as any)?.responseText === 'string' ? (err.request as any).responseText : '';
-    if (text) return text;
-    return err.response?.statusText || err.message || 'Error de autenticación';
-  }
-  return (err as any)?.message || 'Error de autenticación';
-};
+		if (axios.isAxiosError(err)) {
+			const data = err.response?.data as any;
+			if (typeof data === 'string' && data.trim()) return data;
+			if (data && typeof data === 'object')
+				return data.message || data.error || JSON.stringify(data);
+			const text =
+				typeof (err.request as any)?.responseText === 'string'
+					? (err.request as any).responseText
+					: '';
+			if (text) return text;
+			return err.response?.statusText || err.message || 'Error de autenticación';
+		}
+		return (err as any)?.message || 'Error de autenticación';
+	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -76,14 +79,34 @@ export function LoginForm() {
 		setIsLoading(true);
 		try {
 			const res = await login({ email, password });
-			console.log(res);
-			if (res?.['2fa_required'] && res.sessionId) {
-				setSessionId(res.sessionId);
-				setShowTwoFactor(true); // muestra el componente de 2FA
-			} else {
-				toast.error("No se pudo iniciar sesión");
-				setErrors({ email: 'No se pudo iniciar sesión', password: '' });
+			console.log('Login response:', res);
+
+			if (res['2fa_required']) {
+				// 2FA solicitado
+				if (res.sessionId) {
+					setSessionId(res.sessionId);
+					setShowTwoFactor(true);
+					return;
+				} else {
+					toast.error('Falta sessionId para 2FA');
+					return;
+				}
 			}
+
+			// 2FA no requerido: debe venir token
+			if (res.token) {
+				localStorage.setItem('token', res.token);
+				if (res.profileId) localStorage.setItem('profileId', res.profileId);
+				if (res.permissions) {
+					localStorage.setItem('permissions', JSON.stringify(res.permissions));
+				}
+				navigate('/profile', { replace: true });
+				return;
+			}
+
+			// Si llega aquí, respuesta incompleta
+			toast.error('Respuesta de login incompleta');
+			setErrors({ email: 'No se pudo iniciar sesión', password: '' });
 		} catch (err: any) {
 			const msg = extractAxiosMessage(err);
 			setErrors({
@@ -98,40 +121,36 @@ export function LoginForm() {
 	return (
 		<>
 			{showTwoFactor ? (
-      <TwoFactorAuth
-        email={email}
-        onBack={() => setShowTwoFactor(false)}
-        onVerify={async (code: string) => {
-          try {
-            const res = await validate2FA(sessionId, code);
-            if (!res.valid) throw new Error("Código inválido");
-            // Log del token para verificar que llega
-            console.log("Token recibido (JWT):", res.token);
-			localStorage.setItem('token', res.token);
-            setShowTwoFactor(false);
-            navigate('/seguridad', { replace: true });
-          } catch (err) {
-            const msg = extractAxiosMessage(err);
-            const m = msg.toLowerCase();
+				<TwoFactorAuth
+					email={email}
+					onBack={() => setShowTwoFactor(false)}
+					onVerify={async (code: string) => {
+						try {
+							const res = await validate2FA(sessionId, code);
+							if (!res.valid || !res.token) throw new Error('Código inválido');
 
-            // Si expiró o se excedieron intentos (o sesión inválida), cerrar 2FA y volver al login
-            if (
-              m.includes('expirad') ||          // "expirada"
-              m.includes('excedid') ||          // "excedidos"
-              (m.includes('sesión') && m.includes('no encontr')) || // "Sesión no encontrada"
-              (m.includes('session') && m.includes('not found'))
-            ) {
-              setShowTwoFactor(false);
-              setSessionId('');
-              // mostrar el mensaje en el login
-              setErrors({ email: '', password: msg });
-              return; // no propagar al 2FA
-            }
-
-            // Para otros errores (código incorrecto con intentos restantes), mostrar en el 2FA
-            throw new Error(msg);
-          }
-        }}
+							localStorage.setItem('token', res.token);
+							if (res.profileId) localStorage.setItem('profileId', res.profileId);
+							if (res.permissions) {
+								localStorage.setItem(
+									'permissions',
+									JSON.stringify(res.permissions)
+								);
+							}
+							setShowTwoFactor(false);
+							navigate('/profile', { replace: true });
+						} catch (err) {
+							const msg = extractAxiosMessage(err);
+							const m = msg.toLowerCase();
+							if (m.includes('expirad') || m.includes('excedid')) {
+								setShowTwoFactor(false);
+								setSessionId('');
+								setErrors({ email: '', password: msg });
+								return;
+							}
+							throw new Error(msg);
+						}
+					}}
 				/>
 			) : (
 				<div className="w-screen h-screen flex items-center justify-center px-4 py-2 relative overflow-hidden travel-gradient">
@@ -150,9 +169,7 @@ export function LoginForm() {
 							<CardTitle className="text-xl text-gray-800 mb-1">
 								Explora el Mundo
 							</CardTitle>
-							<CardDescription className="text-sm text-gray-600 mb-2">
-								Inicia tu próxima aventura
-							</CardDescription>
+							
 							<div className="flex items-center justify-center text-xs text-gray-500">
 								<MapPin className="w-3 h-3 mr-1" />
 								Más de 150 destinos esperándote
@@ -230,6 +247,15 @@ export function LoginForm() {
 										)}
 									</button>
 								</div>
+
+								<div className="text-center mt-6">
+														<p className="text-sm text-muted-foreground">
+															¿Aun no tienes cuenta?{' '}
+															<Link to="/register" className="text-primary hover:underline font-medium">
+																Crea una cuenta
+															</Link>
+														</p>
+													</div>
 
 								<Button
 									type="submit"

@@ -1,6 +1,12 @@
 import api from '../interceptors/axiosInterceptor';
 import type { User } from '../models/User';
 
+export interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export const getUsers = async (): Promise<User[]> => {
 	try {
 		const response = await api.get('/users');
@@ -30,6 +36,16 @@ export const createUser = async (user: User): Promise<void> => {
 		throw error;
 	}
 };
+
+export async function registerUser(payload: RegisterPayload) {
+  try {
+		const response = await api.post('/public/security/register', payload);
+		return response.data;
+	} catch (error) {
+		console.error('Error creating user:', error);
+		throw error;
+	}
+}
 
 export const updateUser = async (user: User): Promise<void> => {
 	try {
