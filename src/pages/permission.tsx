@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Permission } from '../models/Permission';
 import {
 	createPermission,
 	deletePermissionById,
 	getPermissions,
 	getPermissionsByRoleId,
+	getPermissionByModel,
 	modifiedPermission,
 } from '../services/permissionService';
 import Table, { TableAction } from '../components/Table';
@@ -16,6 +17,7 @@ import {
 	deleteRolePermissionByRoleAndPermission,
 	getPermissionsToAddRole,
 } from '@/services/rolePermissionService';
+import { url } from 'inspector';
 import { set } from 'date-fns';
 import { LoadingOverlay } from '@/components/Loader';
 
@@ -61,6 +63,8 @@ const PermissionPage: React.FC = () => {
 	const [showForm, setShowForm] = useState(false);
 	const [editingPermission, setEditingPermission] = useState<Permission | null>(null);
 	const [permissionToAdd, setPermissionToAdd] = useState<{ value: string; label: string }[]>([]);
+	const [allPermissions, setAllPermissions] = useState<Permission[]>([]);
+	const [filter, setFilter] = useState('');
 	const { id } = useParams<{ id: string }>();
 
 	const currentInitialValues: Permission = editingPermission
@@ -82,6 +86,7 @@ const PermissionPage: React.FC = () => {
 			try {
 				const data = await getPermissionsByRoleId(id);
 				setPermissions(data);
+				setAllPermissions(data);
 			} catch (error) {
 				toast.error('Error al cargar los roles del usuario');
 			} finally {
@@ -91,6 +96,7 @@ const PermissionPage: React.FC = () => {
 			try {
 				const permissions = await getPermissions();
 				setPermissions(permissions);
+				setAllPermissions(permissions);
 			} catch (error) {
 				throw error;
 			}finally{
@@ -98,6 +104,84 @@ const PermissionPage: React.FC = () => {
 			}
 		}
 	};
+
+	const handleSearch = async (q: string) => {
+			setFilter(q);
+			if (!q.trim()) {
+				// restaurar lista completa
+				setPermissions(allPermissions);
+				return;
+			}
+
+			if (q.includes('@')) {
+				setLoading(true);
+				try {
+					const found = await getPermissionByModel(q.trim());
+					setPermissions(found ? [found] : []);
+				} catch {
+					// No encontrado -> lista vacía
+					setPermissions([]);
+				} finally {
+					setLoading(false);
+				}
+				return;
+			}
+	
+			const lower = q.toLowerCase();
+			setPermissions(
+				allPermissions.filter(
+					(u) =>
+						u.model?.toLowerCase().includes(lower) || u.model?.toLowerCase().includes(lower)
+				)
+			);
+		};
+
+		const visiblePermissions = useMemo(() => {
+			const q = filter.trim().toLowerCase();
+			if (!q) return permissions;
+			return permissions.filter(
+				(u) => u.model?.toLowerCase().includes(q) || u.model?.toLowerCase().includes(q)
+			);
+		}, [permissions, filter]);
+
+	const handleSearch = async (q: string) => {
+			setFilter(q);
+			if (!q.trim()) {
+				// restaurar lista completa
+				setPermissions(allPermissions);
+				return;
+			}
+
+			if (q.includes('@')) {
+				setLoading(true);
+				try {
+					const found = await getPermissionByModel(q.trim());
+					setPermissions(found ? [found] : []);
+				} catch {
+					// No encontrado -> lista vacía
+					setPermissions([]);
+				} finally {
+					setLoading(false);
+				}
+				return;
+			}
+	
+			const lower = q.toLowerCase();
+			setPermissions(
+				allPermissions.filter(
+					(u) =>
+						u.model?.toLowerCase().includes(lower) || u.model?.toLowerCase().includes(lower)
+				)
+			);
+		};
+
+		const visiblePermissions = useMemo(() => {
+			const q = filter.trim().toLowerCase();
+			if (!q) return permissions;
+			return permissions.filter(
+				(u) => u.model?.toLowerCase().includes(q) || u.model?.toLowerCase().includes(q)
+			);
+		}, [permissions, filter]);
 
 	const loadPermissionToAdd = async () => {
 		setLoading(true);
@@ -262,12 +346,23 @@ const PermissionPage: React.FC = () => {
 			 {loading && <LoadingOverlay />}
 			<Table
 				tableName={id ? 'Permisos del rol ' + id : 'Permisos'}
-				data={permissions}
+				data={visiblePermissions.map((u) => ({
+					_id: u._id,
+					url: u.url,
+					metodo: u.method,
+					modelo: u.model,
+				}))}
 				titles={['Url', 'Método', 'Modelo']}
 				actions={getActions()}
 				onAdd={handleAddPermission}
 				emptyMessage={loading ? 'Cargando...' : 'No hay permisos'}
 				className="mt-4"
+				search={{
+					onSearch: handleSearch,
+					placeholder: 'Buscar permiso...',
+					debounceMs: 400,
+					hideButton: true,
+				}}
 			/>
 			{showForm && (
 				<div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -302,11 +397,7 @@ const PermissionPage: React.FC = () => {
 								onSubmit={id ? addPermissionToRole : handleSubmit}
 								onCancel={closeForm}
 								submitText={
-									editingPermission
-										? 'Guardar cambios'
-										: id
-											? 'Agregar'
-											: 'Crear'
+									editingPermission ? 'Guardar cambios' : id ? 'Agregar' : 'Crear'
 								}
 							/>
 						)}
