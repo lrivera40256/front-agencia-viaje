@@ -35,7 +35,7 @@ function App() {
 					})}
 					</Route>
 				</Route>
-				<Route path="*" element={<Navigate to="/seguridad" replace />} />
+				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>
 		</Router>
 	);

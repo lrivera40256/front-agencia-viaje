@@ -14,11 +14,7 @@ const coreRoutes = [
 		title: 'Inicio',
 		component: HomePage,
 	},
-	{
-		path: '/inicio',
-		title: 'Inicio',
-		component: HomePage,
-	},
+	
 	{
 		path: '/roles/:id?',
 		title: 'roles',
