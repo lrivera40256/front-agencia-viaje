@@ -113,7 +113,6 @@ const UserPage: React.FC = () => {
 		} finally {
 			loadData()
 			setDeletingId(null);
-			setLoading(false);
 		}
 	};
 

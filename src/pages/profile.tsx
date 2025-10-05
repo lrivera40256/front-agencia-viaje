@@ -18,16 +18,16 @@ import {
 } from '@/services/profileService';
 import { set } from 'date-fns';
 import { LoadingOverlay } from '@/components/Loader';
+import { useProfile } from '@/components/auth/ProfileProvider';
 
 const Profile = () => {
 	const [isEditing, setIsEditing] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [savingPhoto, setSavingPhoto] = useState(false);
-	const [profile, setProfile] = useState<ProfileDto | null>(null);
 	const [editedPhone, setEditedPhone] = useState('');
 	const [isOauth, setIsOauth] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+	const { profile, isLoading, refreshProfile } = useProfile();
 	// 2FA + Password states
 	const [twoFAEnabled, setTwoFAEnabled] = useState(false);
 	const [pwCurrent, setPwCurrent] = useState('');
@@ -38,12 +38,10 @@ const Profile = () => {
 		const load = async () => {
 
 			try {
-				const prof = await getProfile();
-				if (prof) {
-					setProfile(prof);
-					setEditedPhone(prof.phone || '');
-					setIsOauth(!!prof.user?.isOauth);
-					setTwoFAEnabled(!!prof.twoFactorEnabled);
+				if (profile) {
+					setEditedPhone(profile.phone || '');
+					setIsOauth(!!profile.user?.isOauth);
+					setTwoFAEnabled(!!profile.twoFactorEnabled);
 				}
 			} catch {
 				toast({
@@ -67,8 +65,8 @@ const Profile = () => {
 		if (!profile) return;
 		setLoading(true);
 		try {
-			const updated = await patchProfile(profile._id, { phone: editedPhone });
-			setProfile(updated);
+			await patchProfile(profile._id, { phone: editedPhone });
+			refreshProfile();
 			setIsEditing(false);
 			toast({ title: 'Perfil actualizado', description: 'Teléfono guardado.' });
 		} catch {
@@ -114,8 +112,8 @@ const Profile = () => {
 		if (!profile) return;
 		setSavingPhoto(true);
 		try {
-			const updated = await uploadProfilePhoto(profile._id, file);
-			setProfile(updated);
+			await uploadProfilePhoto(profile._id, file);
+			refreshProfile();
 			toast({ title: 'Foto actualizada', description: 'Imagen subida.' });
 		} catch {
 			toast({
@@ -135,8 +133,8 @@ const Profile = () => {
 		setSavingPhoto(true);
 		try {
 			const photo = await saveOAuthPhotoUrl(url);
-			const updated = await patchProfile(profile._id, { photoId: photo._id });
-			setProfile(updated);
+			await patchProfile(profile._id, { photoId: photo._id });
+			refreshProfile();
 			toast({ title: 'Foto registrada', description: 'URL guardada.' });
 		} catch {
 			toast({ title: 'Error', description: 'No se guardó la URL.', variant: 'destructive' });
@@ -151,7 +149,7 @@ const Profile = () => {
 			setLoading(true);
 			const res = await toggle2FA(profile._id, !twoFAEnabled);
 			setTwoFAEnabled(res.twoFactorEnabled);
-			setProfile({ ...profile, twoFactorEnabled: res.twoFactorEnabled });
+			refreshProfile();
 			toast({ title: '2FA', description: res.twoFactorEnabled ? 'Activado' : 'Desactivado' });
 		} catch {
 			toast({

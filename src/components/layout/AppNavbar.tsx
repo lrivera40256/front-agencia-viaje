@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useProfile } from '@/components/auth/ProfileProvider';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
 	DropdownMenu,
@@ -17,24 +18,14 @@ import { logout } from '../auth/AuthProvider';
 import { getProfile, ProfileDto } from '@/services/profileService';
 
 export function AppNavbar() {
+	const { profile, isLoading, refreshProfile } = useProfile();
 	const [notifications, setNotifications] = useState(3);
-	const [profile, setProfile] = useState<ProfileDto | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
-	const loadProfile = async () => {
-		setIsLoading(true);
-		try {
-			const data = await getProfile();
-			setProfile(data);
-		} catch (error) {
-			console.error('Error loading profile:', error);
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	
+	
 
 	useEffect(() => {
-		loadProfile();
+		refreshProfile();
 	}, []);
 	return (
 		<header className="h-16 border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50">
