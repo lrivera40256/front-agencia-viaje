@@ -48,11 +48,14 @@ const toFriendlyError = (err: unknown): Error => {
   }
   return new Error((err as any)?.message || 'Error de autenticación');
 };
-export async function login(user?: { email: string; password: string }, idToken?: string) {
+
+export async function login(user?: { email: string; password: string }, idToken?: string, captcha?: string) {
   try {
-    const body = {};
+    const body: Record<string, any> = {};
     if (user) body["user"] = user;
     if (idToken) body["token"] = idToken;
+    if (captcha) body.captcha = captcha;
+    console.log(body);
     const { data } = await api.post('/public/security/login', body);
 
     return data;
