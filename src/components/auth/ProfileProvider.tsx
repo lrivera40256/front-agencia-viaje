@@ -26,7 +26,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    loadProfile();
+    if (localStorage.getItem('token') != null) {
+        
+        loadProfile();
+    }
   }, []);
 
   return (
