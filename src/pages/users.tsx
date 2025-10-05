@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { User } from '../models/User';
-import { getUsers, getUserByEmail, deleteUserById, createUser, updateUser } from '../services/userService';
+import {
+	getUsers,
+	getUserByName,
+	deleteUserById,
+	createUser,
+	updateUser,
+} from '../services/userService';
 import Form, { FormField } from '../components/Form';
 import Table from '../components/Table';
 import { useNavigate } from 'react-router-dom';
@@ -69,7 +75,7 @@ const UserPage: React.FC = () => {
 		if (q.includes('@')) {
 			setLoading(true);
 			try {
-				const found = await getUserByEmail(q.trim());
+				const found = await getUserByName(q.trim());
 				setUsers(found ? [found] : []);
 			} catch {
 				// No encontrado -> lista vacía
@@ -83,9 +89,8 @@ const UserPage: React.FC = () => {
 		const lower = q.toLowerCase();
 		setUsers(
 			allUsers.filter(
-				u =>
-					u.name?.toLowerCase().includes(lower) ||
-					u.email?.toLowerCase().includes(lower)
+				(u) =>
+					u.name?.toLowerCase().includes(lower) || u.email?.toLowerCase().includes(lower)
 			)
 		);
 	};

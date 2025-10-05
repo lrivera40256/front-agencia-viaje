@@ -17,12 +17,12 @@ export const getUsers = async (): Promise<User[]> => {
 	}
 };
 
-export const getUserByEmail = async (email: string): Promise<User> => {
+export const getUserByName = async (name: string): Promise<User> => {
 	try {
-		const response = await api.get(`/users/email/${email}`);
+		const response = await api.get(`/users/name/${name}`);
 		return response.data;
 	} catch (error) {
-		console.error('Error fetching user by email:', error);
+		console.error('Error fetching user by name:', error);
 		throw error;
 	}
 };

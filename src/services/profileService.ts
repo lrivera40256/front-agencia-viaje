@@ -17,7 +17,7 @@ export interface ProfileDto {
   phone?: string;
   user?: UserDto;
   photo?: PhotoDto | null;
-  twoFactorEnabled?: boolean; // <-- NUEVO / ahora el front lo lee de Profile
+  twoFactorEnabled?: boolean;
 }
 
 export async function changeProfilePassword(
