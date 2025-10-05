@@ -19,6 +19,15 @@ export const getPermissionById = async (id: string): Promise<Permission> => {
 	}
 };
 
+export const getPermissionByModel = async (model: string): Promise<Permission> => {
+	try {
+		const response = await api.get(`/permissions/model/${model}`);
+		return response.data;
+	} catch (error) {
+		throw error;
+	}
+};
+
 export const createPermission = async (permission: Permission): Promise<void> => {
 	try {
 		const response = await api.post(`permissions`, permission);
