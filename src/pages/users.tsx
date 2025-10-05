@@ -106,6 +106,7 @@ const UserPage: React.FC = () => {
 			await deleteUserById(user._id);
 			setUsers((prev) => prev.filter((u) => u._id !== user._id));
 		} finally {
+			loadData()
 			setDeletingId(null);
 			setLoading(false);
 		}
