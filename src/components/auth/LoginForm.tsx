@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,7 @@ import { loginWithGithub, loginWithGoogle, loginWithMicrosoft } from './AuthProv
 import { login, validate2FA } from '@/services/securityService';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 export function LoginForm() {
 	const [email, setEmail] = useState('');
@@ -46,7 +47,7 @@ export function LoginForm() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		console.log('Subiendo', { email, password });
+		console.log('Subiendo', { email, password, captcha });
 
 		// limpiar errores
 		setErrors({ email: '', password: '' });
@@ -76,9 +77,16 @@ export function LoginForm() {
 			return;
 		}
 
+		const token = captcha.current?.getValue();
+		if (!token) {
+			toast.error('Completa el captcha');
+			setIsLoading(false);
+			return;
+		}
+
 		setIsLoading(true);
 		try {
-			const res = await login({ email, password });
+			const res = await login({ email, password }, undefined, token);
 			console.log('Login response:', res);
 
 			if (res['2fa_required']) {
@@ -116,6 +124,12 @@ export function LoginForm() {
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	const captcha = useRef<ReCAPTCHA>(null);
+
+	const onChange = () => {
+		console.log(captcha.current.getValue());
 	};
 
 	return (
@@ -161,7 +175,7 @@ export function LoginForm() {
 					/>
 					<div className="absolute inset-0 travel-overlay" />
 
-					<Card className="w-full max-w-sm auth-card-blur auth-glow animate-fade-in relative z-10 max-h-[90vh] overflow-hidden">
+					<Card className="w-full max-w-sm auth-card-blur auth-glow animate-fade-in relative z-10 max-h-[90vh] overflow-hidden overflow-y-auto">
 						<CardHeader className="text-center pb-3">
 							<div className="mx-auto mb-2 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
 								<Plane className="w-5 h-5 text-white" />
@@ -169,7 +183,7 @@ export function LoginForm() {
 							<CardTitle className="text-xl text-gray-800 mb-1">
 								Explora el Mundo
 							</CardTitle>
-							
+
 							<div className="flex items-center justify-center text-xs text-gray-500">
 								<MapPin className="w-3 h-3 mr-1" />
 								Más de 150 destinos esperándote
@@ -247,15 +261,24 @@ export function LoginForm() {
 										)}
 									</button>
 								</div>
-
+								<div className="flex justify-center">
+									<ReCAPTCHA
+										ref={captcha}
+										sitekey={import.meta.env.VITE_CAPTCHA}
+										onChange={onChange}
+									/>
+								</div>
 								<div className="text-center mt-6">
-														<p className="text-sm text-muted-foreground">
-															¿Aun no tienes cuenta?{' '}
-															<Link to="/register" className="text-primary hover:underline font-medium">
-																Crea una cuenta
-															</Link>
-														</p>
-													</div>
+									<p className="text-sm text-muted-foreground">
+										¿Aun no tienes cuenta?{' '}
+										<Link
+											to="/register"
+											className="text-primary hover:underline font-medium"
+										>
+											Crea una cuenta
+										</Link>
+									</p>
+								</div>
 
 								<Button
 									type="submit"
