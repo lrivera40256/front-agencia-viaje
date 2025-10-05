@@ -144,45 +144,6 @@ const PermissionPage: React.FC = () => {
 			);
 		}, [permissions, filter]);
 
-	const handleSearch = async (q: string) => {
-			setFilter(q);
-			if (!q.trim()) {
-				// restaurar lista completa
-				setPermissions(allPermissions);
-				return;
-			}
-
-			if (q.includes('@')) {
-				setLoading(true);
-				try {
-					const found = await getPermissionByModel(q.trim());
-					setPermissions(found ? [found] : []);
-				} catch {
-					// No encontrado -> lista vacía
-					setPermissions([]);
-				} finally {
-					setLoading(false);
-				}
-				return;
-			}
-	
-			const lower = q.toLowerCase();
-			setPermissions(
-				allPermissions.filter(
-					(u) =>
-						u.model?.toLowerCase().includes(lower) || u.model?.toLowerCase().includes(lower)
-				)
-			);
-		};
-
-		const visiblePermissions = useMemo(() => {
-			const q = filter.trim().toLowerCase();
-			if (!q) return permissions;
-			return permissions.filter(
-				(u) => u.model?.toLowerCase().includes(q) || u.model?.toLowerCase().includes(q)
-			);
-		}, [permissions, filter]);
-
 	const loadPermissionToAdd = async () => {
 		setLoading(true);
 		try {
