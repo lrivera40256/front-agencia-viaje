@@ -1,5 +1,5 @@
-import api from '../interceptors/axiosInterceptor';
-import type { Role } from '../models/Role';
+import api from '../../../interceptors/axiosInterceptor';
+import type { Role } from '../../../models/Role';
 
 export const getRoles = async (): Promise<Role[]> => {
 	try {

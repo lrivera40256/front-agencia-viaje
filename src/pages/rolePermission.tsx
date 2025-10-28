@@ -8,7 +8,7 @@ import type { RolePermission } from '../models/RolePermission';
 import Table from '../components/Table';
 import Form from '../components/Form';
 import { getPermissions } from '../services/permissionService';
-import { getRoles } from '@/services/roleService';
+import { getRoles } from '@/features/roles/services/roleService';
 import { toast } from 'sonner';
 
 const rolePermissionPage: React.FC = () => {

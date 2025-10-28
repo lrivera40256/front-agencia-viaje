@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getUserRole, deleteUserRole, createUserRole } from '../services/userRoleService';
 import { getUsers } from '../services/userService';
-import { getRoles } from '../services/roleService';
+import { getRoles } from '../features/roles/services/roleService';
 import Table from '../components/Table';
 import Form, { FormField } from '../components/Form';
 

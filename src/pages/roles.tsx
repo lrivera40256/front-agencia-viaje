@@ -5,7 +5,7 @@ import {
 	getRoles,
 	getRoleByName,
 	updateRole,
-} from '../services/roleService';
+} from '../features/roles/services/roleService';
 import type { Role } from '../models/Role';
 import Table, { TableAction } from '../components/Table';
 import { Trash2, Plus } from 'lucide-react';

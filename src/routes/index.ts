@@ -1,7 +1,7 @@
 import SecurityPage from '@/pages/security';
 import { lazy } from 'react';
 const HomePage = lazy(() => import('../pages/Home'));
-const RolePage = lazy(() => import('../pages/roles'));
+const RolePage = lazy(() => import('../features/roles/pages/RolePage'));
 const PermissionPage = lazy(() => import('../pages/permission'));
 const rolePermissionPage = lazy(() => import('../pages/rolePermission'));
 const UserPage = lazy(() => import('../pages/users'));
