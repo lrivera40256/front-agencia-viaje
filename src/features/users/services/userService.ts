@@ -1,5 +1,5 @@
-import api from '../interceptors/axiosInterceptor';
-import type { User } from '../models/User';
+import api from '@/interceptors/axiosInterceptor';
+import type { User } from '@/features/users/types/User';
 
 export interface RegisterPayload {
   name: string;

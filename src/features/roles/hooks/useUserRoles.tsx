@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { getRolesByUserId, getRolesToAddUser, createUserRole, deleteUserRole } from "@/services/userRoleService"
-import { getUserById } from "@/services/userService"
+import { getUserById } from "@/features/users"
 import type { Role } from "../types/role.types"
 import { FormField } from "@/components/form/types"
 

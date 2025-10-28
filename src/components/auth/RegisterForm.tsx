@@ -8,7 +8,7 @@ import { Plane, Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, Link } from 'react-router-dom';
-import { registerUser } from '@/services/userService';
+import { registerUser } from '@/features/users';
 
 import * as z from 'zod';
 

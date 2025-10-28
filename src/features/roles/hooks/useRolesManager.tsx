@@ -9,7 +9,7 @@ export function useRolesManager() {
   const { id } = useParams<{ id?: string }>()
   const navigate = useNavigate()
   const isUserMode = Boolean(id)
-
+  
   const base: GlobalRoles | UserRoles = isUserMode
     ? (useUserRoles(id!) as UserRoles)
     : (useRoles() as GlobalRoles)
