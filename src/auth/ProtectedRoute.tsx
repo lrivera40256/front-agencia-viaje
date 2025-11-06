@@ -1,14 +1,17 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useAuthContext } from "@/features/auth/contexts/AuthProvider";
+import { ReactNode } from "react";
 
-// Función para verificar si el usuario está autenticado
-const isAuthenticated = () => {
-    let token = localStorage.getItem("token");
-    return token ? true : false;
-};
+interface ProtectedRouteProps {
+  children: ReactNode;
+}
 
-// Componente de Ruta Protegida
-const ProtectedRoute = () => {    
-    return isAuthenticated() ? <Outlet /> : <Navigate to="/login" replace />;
-};
+export default function ProtectedRoute({ children }: ProtectedRouteProps) {
+  const { token } = useAuthContext();
 
-export default ProtectedRoute;
+  // Si no hay token, redirigir al login
+  if (!token) return <Navigate to="/login" replace />;
+
+  // Si está autenticado, renderiza el contenido protegido
+  return children;
+}

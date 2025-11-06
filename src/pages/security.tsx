@@ -1,6 +1,6 @@
 import PermissionPage from './permission';
-import RolePage from './roles';
-import UserPage from './users';
+import RolePage from '@/features/roles/pages/RolePage';
+import UserPage from '@/features/users/pages/UserPage';
 
 const SecurityPage: React.FC = () => {
 	return (

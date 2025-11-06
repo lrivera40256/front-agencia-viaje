@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useProfile } from '@/components/auth/ProfileProvider';
+import { useProfile } from '@/features/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
 	DropdownMenu,
@@ -14,18 +14,18 @@ import {
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Search, Bell, User, Settings, LogOut, Plane, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../auth/AuthProvider';
+import { useAuthContext } from '@/features/auth/contexts/AuthProvider';
 import { getProfile, ProfileDto } from '@/services/profileService';
 
 export function AppNavbar() {
-	const { profile, isLoading, refreshProfile } = useProfile();
+	const { profile, isLoading } = useProfile();
 	const [notifications, setNotifications] = useState(3);
 	const navigate = useNavigate();
-	
+	const { logout } = useAuthContext();
 	
 
 	useEffect(() => {
-		refreshProfile();
+		
 	}, []);
 	return (
 		<header className="h-16 border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50">

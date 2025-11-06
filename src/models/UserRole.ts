@@ -1,4 +1,4 @@
-import type { User } from './User';
+import type { User } from '../features/users/types/User';
 import type { Role } from './Role';
 
 export interface UserRole {
