@@ -2,9 +2,9 @@ import api from '@/interceptors/axiosInterceptor';
 import type { User } from '@/features/users/types/User';
 
 export interface RegisterPayload {
-  name: string;
-  email: string;
-  password: string;
+	name: string;
+	email: string;
+	password: string;
 }
 
 export const getUsers = async (): Promise<User[]> => {
@@ -39,6 +39,7 @@ export const getUserById = async (id: string): Promise<User> => {
 
 export const createUser = async (user: User): Promise<void> => {
 	try {
+		user = { ...user, isOauth: false };
 		const response = await api.post('/users', user);
 		return response.data;
 	} catch (error) {
@@ -48,7 +49,7 @@ export const createUser = async (user: User): Promise<void> => {
 };
 
 export async function registerUser(payload: RegisterPayload) {
-  try {
+	try {
 		const response = await api.post('/public/security/register', payload);
 		return response.data;
 	} catch (error) {
