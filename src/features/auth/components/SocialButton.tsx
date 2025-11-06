@@ -17,8 +17,8 @@ export function SocialButton({ config, onClick, className }: SocialButtonProps) 
 		<Button
 			type="button"
 			variant="outline"
-			onClick={() => {
-				onClick(config.name.toLowerCase())
+			onClick={async () => {
+				await onClick(config.name.toLowerCase())
 				navigate('/seguridad')
 			}}
 			className={cn(

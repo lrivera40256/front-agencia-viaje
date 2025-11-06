@@ -3,5 +3,5 @@ export * from "./components/SocialButton";
 export * from "./components/GitHubButton";
 export * from "./components/MicrosoftButton";
 export * from "./components/GoogleButton";
-export * from "./contexts/ProfileProvider";
+export * from "../profile/contexts/ProfileContext";
 export * from "./contexts/AuthProvider";

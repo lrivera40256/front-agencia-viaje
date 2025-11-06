@@ -3,6 +3,8 @@ import { createContext, useContext, useState, ReactNode, useEffect } from "react
 import type { AuthUser, AuthContextType } from "../types/auth.types";
 // 👈 tu archivo original
 import { auth } from "@/utils/firebase";
+import { useProfile } from "../../profile/contexts/ProfileContext";
+import { useOAuth } from "../hooks/useOAuth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -10,6 +12,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 	const [user, setUser] = useState<AuthUser | null>(null);
 	const [token, setToken] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
+	
 
 	// 🔹 Escucha cambios en Firebase Auth
 	useEffect(() => {
@@ -35,9 +38,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 	// 🔹 Logout global (Firebase + backend)
 	const logout = async () => {
-		// await firebaseLogout();
 		console.log("logout");
-		
+		const { logout: logoutProfile } = useOAuth();
+		await logoutProfile();
 		setUser(null);
 		setToken(null);
 		localStorage.removeItem("token");

@@ -62,6 +62,6 @@ export const useOAuth = () => {
         console.log('🔥 Result GitHub:', result);
         loginOAuth();
     }
-    return { googleOAuth, microsoftOAuth, githubOAuth };
+    return { googleOAuth, microsoftOAuth, githubOAuth ,loginOAuth,logout};
 
 }

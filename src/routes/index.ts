@@ -3,10 +3,8 @@ import { lazy } from 'react';
 const HomePage = lazy(() => import('../pages/Home'));
 const RolePage = lazy(() => import('../features/roles/pages/RolePage'));
 const PermissionPage = lazy(() => import('../pages/permission'));
-const rolePermissionPage = lazy(() => import('../pages/rolePermission'));
-const UserPage = lazy(() => import('../pages/users'));
-const UserRolePage = lazy(() => import('../pages/userRole'));
-const ProfilePage = lazy(() => import('../pages/profile'));
+const UserPage = lazy(() => import('@/features/users/pages/UserPage'));
+const ProfilePage = lazy(() => import('@/features/profile/pages/profilePage'));
 const tablePermissionPage = lazy(()=> import('../pages/tablePermission'))
 
 const coreRoutes = [
@@ -36,11 +34,7 @@ const coreRoutes = [
 		title: 'permisos',
 		component: PermissionPage,
 	},
-	{
-		path: '/roles-permisos',
-		title: 'roles-permisos',
-		component: rolePermissionPage,
-	},
+	
 	{
 		path: '/usuarios',
 		title: 'usuarios',
@@ -50,11 +44,6 @@ const coreRoutes = [
 		path: '/seguridad',
 		title: 'Seguridad',
 		component: SecurityPage,
-	},
-	{
-		path: '/usuarios-roles',
-		title: 'usuarios-roles',
-		component: UserRolePage,
 	},
 	{
 		path: '/perfil',
