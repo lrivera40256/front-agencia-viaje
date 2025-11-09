@@ -7,6 +7,9 @@ import { LoginPage, RegisterPage } from "@/features/auth/pages";
 import { AuthProvider } from "@/features/auth/contexts/AuthProvider";
 import ProtectedRoute from './auth/ProtectedRoute';
 import { ProfileProvider } from '@/features/profile/contexts/ProfileContext';
+import { WizardProvider } from './features/trip-form/contexts/wizardContext';
+import CreateTripWizard from './features/trip-form/pages/CreateTripWizard';
+import { SegmentProvider } from './features/trip-form/contexts/segmentContext';
 
 function App() {
   return (
@@ -14,9 +17,11 @@ function App() {
       <ProfileProvider>
         <Router>
           <Routes>
+            {/* Public pages */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
 
+            {/* Dashboard layout */}
             <Route element={<DashboardLayout />}>
               <Route
                 element={
@@ -27,17 +32,44 @@ function App() {
                   </ProtectedRoute>
                 }
               >
-                {routes.map(({ path, component: Component }, index) => (
+
+                {/* ✅ Rutas normales */}
+                {routes
+                  .filter(r => r.path !== "/form") // evita duplicar esta ruta
+                  .map(({ path, component: Component }, index) => (
+                    <Route
+                      key={index}
+                      path={path}
+                      element={
+                        <Suspense fallback={<div>Cargando...</div>}>
+                          <Component />
+                        </Suspense>
+                      }
+                    />
+                  ))}
+                <Route
+                  path="/form"
+                  element={
+                    <SegmentProvider>
+                      <WizardProvider>
+                        <Suspense fallback={<div>Cargando viaje...</div>}>
+                          <CreateTripWizard />
+                        </Suspense>
+                      </WizardProvider>
+                    </SegmentProvider>
+                  }
+                >
                   <Route
-                    key={index}
-                    path={path}
+                    index
                     element={
                       <Suspense fallback={<div>Cargando...</div>}>
-                        <Component />
+                        {/* Este componente debe estar en routes o importarlo aquí directamente */}
+                        <Outlet />
                       </Suspense>
                     }
                   />
-                ))}
+                </Route>
+
               </Route>
             </Route>
 
@@ -48,6 +80,5 @@ function App() {
     </AuthProvider>
   );
 }
-
 
 export default App;
