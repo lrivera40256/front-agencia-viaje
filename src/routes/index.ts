@@ -6,12 +6,18 @@ const PermissionPage = lazy(() => import('../pages/permission'));
 const UserPage = lazy(() => import('@/features/users/pages/UserPage'));
 const ProfilePage = lazy(() => import('@/features/profile/pages/profilePage'));
 const tablePermissionPage = lazy(()=> import('../pages/tablePermission'))
+const tripFormPage = lazy(() => import('../features/trip-form/pages/CreateTripWizard'));
 
 const coreRoutes = [
 	{
 		path: '/tablaPermiso/:id?',
 		title: 'tablaPermiso',
 		component: tablePermissionPage,
+	},
+	{
+		path: '/form',
+		title: 'formulario de viaje',
+		component: tripFormPage,
 	},
 	{
 		path: '/',
