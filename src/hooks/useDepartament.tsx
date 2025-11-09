@@ -2,7 +2,7 @@ import { Departament } from "@/models/departaments";
 import { DepartamentService } from "@/services/departamentService";
 import { useEffect, useState } from "react";
 
-const useDepartament = () => {
+export const useDepartament = () => {
     // Hook logic here
     const [departaments, setDepartaments] = useState<Departament[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
