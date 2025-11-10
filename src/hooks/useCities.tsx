@@ -16,7 +16,7 @@ export const useCities = () => {
      const refreshCitiesTo = async (departamentId: number) => {
         setCitiesTo([]);
         try {
-            const cities = await CitiesService.getCitiesByDepartament(departamentId);
+            const cities = await CitiesService.getCitiesWithAvailableHotels(departamentId);
             setCitiesTo(cities);
         } catch (error) {
             console.error("Error fetching cities:", error);
