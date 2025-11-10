@@ -10,6 +10,7 @@ import { ProfileProvider } from '@/features/profile/contexts/ProfileContext';
 import { WizardProvider } from './features/trip-form/contexts/wizardContext';
 import CreateTripWizard from './features/trip-form/pages/CreateTripWizard';
 import { SegmentProvider } from './features/trip-form/contexts/segmentContext';
+import { SegmentsProvider } from './features/trip-form/contexts/segmentsContext';
 
 function App() {
   return (
@@ -51,11 +52,13 @@ function App() {
                   path="/form"
                   element={
                     <SegmentProvider>
-                      <WizardProvider>
-                        <Suspense fallback={<div>Cargando viaje...</div>}>
-                          <CreateTripWizard />
-                        </Suspense>
-                      </WizardProvider>
+                      <SegmentsProvider>
+                        <WizardProvider>
+                          <Suspense fallback={<div>Cargando viaje...</div>}>
+                            <CreateTripWizard />
+                          </Suspense>
+                        </WizardProvider>
+                      </SegmentsProvider>
                     </SegmentProvider>
                   }
                 >
