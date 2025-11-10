@@ -1,6 +1,6 @@
 export interface Room {
     id: number;
-    roomNumber:number;
-    price_per_night;
-    isAvailable:boolean;
+    room_number:number;
+    price_per_night: number;
+    is_available:boolean;
 }
