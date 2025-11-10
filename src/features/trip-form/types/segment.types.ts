@@ -1,14 +1,17 @@
+import { Hotel } from "@/features/accommodation/types/hotel.type";
+import { City, Departament } from "./locationTrip.types";
 import { Vehicle } from "./vehicle.types";
+import { Room } from "@/features/accommodation/types/room.type";
 
 export interface Segment {
   order: number;
   dateFrom: Date;
   dateTo: Date;
-  departamentFrom: number;
-  departamentTo: number;
-  cityFrom: number;
-  cityTo: number;
+  departamentFrom: Departament;
+  departamentTo: Departament;
+  cityFrom: City;
+  cityTo: City;
   vehicle?: Vehicle;
-  hotel: number;
-  rooms: number[];
+  hotel: Hotel;
+  rooms: Room[];
 }
