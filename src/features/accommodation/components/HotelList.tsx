@@ -2,16 +2,16 @@ import { HotelItem } from "./HotelItem";
 import type { Hotel } from "../types/hotel.type";
 import { useState } from "react";
 import { useAccommodation } from "../hooks/useAccommodation";
+import { useWizard } from "@/features/trip-form/contexts/wizardContext";
+import { useSegment } from "@/features/trip-form/contexts/segmentContext";
 
 export const HotelList = () => {
   const {hotels} = useAccommodation();
-  
-  const [selected, setSelected] = useState<number>();  
-  if (selected) {
-    console.log("Hotel seleccionado ID:", selected);
-    return (
-      <div>Hotel Seleccionado ID: {selected}</div>
-    )
+  const { next } = useWizard();
+  const {segment,updateField}=useSegment();
+  const handleSelect = (hotelId: number) => {
+    updateField("hotel", hotelId);
+    next();
   }
 
   return (
@@ -27,7 +27,7 @@ export const HotelList = () => {
         "
       >
         {hotels?.map((hotel) => (
-          <HotelItem key={hotel.id} hotel={hotel} selected={selected === hotel.id} setSelected={setSelected} />
+          <HotelItem key={hotel.id} hotel={hotel} setSelected={handleSelect} />
         ))}
       </div>
     </div>
