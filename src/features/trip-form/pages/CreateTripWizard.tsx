@@ -8,6 +8,7 @@ import { useWizard } from "../contexts/wizardContext";
 import { useSegment } from "../contexts/segmentContext";
 import { HotelStepContainer } from "../containers/HotelStepComtainer";
 import { useSegments } from "../contexts/segmentsContext";
+import { SegmentListContainer } from "@/features/trip-journeys/containers/SegmentListContainer";
 import { RoomStepContainer } from "../containers/RoomStepContainer";
 
 const CreateTripWizard = () => {
@@ -35,6 +36,7 @@ const CreateTripWizard = () => {
                 {step === 2 && <DestinationContainer />}
                 {step === 3 && <HotelStepContainer />}
                 {step === 4 && <RoomStepContainer />}
+                {step === 5 && <SegmentListContainer/>}
                 {/* {step === 4 && <SegmentListContainer/>} */}
             </WizardLayout>
             <StepperControls />
