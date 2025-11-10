@@ -5,7 +5,7 @@ import { Hotel } from "../types/hotel.type";
 export class AccommodationService {
     static getAvailableHotelsByCity = async (idCity: number):Promise<Hotel[]> => {
         try {
-            const { data } = await api.get(`/hotels/${idCity}`);
+            const { data } = await api.get(`/hotels/city/${idCity}`);
             return data;
         } catch (error) {
             console.log(error);
