@@ -13,12 +13,19 @@ const CreateTripWizard = () => {
     const { step } = useWizard();
     const { create } = useSegment();
     const list = useSegments();
+    const initialized = useRef(false);
+
     useEffect(() => {
-        if (list.segments.length === 0) {
-            const newSeg = create(0);
-            list.addSegment(newSeg);
+        if (!initialized.current) {
+            initialized.current = true;
+
+            if (list.segments.length === 0) {
+                const newSeg = create(0);
+                list.addSegment(newSeg);
+            }
         }
     }, []);
+
 
     return (
         <div>
@@ -26,7 +33,7 @@ const CreateTripWizard = () => {
                 {step === 1 && <DateStepContainer />}
                 {step === 2 && <DestinationContainer />}
                 {step === 3 && <HotelStepContainer />}
-                {step === 4 && <SegmentListContainer/>}
+                {/* {step === 4 && <SegmentListContainer/>} */}
             </WizardLayout>
             <StepperControls />
         </div>
