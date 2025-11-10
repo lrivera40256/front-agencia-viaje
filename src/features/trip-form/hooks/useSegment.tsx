@@ -14,6 +14,7 @@ export function useTripSegment() {
       dateFrom: new Date(),
       dateTo: new Date(),
       hotel: 0,
+      rooms: [],
     };
     setSegment(newSeg);
     return newSeg;
