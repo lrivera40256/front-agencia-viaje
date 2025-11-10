@@ -10,4 +10,5 @@ export interface Segment {
   cityTo: number;
   vehicle?: Vehicle;
   hotel: number;
+  rooms: number[];
 }

@@ -21,7 +21,6 @@ export const WizardProvider = ({ children }: { children: ReactNode }) => {
 // Hook de acceso
 export const useWizard = () => {
   const context = useContext(WizardContext);
-  console.log(context);
   
   if (!context) {
     throw new Error("useWizard must be used within a WizardProvider");

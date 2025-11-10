@@ -40,6 +40,7 @@ export const useAccommodation = () => {
             fetchRooms(segment.hotel);
         }
     }, [segment.hotel]);
+   
     return {
         hotels,
         rooms,
