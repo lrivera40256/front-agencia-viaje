@@ -10,5 +10,14 @@ export const DepartamentService = {
             console.error("Error fetching departaments:", error);
             return [];
         }
+    },
+    getDepartmentsWithAvailableHotels: async (): Promise<Departament[]> => {
+        try {
+            const { data } = await api.get("/departments/available-hotels");
+            return data;
+        } catch (error) {
+            console.error("Error fetching departments with available hotels:", error);
+            return [];
+        }
     }
 };
