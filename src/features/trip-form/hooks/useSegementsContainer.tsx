@@ -5,7 +5,9 @@ export const useSegmentsContainer = () => {
     // Hook logic here
     const [segments, setSegments] = useState<Segment[]>([]);
     const addSegment = (segment: Segment) => {
-        setSegments(prev => [...prev, segment]);
+        if (!segments.find(s => s.order === segment.order)) {
+            setSegments(prev => [...prev, segment]);
+        }
     }
     return {
         segments,

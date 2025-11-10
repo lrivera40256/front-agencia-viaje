@@ -8,11 +8,12 @@ import { useSegmentsContainer } from "../hooks/useSegementsContainer";
 import { useWizard } from "../contexts/wizardContext";
 import { useSegment } from "../contexts/segmentContext";
 import { HotelStepContainer } from "../containers/HotelStepComtainer";
+import { useSegments } from "../contexts/segmentsContext";
 
 const CreateTripWizard = () => {
     const { step } = useWizard();
     const { create } = useSegment();
-    const list = useSegmentsContainer();
+    const list = useSegments();
     useEffect(() => {
         if (list.segments.length === 0) {
             const newSeg = create(0);
