@@ -3,14 +3,14 @@ import hotellmage from "@/assets/hotel.png";
 import { Hotel } from "../types/hotel.type";
 interface HotelItemProps {
     hotel: Hotel
-    setSelected: (hotelId: number) => void;
+    setSelected: (hotel: Hotel) => void;
 }
 
 export const HotelItem = ({ hotel, setSelected }: HotelItemProps) => {
 
     return (
         <div
-            onClick={() => setSelected(hotel.id)}
+            onClick={() => setSelected(hotel)}
             className={`
         rounded-xl overflow-hidden cursor-pointer transition-all
         bg-white border shadow-md hover:shadow-lg

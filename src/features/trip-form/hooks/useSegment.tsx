@@ -29,7 +29,10 @@ export function useTripSegment() {
 
     setSegment(s => s ? { ...s, [field]: value } : undefined);
   }
-
+  useEffect(() => {
+    console.log(segment);
+    
+  }, [segment]);
   return {
 
     updateField,

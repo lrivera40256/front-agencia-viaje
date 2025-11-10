@@ -9,8 +9,8 @@ export const HotelList = () => {
   const {hotels} = useAccommodation();
   const { next } = useWizard();
   const {segment,updateField}=useSegment();
-  const handleSelect = (hotelId: number) => {
-    updateField("hotel", hotelId);
+  const handleSelect = (hotel: Hotel) => {
+    updateField("hotel", hotel);
     next();
   }
 

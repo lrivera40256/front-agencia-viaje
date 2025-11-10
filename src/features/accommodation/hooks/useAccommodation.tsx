@@ -11,7 +11,7 @@ export const useAccommodation = () => {
     const { segment } = useSegment();
     const fetchHotels = async () => {
         try {
-            const response = await AccommodationService.getAvailableHotelsByCity(segment.cityTo);
+            const response = await AccommodationService.getAvailableHotelsByCity(segment.cityTo.id);
             setHotels(response);
         } catch (error) {
             console.log("error fetching hotels");
@@ -37,7 +37,7 @@ export const useAccommodation = () => {
 
     useEffect(() => {
         if (segment.hotel) {
-            fetchRooms(segment.hotel);
+            fetchRooms(segment.hotel.id);
         }
     }, [segment.hotel]);
    
