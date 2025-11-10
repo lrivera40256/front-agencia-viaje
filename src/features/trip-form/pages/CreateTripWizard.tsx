@@ -7,6 +7,7 @@ import { useEffect, useRef } from "react";
 import { useSegmentsContainer } from "../hooks/useSegementsContainer";
 import { useWizard } from "../contexts/wizardContext";
 import { useSegment } from "../contexts/segmentContext";
+import { HotelStepContainer } from "../containers/HotelStepComtainer";
 
 const CreateTripWizard = () => {
     const { step } = useWizard();
@@ -24,6 +25,7 @@ const CreateTripWizard = () => {
             <WizardLayout step={step}>
                 {step === 1 && <DateStepContainer />}
                 {step === 2 && <DestinationContainer />}
+                {step === 3 && <HotelStepContainer />}
             </WizardLayout>
             <StepperControls />
         </div>
