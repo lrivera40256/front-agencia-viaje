@@ -4,21 +4,30 @@ import { useEffect, useState } from "react";
 
 export const useDepartament = () => {
     // Hook logic here
-    const [departaments, setDepartaments] = useState<Departament[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const getDepartaments = async () => {
+    const getDepartamentsWithAvailableHotels = async ():Promise<Departament[]> => {
         setLoading(true);
         try {
-            const data = await DepartamentService.getAllDepartaments();
-            setDepartaments(data);
+            const data = await DepartamentService.getDepartmentsWithAvailableHotels();
+            return data;
         } catch (error) {
             console.error("Error fetching departaments:", error);
         } finally {
             setLoading(false);
         }
     };
-    useEffect(() => {
-        getDepartaments();
-    }, []);
-    return { departaments, loading };
+    const getDepartaments = async (): Promise<Departament[]> => {
+        setLoading(true);
+        try {
+            const data = await DepartamentService.getAllDepartaments();
+            return data;
+        } catch (error) {
+            console.error("Error fetching departaments:", error);
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
+    return { loading, getDepartaments, getDepartamentsWithAvailableHotels };
 };
