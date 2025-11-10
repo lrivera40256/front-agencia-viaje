@@ -7,7 +7,7 @@ import { useSegment } from "@/features/trip-form/contexts/segmentContext";
 export function RoomList() {
   const {segment, updateField} = useSegment();
   const { rooms } = useAccommodation();
-  const handleSetSelected = (selectedRooms: number[]) => {
+  const handleSetSelected = (selectedRooms: Room[]) => {
     updateField('rooms', selectedRooms);
   }
   const columns = [
@@ -38,7 +38,7 @@ export function RoomList() {
         columns={columns}
         selectable
         rowKey={(r) => r.id}
-        selectedKeys={segment.rooms}
+        selected={segment.rooms}
         onSelectChange={handleSetSelected}
       />
 

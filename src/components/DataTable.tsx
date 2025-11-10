@@ -6,8 +6,8 @@ type DataTableProps<T> = {
   columns: ColumnDef<T>[];
   selectable?: boolean;
   rowKey?: (row: T) => string | number;
-  selectedKeys?: (string | number)[];
-  onSelectChange?: (keys: (string | number)[]) => void;
+  selected?: T[];
+  onSelectChange?: (selected: T[]) => void;
 };
 
 export const DataTable = <T,>({
@@ -15,16 +15,15 @@ export const DataTable = <T,>({
   columns,
   selectable = false,
   rowKey = () => crypto.randomUUID(),
-  selectedKeys = [],
+  selected = [],
   onSelectChange = () => {},
 }: DataTableProps<T>) => {
-  const handleToggle = (key: string | number) => {
-    const exists = selectedKeys.includes(key);
-    const newKeys = exists
-      ? selectedKeys.filter((k) => k !== key)
-      : [...selectedKeys, key];
-
-    onSelectChange(newKeys);
+  const handleToggle = (row: T) => {
+    const exists = selected.includes(row);
+    const newSelected = exists
+      ? selected.filter((r) => r !== row)
+      : [...selected, row];
+    onSelectChange(newSelected);
   };
 
   return (
@@ -61,7 +60,7 @@ export const DataTable = <T,>({
           ) : (
             data.map((row) => {
               const key = rowKey(row);
-              const isSelected = selectedKeys.includes(key);
+              const isSelected = selected.includes(row);
 
               return (
                 <tr
@@ -75,7 +74,7 @@ export const DataTable = <T,>({
                       <input
                         type="checkbox"
                         checked={isSelected}
-                        onChange={() => handleToggle(key)}
+                        onChange={() => handleToggle(row)}
                         className="h-4 w-4"
                       />
                     </td>
