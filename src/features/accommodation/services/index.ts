@@ -14,7 +14,8 @@ export class AccommodationService {
     }
     static getAvailableRoomsByHotel = async (hotelId: number):Promise<Room[]> => {
         try {
-            const { data } = await api.get(`/rooms/${hotelId}`);
+            
+            const { data } = await api.get(`/rooms/hotel/${hotelId}`);
             return data;
         } catch (error) {
             console.log(error);
