@@ -5,11 +5,11 @@ import { City, Departament } from "../types/locationTrip.types";
 interface DestinationationPickerProps {
     title: string;
     departaments: Departament[];
-    departament: number | null;
-    city: number | null;
+    departament: Departament | null;
+    city: City | null;
     cities: City[];
-    onDepartamentChange: (deptId: number, type: 'from' | 'to') => void;
-    onCityChange: (cityId: number) => void;
+    onDepartamentChange: (dep:Departament, type: 'from' | 'to') => void;
+    onCityChange: (city: City) => void;
     color: string;
 }
 
@@ -51,8 +51,8 @@ export const DestinationationPicker = ({
     // ✅ Si el color no existe, usa azul por defecto
     const currentColor = colors[color as keyof typeof colors] ?? colors.blue;
 
-    const handleDepartamentChange = (deptId: number) => {
-        onDepartamentChange(deptId, title === "Origen" ? "from" : "to");
+    const handleDepartamentChange = (dep: Departament) => {
+        onDepartamentChange(dep, title === "Origen" ? "from" : "to");
     };
 
     return (
@@ -66,7 +66,7 @@ export const DestinationationPicker = ({
                 <Select
                     data={departaments}
                     title="Departamento"
-                    value={departament}
+                    value={departament.id}
                     onChange={handleDepartamentChange}
                     icon={<MapPin size={16} className={currentColor.icon} />}
                 />
@@ -74,7 +74,7 @@ export const DestinationationPicker = ({
                 <Select
                     data={cities}
                     title="Ciudad"
-                    value={city}
+                    value={city.id}
                     onChange={onCityChange}
                     icon={<MapPin size={16} className={currentColor.icon} />}
                 />

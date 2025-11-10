@@ -8,9 +8,9 @@ interface DataType{
 interface SelectProps {
   title: string;
   data: DataType[];
-  value: number;
+  value: number ;
   icon: ReactNode
-  onChange: (deptId: number) => void;
+  onChange: (value: DataType) => void;
 }
 
 export const Select = ({ title,data,value,onChange,icon}: SelectProps) => {
@@ -40,7 +40,13 @@ export const Select = ({ title,data,value,onChange,icon}: SelectProps) => {
           "
           style={{ width: "180px" }}
           value={value}
-          onChange={(e) => onChange(Number(e.target.value))}
+          onChange={(e) => {
+            const selectedId = Number(e.target.value);
+            const selectedItem = data.find(item => item.id === selectedId);
+            if (selectedItem) {
+              onChange(selectedItem);
+            }
+          }}
         >
           <option value="" className="text-gray-400">
             Selecciona…

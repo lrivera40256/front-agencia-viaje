@@ -12,13 +12,13 @@ export const DestinationContainer = () => {
     const [departamentsAvailables,setDepartamentsAvailables] = useState<Departament[]>([]);
     const { citiesFrom, refreshCitiesFrom, refreshCitiesTo, citiesTo } = useCities()
 
-    const handleDepartamentChange = (deptId: number, type: 'from' | 'to') => {
+    const handleDepartamentChange = (dep: Departament, type: 'from' | 'to') => {
         if (type === 'from') {
-            updateField('departamentFrom', deptId);
-            refreshCitiesFrom(deptId)
+            updateField('departamentFrom', dep);
+            refreshCitiesFrom(dep.id)
         } else {
-            updateField('departamentTo', deptId);
-            refreshCitiesTo(deptId)
+            updateField('departamentTo', dep);
+            refreshCitiesTo(dep.id)
         }
     };
     useEffect(() => {
@@ -31,8 +31,8 @@ export const DestinationContainer = () => {
         fetchDepartaments();
     }, []);
     useEffect(() => {
-        refreshCitiesFrom(segment.departamentFrom);
-        refreshCitiesTo(segment.departamentTo);
+        refreshCitiesFrom(segment.departamentFrom.id);
+        refreshCitiesTo(segment.departamentTo.id);
     }, [segment?.departamentFrom, segment?.departamentTo]);
     if (!citiesFrom || !citiesTo) {
         return null;
