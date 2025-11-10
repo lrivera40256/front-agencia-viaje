@@ -11,6 +11,7 @@ interface DestinationationsPickerProps {
   onCityFromChange: (cityId: number) => void;
   onCityToChange: (cityId: number) => void;
   departaments: Departament[];
+  departamentsAvailables: Departament[];
   citiesFrom: City[];
   citiesTo: City[];
 }
@@ -25,7 +26,8 @@ export const DestinationationsPicker = ({
   onCityToChange,
   departaments,
   citiesFrom,
-  citiesTo
+  citiesTo,
+  departamentsAvailables
 }: DestinationationsPickerProps) => {
 
   return (
@@ -44,7 +46,7 @@ export const DestinationationsPicker = ({
 
         <DestinationationPicker
           title="Destino"
-          departaments={departaments}
+          departaments={departamentsAvailables}
           departament={departamentTo}
           city={cityTo}
           cities={citiesTo}
