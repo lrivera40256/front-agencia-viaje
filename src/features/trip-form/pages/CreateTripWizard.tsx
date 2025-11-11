@@ -38,7 +38,6 @@ const CreateTripWizard = () => {
                 {step === 4 && <RoomStepContainer />}
                 {step === 5 && <VehicleStepContainer />}
                 {step === 6 && <SegmentListContainer/>}
-                {/* {step === 4 && <SegmentListContainer/>} */}
             </WizardLayout>
             <StepperControls />
         </div>

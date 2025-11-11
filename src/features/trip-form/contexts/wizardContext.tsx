@@ -1,18 +1,20 @@
 import { createContext, ReactNode, useContext } from "react";
 import { useTripWizard } from "../hooks/usetripWizard";
+import { configuration } from "../types/configuration.type";
 
 export interface wizardContextType {
   step: number;
   next: () => void;
   back: () => void;
+  configuration: configuration [];
 }
 
 const WizardContext = createContext<wizardContextType | undefined>(undefined);
 export const WizardProvider = ({ children }: { children: ReactNode }) => {
-  const {step, next, back} = useTripWizard();
+  const {step, next, back,configuration} = useTripWizard();
   return (
     <WizardContext.Provider
-      value={{ step, next, back }}
+      value={{ step, next, back,configuration }}
     >
       {children}
     </WizardContext.Provider>

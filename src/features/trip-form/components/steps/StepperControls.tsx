@@ -1,28 +1,28 @@
 import { useWizard } from "../../contexts/wizardContext";
 
-// features/trip-form/components/StepperControls.tsx
 export const StepperControls = () => {
-  const { step, next, back } = useWizard();
+  const { step, configuration } = useWizard();
+
+  // Todas las acciones válidas para este step
+  const buttons = configuration.filter((c) => c.steps.includes(step));
 
   return (
     <div className="mt-6 flex justify-between">
-      {step > 1 && (
+
+      {buttons.map((c) => (
         <button
-          className="px-4 py-2 bg-gray-200 rounded"
-          onClick={back}
+          key={c.label}
+          className={
+            c.label === "Atras"
+              ? "px-4 py-2 bg-gray-200 rounded"
+              : "px-4 py-2 bg-blue-600 text-white rounded"
+          }
+          onClick={c.action}
         >
-          Atrás
+          {c.label}
         </button>
-      )}
-      {step == 3 ? null : (
-        <button
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-          onClick={next}
-        >
-          Siguiente
-        </button>
-      )}
+      ))}
 
     </div>
   );
-}
+};
