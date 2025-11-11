@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Room } from "../types/room.type";
 import { DataTable } from "@/components/DataTable";
 import { useAccommodation } from "../hooks/useAccommodation";
@@ -41,11 +40,6 @@ export function RoomList() {
         selected={segment.rooms}
         onSelectChange={handleSetSelected}
       />
-
-
-      <p className="mt-4">
-        Seleccionadas: {JSON.stringify(segment.rooms)}
-      </p>
     </div>
   );
 }
