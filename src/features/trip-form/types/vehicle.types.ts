@@ -1,4 +1,4 @@
 export interface Vehicle {
-  type: "car" | "plane" | "bus";
+  type: "car" | "plane" ;
   seats?: number;
 }
