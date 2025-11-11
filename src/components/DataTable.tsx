@@ -60,7 +60,7 @@ export const DataTable = <T,>({
           ) : (
             data.map((row) => {
               const key = rowKey(row);
-              const isSelected = selected.includes(row);
+              const isSelected = selected.find((r) => rowKey(r) === key) !== undefined;
 
               return (
                 <tr
