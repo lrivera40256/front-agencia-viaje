@@ -8,8 +8,10 @@ export function useProfileData() {
   const refreshProfile = async () => {
     setLoading(true);
     try {
-      const data = await getProfile();
-      setProfile(data);
+      if (localStorage.getItem("token") === null) {
+        const data = await getProfile();
+        setProfile(data);
+      }
     } catch {
       setProfile(null);
     } finally {
@@ -37,7 +39,7 @@ export function useProfileData() {
       const response = await uploadProfilePhoto(profile._id, file);
       refreshProfile();
       return response;
-    }catch (error) {
+    } catch (error) {
       throw error;
     } finally {
       setLoading(false);
