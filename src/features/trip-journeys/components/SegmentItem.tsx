@@ -20,7 +20,7 @@ export const SegmentItem = ({ segment, isOpen, onToggle }: SegmentItemProps) => 
 				onClick={onToggle}
 			>
 			<span className="font-semibold py-1 pl-2 text-blue-700 bg-blue-50 rounded-md px-3 text-sm tracking-wide">
-				Trayecto: {segment.cityFrom} → {segment.cityTo}
+				Trayecto: {segment.cityFrom.name} → {segment.cityTo.name}
 			</span>
 
 				<motion.div

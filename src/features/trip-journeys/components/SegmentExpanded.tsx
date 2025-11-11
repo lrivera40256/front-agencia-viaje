@@ -28,28 +28,28 @@ export const SegmentExpanded = ({ segment }: SegmentExpandedProps) => {
         />
 
         <DetailRow 
-          label="Departamento origen ID" 
-          value={segment.departamentFrom} 
+          label="Departamento origen " 
+          value={segment.departamentFrom.name} 
         />
 
         <DetailRow 
-          label="Departamento destino ID" 
-          value={segment.departamentTo} 
+          label="Departamento destino " 
+          value={segment.departamentTo.name} 
         />
 
         <DetailRow 
-          label="Ciudad origen ID" 
-          value={segment.cityFrom} 
+          label="Ciudad origen " 
+          value={segment.cityFrom.name} 
         />
 
         <DetailRow 
-          label="Ciudad destino ID" 
-          value={segment.cityTo} 
+          label="Ciudad destino " 
+          value={segment.cityTo.name} 
         />
 
         <DetailRow 
-          label="Hotel ID" 
-          value={segment.hotel} 
+          label="Hotel " 
+          value={segment.hotel.name} 
         />
       </div>
     </div>
