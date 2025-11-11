@@ -8,7 +8,7 @@ export function useProfileData() {
   const refreshProfile = async () => {
     setLoading(true);
     try {
-      if (localStorage.getItem("token") === null) {
+      if (localStorage.getItem("token") != null) {
         const data = await getProfile();
         setProfile(data);
       }
