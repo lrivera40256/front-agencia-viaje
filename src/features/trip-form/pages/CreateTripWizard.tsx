@@ -17,14 +17,13 @@ const CreateTripWizard = () => {
     const { create } = useSegment();
     const list = useSegments();
     const initialized = useRef(false);
+    const {segments} = useSegments();
 
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true;
-
-            if (list.segments.length === 0) {
-                create(0);
-            }
+            console.log(segments.length);
+            create(segments.length);
         }
     }, []);
 
