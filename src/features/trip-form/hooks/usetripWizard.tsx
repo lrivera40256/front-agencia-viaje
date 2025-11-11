@@ -13,7 +13,8 @@ export const useTripWizard = () => {
         { steps: [1, 2, 3, 4, 5], label: "Siguiente", action: () => setStep(s => s + 1) },
         {
             steps: [6], label: "Agregar", action: () => {
-                create(segments.length);
+                const lastSegment = segments[segments.length - 1];
+                create(segments.length, lastSegment.dateTo, lastSegment.cityTo, lastSegment.departamentTo);
                 setStep(1)
             }
         },

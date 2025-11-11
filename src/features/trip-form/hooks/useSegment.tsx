@@ -1,17 +1,18 @@
 // useTripWizard.ts
 import { useEffect, useState } from "react";
 import type { Segment } from "../types/segment.types";
+import { City, Departament } from "../types/locationTrip.types";
 
 export function useTripSegment() {
   const [segment, setSegment] = useState<Segment>();
-  const create = (order: number): Segment => {
+  const create = (order: number,dateFrom?: Date,cityFrom?: City,departamentFrom?: Departament): Segment => {
     const newSeg: Segment = {
       order,
-      cityFrom: { id: 0, name: "" },
+      cityFrom: cityFrom || { id: 0, name: "" },
       cityTo: { id: 0, name: "" },
-      departamentFrom: { id: 0, name: "" },
+      departamentFrom: departamentFrom || { id: 0, name: "" },
       departamentTo: { id: 0, name: "" },
-      dateFrom: new Date(),
+      dateFrom: dateFrom || new Date(),
       dateTo: new Date(),
       hotel: {
         id: 0,
@@ -21,6 +22,8 @@ export function useTripSegment() {
       },
       rooms: [],
     };
+    console.log(newSeg);
+    
     setSegment(newSeg);
     return newSeg;
   };

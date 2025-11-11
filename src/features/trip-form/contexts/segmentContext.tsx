@@ -1,12 +1,13 @@
 import { createContext, ReactNode, useContext } from "react";
 import { Segment } from "../types/segment.types";
 import { useTripSegment } from "../hooks/useSegment";
+import { City, Departament } from "../types/locationTrip.types";
 
 export interface segmentContextType {
     segment: Segment;
     setSegment: (segment: Segment) => void;
     updateField: (field: keyof Segment, value: Segment[keyof Segment]) => void;
-    create: (order: number) => Segment;
+    create: (order: number,dateFrom?: Date,cityFrom?: City,departamentFrom?: Departament) => Segment;
 }
 const SegmentContext = createContext<segmentContextType | undefined>(undefined);
 export const SegmentProvider = ({ children }: { children: ReactNode }) => {
