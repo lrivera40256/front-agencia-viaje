@@ -23,8 +23,7 @@ const CreateTripWizard = () => {
             initialized.current = true;
 
             if (list.segments.length === 0) {
-                const newSeg = create(0);
-                list.addSegment(newSeg);
+                create(0);
             }
         }
     }, []);
