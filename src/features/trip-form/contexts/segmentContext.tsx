@@ -4,17 +4,18 @@ import { useTripSegment } from "../hooks/useSegment";
 import { City, Departament } from "../types/locationTrip.types";
 
 export interface segmentContextType {
-    segment: Segment;
-    setSegment: (segment: Segment) => void;
-    updateField: (field: keyof Segment, value: Segment[keyof Segment]) => void;
-    create: (order: number,dateFrom?: Date,cityFrom?: City,departamentFrom?: Departament) => Segment;
+  selectSegment: (seg: Segment) => void;
+  segment: Segment;
+  setSegment: (segment: Segment) => void;
+  updateField: (field: keyof Segment, value: Segment[keyof Segment]) => void;
+  create: (order: number, dateFrom?: Date, cityFrom?: City, departamentFrom?: Departament) => Segment;
 }
 const SegmentContext = createContext<segmentContextType | undefined>(undefined);
 export const SegmentProvider = ({ children }: { children: ReactNode }) => {
-  const {segment, setSegment, updateField, create} = useTripSegment();
+  const { segment, setSegment, updateField, create, selectSegment } = useTripSegment();
   return (
     <SegmentContext.Provider
-      value={{ segment, setSegment, updateField, create }}
+      value={{ segment, setSegment, updateField, create, selectSegment }}
     >
       {children}
     </SegmentContext.Provider>

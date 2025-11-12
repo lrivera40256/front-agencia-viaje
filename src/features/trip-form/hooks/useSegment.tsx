@@ -27,6 +27,9 @@ export function useTripSegment() {
     setSegment(newSeg);
     return newSeg;
   };
+  const selectSegment = (seg: Segment) => { 
+    setSegment(seg);
+  }
   const updateField = (field: keyof Segment, value: Segment[keyof Segment]) => {
     console.log(field, value);
 
@@ -41,7 +44,8 @@ export function useTripSegment() {
     updateField,
     create,
     segment,
-    setSegment
+    setSegment,
+    selectSegment
 
   };
 }
