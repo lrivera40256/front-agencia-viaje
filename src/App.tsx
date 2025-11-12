@@ -11,6 +11,8 @@ import { WizardProvider } from './features/trip-form/contexts/wizardContext';
 import CreateTripWizard from './features/trip-form/pages/CreateTripWizard';
 import { SegmentProvider } from './features/trip-form/contexts/segmentContext';
 import { SegmentsProvider } from './features/trip-form/contexts/segmentsContext';
+import PlanPage from './features/plan/pages/PlanPage';
+import { PlanProvider } from './features/plan/contexts/PlanContex';
 
 function App() {
   return (
@@ -60,6 +62,27 @@ function App() {
                         </WizardProvider>
                       </SegmentsProvider>
                     </SegmentProvider>
+                  }
+                >
+
+                  <Route
+                    index
+                    element={
+                      <Suspense fallback={<div>Cargando...</div>}>
+                        {/* Este componente debe estar en routes o importarlo aquí directamente */}
+                        <Outlet />
+                      </Suspense>
+                    }
+                  />
+                </Route>
+                <Route
+                  path="/plan"
+                  element={
+                    <PlanProvider>
+                          <Suspense fallback={<div>Cargando viaje...</div>}>
+                            <PlanPage />
+                          </Suspense>
+                    </PlanProvider>
                   }
                 >
                   <Route

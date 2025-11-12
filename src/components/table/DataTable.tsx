@@ -64,7 +64,7 @@ export function DataTable<T>({
                 className="odd:bg-white even:bg-slate-50 px-5 border-b border-slate-100 hover:bg-blue-50 transition-colors"
               >
                 {Object.entries(row).map(([k, v]) =>
-                  k === '_id' ? null : (
+                  k === '_id' || k === 'id' ? null : (
                     <td className="px-5 py-3 align-middle" key={k}>{v}</td>
                   )
                 )}
