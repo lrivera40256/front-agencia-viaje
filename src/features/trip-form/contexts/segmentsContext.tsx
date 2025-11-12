@@ -4,10 +4,14 @@ import { Segment } from "../types/segment.types";
 export interface segmentsContextType {
     segments: Segment[];
     addSegment: (segment: Segment) => void;
+    modifiedSegment: (segment: Segment) => void;
 }
 const SegmentsContext = createContext<segmentsContextType | undefined>(undefined);
 export const SegmentsProvider = ({ children }: { children: ReactNode }) => {
     const [segments, setSegments] = useState<Segment[]>([]);
+    const modifiedSegment = (segment: Segment) => {
+        setSegments(prev => prev.map(s => s.order === segment.order ? segment : s));
+    }
     const addSegment = (segment: Segment) => {
         if (!segments.find(s => s.order === segment.order)) {
             setSegments(prev => [...prev, segment]);
@@ -15,7 +19,7 @@ export const SegmentsProvider = ({ children }: { children: ReactNode }) => {
     }
     return (
         <SegmentsContext.Provider
-            value={{ segments, addSegment }}
+            value={{ segments, addSegment,modifiedSegment }}
         >
             {children}
         </SegmentsContext.Provider>
