@@ -4,17 +4,19 @@ import { configuration } from "../types/configuration.type";
 
 export interface wizardContextType {
   step: number;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
   next: () => void;
   back: () => void;
   configuration: configuration [];
+  setOnlyTheseActive: (index:number[]) => void;
 }
 
 const WizardContext = createContext<wizardContextType | undefined>(undefined);
 export const WizardProvider = ({ children }: { children: ReactNode }) => {
-  const {step, next, back,configuration} = useTripWizard();
+  const {step, setStep ,next, back,configuration, setOnlyTheseActive} = useTripWizard();
   return (
     <WizardContext.Provider
-      value={{ step, next, back,configuration }}
+      value={{ step, setStep, next, back,configuration, setOnlyTheseActive}}
     >
       {children}
     </WizardContext.Provider>

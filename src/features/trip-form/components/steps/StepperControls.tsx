@@ -4,7 +4,8 @@ export const StepperControls = () => {
   const { step, configuration } = useWizard();
 
   // Todas las acciones válidas para este step
-  const buttons = configuration.filter((c) => c.steps.includes(step));
+  const buttons = configuration.filter((c) => c.steps.includes(step) && c.status);
+  console.log(buttons)
 
   return (
     <div className="mt-6 flex justify-between">
