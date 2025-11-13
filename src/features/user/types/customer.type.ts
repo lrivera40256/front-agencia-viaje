@@ -5,5 +5,5 @@ export interface Customer {
     phone: string;
     identification_number: string;
     document_type: string;
-    birth_date: Date;
+    birth_date: Date | string;
 }
