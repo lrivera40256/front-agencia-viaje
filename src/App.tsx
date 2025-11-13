@@ -13,95 +13,100 @@ import { SegmentProvider } from './features/trip-form/contexts/segmentContext';
 import { SegmentsProvider } from './features/trip-form/contexts/segmentsContext';
 import PlanPage from './features/plan/pages/PlanPage';
 import { PlanProvider } from './features/plan/contexts/PlanContex';
+import { CustomerProvider } from './features/user/context/customerContext';
+
 
 function App() {
   return (
     <AuthProvider>
       <ProfileProvider>
-        <Router>
-          <Routes>
-            {/* Public pages */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+        <CustomerProvider>
+          <Router>
+            <Routes>
+              {/* Public pages */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            {/* Dashboard layout */}
-            <Route element={<DashboardLayout />}>
-              <Route
-                element={
-                  <ProtectedRoute>
-                    <Suspense fallback={<div>Cargando...</div>}>
-                      <Outlet />
-                    </Suspense>
-                  </ProtectedRoute>
-                }
-              >
+              {/* Dashboard layout */}
+              <Route element={<DashboardLayout />}>
+                <Route
+                  element={
+                    <ProtectedRoute>
+                      <Suspense fallback={<div>Cargando...</div>}>
+                        <Outlet />
+                      </Suspense>
+                    </ProtectedRoute>
+                  }
+                >
 
-                {/* ✅ Rutas normales */}
-                {routes
-                  .filter(r => r.path !== "/form") // evita duplicar esta ruta
-                  .map(({ path, component: Component }, index) => (
+                  {/* ✅ Rutas normales */}
+                  {routes
+                    .filter(r => r.path !== "/form") // evita duplicar esta ruta
+                    .map(({ path, component: Component }, index) => (
+                      <Route
+                        key={index}
+                        path={path}
+                        element={
+                          <Suspense fallback={<div>Cargando...</div>}>
+                            <Component />
+                          </Suspense>
+                        }
+                      />
+                    ))}
+                  <Route
+                    path="/form"
+                    element={
+                      <SegmentProvider>
+                        <SegmentsProvider>
+                          <WizardProvider>
+                            <Suspense fallback={<div>Cargando viaje...</div>}>
+                              <CreateTripWizard />
+                            </Suspense>
+                          </WizardProvider>
+                        </SegmentsProvider>
+                      </SegmentProvider>
+                    }
+                  >
+
                     <Route
-                      key={index}
-                      path={path}
+                      index
                       element={
                         <Suspense fallback={<div>Cargando...</div>}>
-                          <Component />
+                          {/* Este componente debe estar en routes o importarlo aquí directamente */}
+                          <Outlet />
                         </Suspense>
                       }
                     />
-                  ))}
-                <Route
-                  path="/form"
-                  element={
-                    <SegmentProvider>
-                      <SegmentsProvider>
-                        <WizardProvider>
-                          <Suspense fallback={<div>Cargando viaje...</div>}>
-                            <CreateTripWizard />
-                          </Suspense>
-                        </WizardProvider>
-                      </SegmentsProvider>
-                    </SegmentProvider>
-                  }
-                >
+                  </Route>
 
                   <Route
-                    index
+                    path="/plan"
                     element={
-                      <Suspense fallback={<div>Cargando...</div>}>
-                        {/* Este componente debe estar en routes o importarlo aquí directamente */}
-                        <Outlet />
-                      </Suspense>
+                      <PlanProvider>
+                        <Suspense fallback={<div>Cargando viaje...</div>}>
+                          <PlanPage />
+                        </Suspense>
+                      </PlanProvider>
                     }
-                  />
-                </Route>
-                <Route
-                  path="/plan"
-                  element={
-                    <PlanProvider>
-                          <Suspense fallback={<div>Cargando viaje...</div>}>
-                            <PlanPage />
-                          </Suspense>
-                    </PlanProvider>
-                  }
-                >
-                  <Route
-                    index
-                    element={
-                      <Suspense fallback={<div>Cargando...</div>}>
-                        {/* Este componente debe estar en routes o importarlo aquí directamente */}
-                        <Outlet />
-                      </Suspense>
-                    }
-                  />
-                </Route>
+                  >
+                    <Route
+                      index
+                      element={
+                        <Suspense fallback={<div>Cargando...</div>}>
+                          {/* Este componente debe estar en routes o importarlo aquí directamente */}
+                          <Outlet />
+                        </Suspense>
+                      }
+                    />
+                  </Route>
 
+                </Route>
               </Route>
-            </Route>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Router>
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Router>
+        </CustomerProvider>
       </ProfileProvider>
     </AuthProvider>
   );

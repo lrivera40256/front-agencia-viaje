@@ -5,13 +5,15 @@ interface DatePickerProps {
   endDate: Date;
   updateStartDate: (date: Date) => void;
   updateEndDate: (date: Date) => void;
+  disable?: boolean;
 }
 
 export const DatePicker = ({
   startDate,
   endDate,
   updateStartDate,
-  updateEndDate
+  updateEndDate,
+  disable
 }: DatePickerProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
@@ -23,6 +25,7 @@ export const DatePicker = ({
         </label>
 
         <Input
+          disabled={disable}
           type="date"
           className="h-11 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500"
           value={startDate ? startDate.toISOString().slice(0, 10) : ""}

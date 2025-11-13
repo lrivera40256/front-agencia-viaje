@@ -8,6 +8,7 @@ export const DateStepContainer = () => {
     return (
         <SectionCard title="Selección de Fechas">
             <DatePicker
+                disable={segment?.order > 0}
                 startDate={segment?.dateFrom}
                 endDate={segment?.dateTo}
                 updateStartDate={(date: Date) => updateField('dateFrom', date)}
