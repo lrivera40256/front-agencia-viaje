@@ -3,7 +3,7 @@ import api from '@/interceptors/msLogicInterceptor';
 
 export const getBankCards = async (): Promise<BankCard[]> => {
   try {
-    const response = await api.get('/BankCard');
+    const response = await api.get('/bank-card');
     return response.data;
   } catch (error) {
     console.error('Error fetching bank cards:', error);
@@ -13,7 +13,7 @@ export const getBankCards = async (): Promise<BankCard[]> => {
 
 export const getBankCardById = async (id: number | string): Promise<BankCard> => {
   try {
-    const response = await api.get(`/BankCard/${id}`);
+    const response = await api.get(`/bank-card/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching bank card by ID:', error);
@@ -23,7 +23,7 @@ export const getBankCardById = async (id: number | string): Promise<BankCard> =>
 
 export const getBankCardByNumber = async (number: string): Promise<BankCard> => {
   try {
-    const response = await api.get(`/BankCard/number/${number}`);
+    const response = await api.get(`/bank-card/number/${number}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching bank card by number:', error);
@@ -33,7 +33,7 @@ export const getBankCardByNumber = async (number: string): Promise<BankCard> => 
 
 export const createBankCard = async (payload: BankCard): Promise<void> => {
   try {
-    const response = await api.post('/BankCard', payload);
+    const response = await api.post('/bank-card', payload);
     return response.data;
   } catch (error) {
     console.error('Error creating bank card:', error);
@@ -45,7 +45,7 @@ export const updateBankCard = async (payload: BankCard): Promise<void> => {
   try {
     const body = { ...(payload as any) };
     if (body.id) delete body.id;
-    const response = await api.put(`/BankCard/${payload.id}`, body);
+    const response = await api.put(`/bank-card/${payload.id}`, body);
     return response.data;
   } catch (error) {
     console.error('Error updating bank card:', error);
@@ -59,7 +59,7 @@ export const updateBankCard = async (payload: BankCard): Promise<void> => {
 
 export const deleteBankCardById = async (id: number | string): Promise<void> => {
   try {
-    const response = await api.delete(`/BankCard/${id}`);
+    const response = await api.delete(`/bank-card/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error deleting bank card by ID:', error);
