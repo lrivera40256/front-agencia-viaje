@@ -35,7 +35,7 @@ export function Form<T extends Record<string, any>>({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-lg shadow-md w-full max-w-sm mx-auto"
+      className="bg-white p-6 rounded-lg shadow-md w-full max-w-full sm:max-w-md mx-auto max-h-[70vh] overflow-auto"
     >
       <h2 className="text-xl font-bold mb-4 text-center text-gray-700">{title}</h2>
 
