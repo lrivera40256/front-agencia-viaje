@@ -5,7 +5,7 @@ const BASE_URL = '/quota';
 
 export const getQuotas = async (): Promise<Quota[]> => {
 	try {
-		const response = await api.get(BASE_URL);
+		const response = await api.get(`${BASE_URL}`);
 		return response.data;
 	} catch (error) {
 		console.error('Error fetching quotas:', error);

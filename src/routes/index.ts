@@ -24,6 +24,9 @@ const transportItineraryPage = lazy(
 const ServiceTransportationPage = lazy(
 	() => import('../features/transportation/pages/ServiceTransportationPage')
 );
+const UserLogicPage = lazy(() =>
+	import('../features/user-logic/pages/UserLogicPage').then((m) => ({ default: m.UserLogicPage }))
+);
 
 const coreRoutes = [
 	{
@@ -106,6 +109,11 @@ const coreRoutes = [
 		path: '/usuarios',
 		title: 'usuarios',
 		component: UserPage,
+	},
+	{
+		path: '/usuarios-logic',
+		title: 'usuarios logica',
+		component: UserLogicPage,
 	},
 	{
 		path: '/tarjetas/:customerId?',

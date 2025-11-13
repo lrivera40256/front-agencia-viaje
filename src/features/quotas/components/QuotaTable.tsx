@@ -3,10 +3,9 @@ import type { Quota } from '../types/Quota';
 
 export interface QuotaTableData {
 	id: string;
-	travelName: string;
+	travelId: number;
 	amount: string;
 	numberPayments: string;
-	createdAt: string;
 }
 
 export interface QuotaTableProps {
@@ -31,10 +30,9 @@ export function QuotaTable({
 	const tableData = quotas.map((q) => {
 		const data: QuotaTableData = {
 			id: q.id?.toString() || '',
-			travelName: q.travel?.name || 'N/A',
+			travelId: q.travel_id,
 			amount: `$${q.amount.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
 			numberPayments: q.number_payments.toString(),
-			createdAt: q.createdAt ? new Date(q.createdAt).toLocaleDateString('es-ES') : 'N/A',
 		};
 		quotaDataMap.set(q.id?.toString() || '', q);
 		return data;
@@ -66,7 +64,7 @@ export function QuotaTable({
 	return (
 		<Table<QuotaTableData>
 			tableName="Cuotas"
-			titles={['Viaje', 'Monto', 'Número de Pagos', 'Fecha Creación']}
+			titles={['Viaje', 'Monto', 'Número de Pagos']}
 			data={tableData}
 			actions={actions}
 			onAdd={onAdd}

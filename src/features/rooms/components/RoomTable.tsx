@@ -5,7 +5,7 @@ export interface RoomTableData {
 	id: string;
 	roomNumber: string;
 	price: string;
-	hotel: string;
+	hotel: number;
 	available: string;
 }
 
@@ -26,7 +26,7 @@ export function RoomTable({ rooms, loading, onAdd, onDelete, onEdit, onSearch }:
 			id: r.id?.toString() || '',
 			roomNumber: r.room_number || 'N/A',
 			price: `$${r.price_per_night.toLocaleString('es-CO')}`,
-			hotel: r.hotel?.name || 'Sin asignar',
+			hotel: r.hotel_id,
 			available: r.is_available ? 'Sí' : 'No',
 		};
 		roomDataMap.set(r.id?.toString() || '', r);

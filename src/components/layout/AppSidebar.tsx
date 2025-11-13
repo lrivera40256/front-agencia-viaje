@@ -42,12 +42,12 @@ const crudItems = [
 	{ title: 'Habitaciones', url: '/habitaciones', icon: Hotel },
 	{ title: 'Vehículos', url: '/vehiculos', icon: Car },
 	{ title: 'Itinerarios Transporte', url: '/itinerarios-transporte', icon: Truck },
-	{ title: 'Servicios Transporte', url: '/servicios-transporte', icon: Zap },
+	{ title: 'Servicios Transporte', url: '/servicio-transporte', icon: Zap },
 	{ title: 'Actividades', url: '/actividades', icon: Activity },
-	{ title: 'Planes', url: '/planes', icon: Calendar },
+	{ title: 'Planes', url: '/plan', icon: Calendar },
 	{ title: 'Clientes', url: '/clientes', icon: Users },
-	{ title: 'Tarjetas Bancarias', url: '/tarjetas-bancarias', icon: CreditCard },
 	{ title: 'Usuarios', url: '/usuarios', icon: Compass },
+	{ title: 'Tarjetas Bancarias', url: '/tarjetas', icon: CreditCard },
 ];
 
 const quickItems = [
