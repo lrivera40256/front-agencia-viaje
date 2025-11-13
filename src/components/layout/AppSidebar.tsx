@@ -10,11 +10,44 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from '@/components/ui/sidebar';
-import { Plane, Star, User, Settings, Shield, Home } from 'lucide-react';
+import {
+	Plane,
+	Star,
+	User,
+	Settings,
+	Shield,
+	Home,
+	Car,
+	Hotel,
+	MapPin,
+	Truck,
+	LogOut,
+	Zap,
+	Activity,
+	Calendar,
+	CreditCard,
+	Users,
+	Compass,
+} from 'lucide-react';
 
 const mainItems = [
 	{ title: 'Inicio', url: '/', icon: Home },
-	{ title: 'Seguridad', url: '/seguridad', icon: Shield }
+	{ title: 'Seguridad', url: '/seguridad', icon: Shield },
+];
+
+const crudItems = [
+	{ title: 'Viajes', url: '/viajes', icon: Plane },
+	{ title: 'Trayectos', url: '/trayectos', icon: MapPin },
+	{ title: 'Cuotas', url: '/cuotas', icon: Star },
+	{ title: 'Habitaciones', url: '/habitaciones', icon: Hotel },
+	{ title: 'Vehículos', url: '/vehiculos', icon: Car },
+	{ title: 'Itinerarios Transporte', url: '/itinerarios-transporte', icon: Truck },
+	{ title: 'Servicios Transporte', url: '/servicios-transporte', icon: Zap },
+	{ title: 'Actividades', url: '/actividades', icon: Activity },
+	{ title: 'Planes', url: '/planes', icon: Calendar },
+	{ title: 'Clientes', url: '/clientes', icon: Users },
+	{ title: 'Tarjetas Bancarias', url: '/tarjetas-bancarias', icon: CreditCard },
+	{ title: 'Usuarios', url: '/usuarios', icon: Compass },
 ];
 
 const quickItems = [
@@ -33,11 +66,16 @@ export function AppSidebar() {
 	const location = useLocation();
 	const currentPath = location.pathname;
 
-	const isActive = (path: string) => currentPath === path;
-	const getNavCls = ({ isActive }: { isActive: boolean }) =>
-		isActive
-			? 'bg-travel-ocean-light text-travel-ocean font-medium border-r-2 border-travel-ocean'
-			: 'hover:bg-muted/50 text-muted-foreground hover:text-foreground';
+	const isRouteActive = (path: string) => {
+		return currentPath === path || currentPath.startsWith(path + '/');
+	};
+
+	const getNavCls = (path: string) => {
+		const isActive = isRouteActive(path);
+		return isActive
+			? 'bg-travel-ocean-light text-travel-ocean font-semibold border-r-4 border-travel-ocean shadow-md'
+			: 'hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors';
+	};
 
 	const isCollapsed = state === 'collapsed';
 
@@ -73,7 +111,7 @@ export function AppSidebar() {
 							{mainItems.map((item) => (
 								<SidebarMenuItem key={item.title}>
 									<SidebarMenuButton asChild>
-										<NavLink to={item.url} end className={getNavCls}>
+										<NavLink to={item.url} className={getNavCls(item.url)}>
 											<item.icon className="h-4 w-4 min-w-4" />
 											{!isCollapsed && <span>{item.title}</span>}
 										</NavLink>
@@ -105,6 +143,27 @@ export function AppSidebar() {
 					</SidebarGroupContent>
 				</SidebarGroup> */}
 
+				{/* CRUDs */}
+				<SidebarGroup>
+					<SidebarGroupLabel className="text-travel-navy font-semibold">
+						{!isCollapsed && 'Gestión'}
+					</SidebarGroupLabel>
+					<SidebarGroupContent>
+						<SidebarMenu>
+							{crudItems.map((item) => (
+								<SidebarMenuItem key={item.title}>
+									<SidebarMenuButton asChild>
+										<NavLink to={item.url} className={getNavCls(item.url)}>
+											<item.icon className="h-4 w-4 min-w-4" />
+											{!isCollapsed && <span>{item.title}</span>}
+										</NavLink>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
+							))}
+						</SidebarMenu>
+					</SidebarGroupContent>
+				</SidebarGroup>
+
 				{/* Account */}
 				<div className="mt-auto">
 					<SidebarGroup>
@@ -116,7 +175,7 @@ export function AppSidebar() {
 								{accountItems.map((item) => (
 									<SidebarMenuItem key={item.title}>
 										<SidebarMenuButton asChild>
-											<NavLink to={item.url} end className={getNavCls}>
+											<NavLink to={item.url} className={getNavCls(item.url)}>
 												<item.icon className="h-4 w-4 min-w-4" />
 												{!isCollapsed && <span>{item.title}</span>}
 											</NavLink>
