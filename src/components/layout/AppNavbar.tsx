@@ -15,7 +15,6 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Search, Bell, User, Settings, LogOut, Plane, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/features/auth/contexts/AuthProvider';
-import { getProfile, ProfileDto } from '@/services/profileService';
 
 export function AppNavbar() {
 	const { profile, isLoading } = useProfile();
@@ -86,15 +85,15 @@ export function AppNavbar() {
 						  <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                                 <Avatar className="h-8 w-8">
-                                    <AvatarImage 
+                                    {/* <AvatarImage 
                                         src={profile?.photo?.url || "/avatars/01.png"} 
                                         alt={profile?.user.name || "Usuario"} 
-                                    />
+                                    /> */}
                                     <AvatarFallback className="bg-travel-ocean text-white">
-                                        {profile?.user.name 
+                                        {/* {profile?.user.name 
                                             ? profile.user.name.charAt(0).toUpperCase()
                                             : <User className="w-4 h-4" />
-                                        }
+                                        } */}
                                     </AvatarFallback>
                                 </Avatar>
                             </Button>
@@ -102,9 +101,9 @@ export function AppNavbar() {
 						<DropdownMenuContent className="w-56" align="end" forceMount>
 							<DropdownMenuLabel className="font-normal">
 								<div className="flex flex-col space-y-1">
-									<p className="text-sm font-medium leading-none">{profile?.user.name || 'Cargando...'}</p>
+									{/* <p className="text-sm font-medium leading-none">{profile?.user.name || 'Cargando...'}</p> */}
 									<p className="text-xs leading-none text-muted-foreground">
-										{profile?.user.email || 'Cargando...'}
+										{/* {profile?.user.email || 'Cargando...'} */}
 									</p>
 								</div>
 							</DropdownMenuLabel>

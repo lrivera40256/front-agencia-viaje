@@ -21,7 +21,7 @@ export class CustomerService {
     }
     static async updateCustomer(customerId: number, customerData: Customer) {
         try {
-             await api.put(`/customer/${customerId}`, customerData);
+             await api.patch(`/customer/${customerId}`, customerData);
         } catch (error) {
             throw error;
         }

@@ -20,10 +20,10 @@ export const CustomerTable = () => {
         return null;
     }
     return (
-        <Table<Customer>
+        <Table<Pick<Customer, "id" | "name" | "email" | "phone" | "identification_number">>
             tableName="Clientes"
-            titles={["Nombre", "Email", "Teléfono", "Número de identificación","Tipo de documento","Fecha de nacimiento"]}
-            data={customers}
+            titles={["Nombre", "Email", "Teléfono", "Número de identificación"]}
+            data={customers.map((c) => ({id: c.id, name: c.name, email: c.email, phone: c.phone, identification_number: c.identification_number}))}
             onAdd={addCustomer}
             actions={actions}
             emptyMessage={loading ? "Cargando..." : "No hay clientes"}

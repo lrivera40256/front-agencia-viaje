@@ -28,7 +28,8 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
         setShowForm(true);
     };
     const editCustomer = (customer: Customer) => {
-        setCustomerToEdit(customer);
+        const customerToEdit = customers?.find((c) => c.id === customer.id);
+        setCustomerToEdit({ ...customerToEdit, birth_date: customerToEdit?.birth_date.toString().slice(0, 10) });
         setShowForm(true);
     }
     const fetchCustomers = async () => {
@@ -55,14 +56,16 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
     };
     const onSubmit = async (customer: Customer) => {
         try {
+            console.log("Submitting customer:", customer);
+            
             setLoading(true);
             if (customer.id) {
-                await CustomerService.updateCustomer(customer.id, customer);
+                await CustomerService.updateCustomer(customer.id, { ...customer , birth_date: customer.birth_date.toString().slice(0, 10)});
             } else {
                 await CustomerService.createCustomer(customer);
             }
             fetchCustomers();
-
+            setShowForm(false);
         } catch (error) {
             console.error("Error submitting customer:", error);
         } finally {
