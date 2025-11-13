@@ -16,8 +16,16 @@ const BankCardPage = lazy(() => import('@/features/bank-cards/pages/BankCardPage
 const travelPage = lazy(() => import('../features/travels/pages/TravelPage'));
 const quotaPage = lazy(() => import('../features/quotas/pages/QuotaPage'));
 const journeysPage = lazy(() => import('../features/journeys/pages/JourneyPage'));
+const ServiceTransportationPage = lazy(
+	() => import('../features/transportation/pages/ServiceTransportationPage')
+);
 
 const coreRoutes = [
+	{
+		path: 'servicio-transporte',
+		title: 'tablaServicios',
+		component: ServiceTransportationPage,
+	},
 	{
 		path: '/clientes',
 		title: 'tablaClientes',
