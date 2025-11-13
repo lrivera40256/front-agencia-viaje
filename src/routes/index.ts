@@ -16,15 +16,13 @@ const BankCardPage = lazy(() => import('@/features/bank-cards/pages/BankCardPage
 const travelPage = lazy(() => import('../features/travels/pages/TravelPage'));
 const quotaPage = lazy(() => import('../features/quotas/pages/QuotaPage'));
 const journeysPage = lazy(() => import('../features/journeys/pages/JourneyPage'));
-<<<<<<< HEAD
 const roomPage = lazy(() => import('../features/rooms/pages/RoomPage'));
 const vehiclePage = lazy(() => import('../features/vehicle-management/pages/VehiclePage'));
-
-const coreRoutes = [
-	{
-=======
 const ServiceTransportationPage = lazy(
 	() => import('../features/transportation/pages/ServiceTransportationPage')
+);
+const transportItineraryPage = lazy(
+	() => import('../features/transport-itinerary/pages/TransportItineraryPage')
 );
 
 const coreRoutes = [
@@ -34,7 +32,6 @@ const coreRoutes = [
 		component: ServiceTransportationPage,
 	},
 	{
->>>>>>> 589641f5dab7bf8026d53b2a1736824eea3f9771
 		path: '/clientes',
 		title: 'tablaClientes',
 		component: CustomerPage,
@@ -73,6 +70,11 @@ const coreRoutes = [
 		path: '/vehiculos',
 		title: 'vehiculos',
 		component: vehiclePage,
+	},
+	{
+		path: '/itinerarios-transporte',
+		title: 'itinerarios de transporte',
+		component: transportItineraryPage,
 	},
 	{
 		path: '/form',
