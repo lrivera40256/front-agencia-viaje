@@ -13,7 +13,7 @@ export const PlanTable = () => {
     return (
         <Table<Plan>
             tableName="Planes"
-            titles={["Nombre", "Descripción", "Precio", "Duración (días)", "Tipo"]}
+            titles={["Nombre", "Descripción", "Precio", "Duración (días)", "Activo"]}
             data={plans}
             onAdd={addPlan}
             actions={actions}

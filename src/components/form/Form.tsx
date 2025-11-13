@@ -18,11 +18,15 @@ export function Form<T extends Record<string, any>>({
   const [loading, setLoading] = useState(false)
 
   const handleChange = (name: string, value: any) => {
+    console.log(name,value);
+    
     setValues((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log("Submitting form with values:", values);
+    
     setLoading(true)
     await onSubmit(values as T)
     setLoading(false)

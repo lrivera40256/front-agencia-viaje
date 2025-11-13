@@ -65,6 +65,7 @@ export function DataTable<T>({
               >
                 {Object.entries(row).map(([k, v]) =>
                   k === '_id' || k === 'id' ? null : (
+                    typeof(v) === 'boolean'?<td className="px-5 py-3 align-middle" key={k}>{v ? "Sí" : "No"}</td> :
                     <td className="px-5 py-3 align-middle" key={k}>{v}</td>
                   )
                 )}

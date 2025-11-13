@@ -18,7 +18,7 @@ export const PlanForm = () => {
         <Form
             title={planToEdit ? "Editar plan" : "Nuevo plan"}
             fields={fields}
-            initialValues={planToEdit || { name: "", description: "" }}
+            initialValues={planToEdit || { name: "", description: "",price:0,duration_days:0,is_active:true }}
             onSubmit={onSubmit}
             onCancel={() =>setShowForm(false)}
             submitText={planToEdit ? "Actualizar" : "Crear"}
