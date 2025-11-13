@@ -17,7 +17,7 @@ export const usePlan = () => {
                 name: plan.name,
                 description: plan.description,
                 price: plan.price,
-                duration: plan.duration_days,
+                duration_days: plan.duration_days,
                 is_active: plan.is_active,
             })));
         } catch (error) {
@@ -66,6 +66,7 @@ export const usePlan = () => {
         setShowForm(true);
     }
     useEffect(() => {
+        console.log("Fetching plans");
         fetchPlans();
     }, []);
     return { plans, loading, addPlan, editPlan, planToEdit, showForm, onSubmit, setShowForm,onDelete};
