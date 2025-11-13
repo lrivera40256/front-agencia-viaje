@@ -11,18 +11,20 @@ const ProfilePage = lazy(() => import('@/features/profile/pages/profilePage'));
 const tablePermissionPage = lazy(() => import('../pages/tablePermission'));
 const tripFormPage = lazy(() => import('../features/trip-form/pages/CreateTripWizard'));
 const journeyPage = lazy(() => import('../features/trip-journeys/pages/SegmentPage'));
-// const CustomerPage = lazy(() => import('../features/user/pages/customerPage'));
-// const BankCardPage = lazy(() => import('@/features/bank-cards/pages/BankCardPage'));
+const CustomerPage = lazy(() => import('../features/user/pages/customerPage'));
+const BankCardPage = lazy(() => import('@/features/bank-cards/pages/BankCardPage'));
 const travelPage = lazy(() => import('../features/travels/pages/TravelPage'));
 const quotaPage = lazy(() => import('../features/quotas/pages/QuotaPage'));
 const journeysPage = lazy(() => import('../features/journeys/pages/JourneyPage'));
+const roomPage = lazy(() => import('../features/rooms/pages/RoomPage'));
+const vehiclePage = lazy(() => import('../features/vehicle-management/pages/VehiclePage'));
 
 const coreRoutes = [
-	// {
-	// 	path: '/clientes',
-	// 	title: 'tablaClientes',
-	// 	component: CustomerPage,
-	// },
+	{
+		path: '/clientes',
+		title: 'tablaClientes',
+		component: CustomerPage,
+	},
 	{
 		path: '/tablaPermiso/:id?',
 		title: 'tablaPermiso',
@@ -47,6 +49,16 @@ const coreRoutes = [
 		path: '/trayectos',
 		title: 'trayectos',
 		component: journeysPage,
+	},
+	{
+		path: '/habitaciones',
+		title: 'habitaciones',
+		component: roomPage,
+	},
+	{
+		path: '/vehiculos',
+		title: 'vehiculos',
+		component: vehiclePage,
 	},
 	{
 		path: '/form',
@@ -79,16 +91,16 @@ const coreRoutes = [
 		title: 'usuarios',
 		component: UserPage,
 	},
-	// {
-	// 	path: '/tarjetas/:customerId?',
-	// 	title: 'tarjetas',
-	// 	component: BankCardPage,
-	// },
-	// {
-	// 	path: '/tarjetas',
-	// 	title: 'tarjetas',
-	// 	component: BankCardPage,
-	// },
+	{
+		path: '/tarjetas/:customerId?',
+		title: 'tarjetas',
+		component: BankCardPage,
+	},
+	{
+		path: '/tarjetas',
+		title: 'tarjetas',
+		component: BankCardPage,
+	},
 	{
 		path: '/actividades',
 		title: 'actividades',
