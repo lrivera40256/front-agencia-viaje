@@ -18,9 +18,6 @@ const quotaPage = lazy(() => import('../features/quotas/pages/QuotaPage'));
 const journeysPage = lazy(() => import('../features/journeys/pages/JourneyPage'));
 const roomPage = lazy(() => import('../features/rooms/pages/RoomPage'));
 const vehiclePage = lazy(() => import('../features/vehicle-management/pages/VehiclePage'));
-const ServiceTransportationPage = lazy(
-	() => import('../features/transportation/pages/ServiceTransportationPage')
-);
 const transportItineraryPage = lazy(
 	() => import('../features/transport-itinerary/pages/TransportItineraryPage')
 );
