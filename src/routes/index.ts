@@ -4,7 +4,9 @@ const HomePage = lazy(() => import('../pages/Home'));
 const RolePage = lazy(() => import('../features/roles/pages/RolePage'));
 const PermissionPage = lazy(() => import('../pages/permission'));
 const UserPage = lazy(() => import('@/features/users/pages/UserPage'));
-const TouristActivityPage = lazy(() => import('@/features/tourist-activities/pages/TouristActivityPage'));
+const TouristActivityPage = lazy(
+	() => import('@/features/tourist-activities/pages/TouristActivityPage')
+);
 const ProfilePage = lazy(() => import('@/features/profile/pages/profilePage'));
 const tablePermissionPage = lazy(() => import('../pages/tablePermission'));
 const tripFormPage = lazy(() => import('../features/trip-form/pages/CreateTripWizard'));
@@ -12,6 +14,8 @@ const journeyPage = lazy(() => import('../features/trip-journeys/pages/SegmentPa
 // const CustomerPage = lazy(() => import('../features/user/pages/customerPage'));
 // const BankCardPage = lazy(() => import('@/features/bank-cards/pages/BankCardPage'));
 const travelPage = lazy(() => import('../features/travels/pages/TravelPage'));
+const quotaPage = lazy(() => import('../features/quotas/pages/QuotaPage'));
+const journeysPage = lazy(() => import('../features/journeys/pages/JourneyPage'));
 
 const coreRoutes = [
 	// {
@@ -25,7 +29,7 @@ const coreRoutes = [
 		component: tablePermissionPage,
 	},
 	{
-		path: 'trayectos',
+		path: 'trayecto',
 		title: 'trayectos',
 		component: journeyPage,
 	},
@@ -33,6 +37,16 @@ const coreRoutes = [
 		path: '/viajes',
 		title: 'viajes',
 		component: travelPage,
+	},
+	{
+		path: '/cuotas',
+		title: 'cuotas',
+		component: quotaPage,
+	},
+	{
+		path: '/trayectos',
+		title: 'trayectos',
+		component: journeysPage,
 	},
 	{
 		path: '/form',
@@ -44,7 +58,6 @@ const coreRoutes = [
 		title: 'Inicio',
 		component: HomePage,
 	},
-
 	{
 		path: '/roles/:id?',
 		title: 'roles',
