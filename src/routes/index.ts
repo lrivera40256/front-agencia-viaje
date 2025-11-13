@@ -24,6 +24,9 @@ const ServiceTransportationPage = lazy(
 const transportItineraryPage = lazy(
 	() => import('../features/transport-itinerary/pages/TransportItineraryPage')
 );
+const ServiceTransportationPage = lazy(
+	() => import('../features/transportation/pages/ServiceTransportationPage')
+);
 
 const coreRoutes = [
 	{
