@@ -16,6 +16,14 @@ const BankCardPage = lazy(() => import('@/features/bank-cards/pages/BankCardPage
 const travelPage = lazy(() => import('../features/travels/pages/TravelPage'));
 const quotaPage = lazy(() => import('../features/quotas/pages/QuotaPage'));
 const journeysPage = lazy(() => import('../features/journeys/pages/JourneyPage'));
+const roomPage = lazy(() => import('../features/rooms/pages/RoomPage'));
+const vehiclePage = lazy(() => import('../features/vehicle-management/pages/VehiclePage'));
+const ServiceTransportationPage = lazy(
+	() => import('../features/transportation/pages/ServiceTransportationPage')
+);
+const transportItineraryPage = lazy(
+	() => import('../features/transport-itinerary/pages/TransportItineraryPage')
+);
 const ServiceTransportationPage = lazy(
 	() => import('../features/transportation/pages/ServiceTransportationPage')
 );
@@ -55,6 +63,21 @@ const coreRoutes = [
 		path: '/trayectos',
 		title: 'trayectos',
 		component: journeysPage,
+	},
+	{
+		path: '/habitaciones',
+		title: 'habitaciones',
+		component: roomPage,
+	},
+	{
+		path: '/vehiculos',
+		title: 'vehiculos',
+		component: vehiclePage,
+	},
+	{
+		path: '/itinerarios-transporte',
+		title: 'itinerarios de transporte',
+		component: transportItineraryPage,
 	},
 	{
 		path: '/form',
