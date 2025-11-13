@@ -5,9 +5,10 @@ const RolePage = lazy(() => import('../features/roles/pages/RolePage'));
 const PermissionPage = lazy(() => import('../pages/permission'));
 const UserPage = lazy(() => import('@/features/users/pages/UserPage'));
 const ProfilePage = lazy(() => import('@/features/profile/pages/profilePage'));
-const tablePermissionPage = lazy(()=> import('../pages/tablePermission'))
+const tablePermissionPage = lazy(() => import('../pages/tablePermission'));
 const tripFormPage = lazy(() => import('../features/trip-form/pages/CreateTripWizard'));
 const journeyPage = lazy(() => import('../features/trip-journeys/pages/SegmentPage'));
+const travelPage = lazy(() => import('../features/travels/pages/TravelPage'));
 
 const coreRoutes = [
 	{
@@ -21,6 +22,11 @@ const coreRoutes = [
 		component: journeyPage,
 	},
 	{
+		path: '/viajes',
+		title: 'viajes',
+		component: travelPage,
+	},
+	{
 		path: '/form',
 		title: 'formulario de viaje',
 		component: tripFormPage,
@@ -30,7 +36,7 @@ const coreRoutes = [
 		title: 'Inicio',
 		component: HomePage,
 	},
-	
+
 	{
 		path: '/roles/:id?',
 		title: 'roles',
@@ -46,7 +52,7 @@ const coreRoutes = [
 		title: 'permisos',
 		component: PermissionPage,
 	},
-	
+
 	{
 		path: '/usuarios',
 		title: 'usuarios',
