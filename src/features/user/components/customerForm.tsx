@@ -12,7 +12,7 @@ export const CustomerForm = () => {
         <Form
             title={customerToEdit ? "Editar cliente" : "Nuevo cliente"}
             fields={fields}
-            initialValues={customerToEdit ? { name: customerToEdit.user.name, email: customerToEdit.user.email } : { name: "", email: "" }}
+            initialValues={customerToEdit ? { name: customerToEdit.name, email: customerToEdit.email } : { name: "", email: "" }}
             onSubmit={onSubmit} 
             onCancel={() =>setShowForm(false)}
             submitText={customerToEdit ? "Actualizar" : "Crear"}
