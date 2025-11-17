@@ -3,13 +3,15 @@ export interface User {
     email: string;
 }
 
-export interface Customer {
+export interface Customer extends User {
     id: number;
     user_id: string;
     created_at: string;
     updated_at: string;
-    user: User;
+    
 }
+
+
 
 export interface CustomerFormData {
     name: string;

@@ -2,6 +2,8 @@ import { Table } from '@/components/table/Table';
 import { useCustomer } from '../context/customerContext';
 import { Customer } from '../types/customer.type';
 import { useNavigate } from 'react-router';
+import { C } from 'node_modules/framer-motion/dist/types.d-BJcRxCew';
+import { useEffect } from 'react';
 
 export const CustomerTable = () => {
 	const { customers, loading, addCustomer, editCustomer, onDelete } = useCustomer();
@@ -19,10 +21,10 @@ export const CustomerTable = () => {
 		return null;
 	}
 	return (
-		<Table<{ id: number; name: string; email: string }>
+		<Table<Pick<Customer, 'id' | 'name' | 'email'>>
 			tableName="Clientes"
 			titles={['Nombre', 'Email']}
-			data={customers.map((c) => ({ id: c.id, name: c.user.name, email: c.user.email }))}
+			data={customers.map((c) => ({ id: c.id, name: c.name, email: c.email }))}
 			onAdd={addCustomer}
 			actions={actions}
 			emptyMessage={loading ? 'Cargando...' : 'No hay clientes'}
