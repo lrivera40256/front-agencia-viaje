@@ -8,12 +8,17 @@ import {
 	updateJourney,
 } from '@/features/journeys/services/journeyService';
 import { CitiesService } from '@/services/citieService';
+import { DepartamentService } from '@/services/departamentService';
+import { Departament } from '@/models/departaments';
+import { ShowerHead } from 'lucide-react';
 
 export function useJourney() {
 	const [showForm, setShowForm] = useState(false);
 	const [journeyToEdit, setJourneyToEdit] = useState<Journey | null>(null);
 	const [journeys, setJourneys] = useState<Journey[]>([]);
-	const [cities, setCities] = useState<City[]>([]);
+	const [departments, setDepartments] = useState<Departament[]>([]);
+	const [originCities, setOriginCities] = useState<City[]>([]);
+	const [destinationCities, setDestinationCities] = useState<City[]>([]);
 	const [filter, setFilter] = useState('');
 	const [loading, setLoading] = useState(false);
 
@@ -70,27 +75,12 @@ export function useJourney() {
 		setLoading(true);
 		try {
 			const data = await getJourneys();
-			console.log('📋 Journeys sin procesar:', data);
-			if (data.length > 0) {
-				console.log('📋 Primer journey - Keys:', Object.keys(data[0]));
-				console.log('📋 Primer journey completo:', data[0]);
-			}
 
 			setJourneys(
 				data.map((item: any) => {
 					// Enriquecer journeys con información de ciudades si no la tienen
 					let origin = item.origin;
 					let destination = item.destination;
-
-					// Si no viene origin del backend, buscar en cities
-					if (!origin && item.origin_id && cities.length > 0) {
-						origin = cities.find((c) => c.id === item.origin_id);
-					}
-
-					// Si no viene destination del backend, buscar en cities
-					if (!destination && item.destination_id && cities.length > 0) {
-						destination = cities.find((c) => c.id === item.destination_id);
-					}
 
 					return {
 						id: item.id,
@@ -110,45 +100,32 @@ export function useJourney() {
 		}
 	};
 
-	const loadCities = async () => {
+	const loadCitiesByDepartment = async (departmentId: number, departamentOrigin: boolean) => {
 		try {
-			console.log('📍 Iniciando carga de ciudades...');
-			const response = await CitiesService.getAllCities();
-			console.log('📍 Respuesta del backend:', response);
-			console.log('📍 Tipo de respuesta:', typeof response);
-			console.log('📍 Es array?', Array.isArray(response));
-
-			// El servicio ya retorna res.data
-			let citiesData: City[] = [];
-
-			if (Array.isArray(response)) {
-				citiesData = response;
-				console.log('✅ Respuesta es array, ciudades:', citiesData.length);
-			} else if (response && typeof response === 'object') {
-				console.log('⚠️ Respuesta es objeto, keys:', Object.keys(response));
-				// Buscar un array dentro del objeto
-				for (const key in response) {
-					if (Array.isArray(response[key])) {
-						citiesData = response[key];
-						console.log(
-							'✅ Array encontrado en key:',
-							key,
-							'cantidad:',
-							citiesData.length
-						);
-						break;
-					}
-				}
+			const response: City[] = await CitiesService.getCitiesByDepartament(departmentId);
+			if (departamentOrigin) {
+				setOriginCities(response);
+				return;
 			}
-
-			console.log('📍 Ciudades finales cargadas:', citiesData.length);
-			setCities(citiesData);
+			setDestinationCities(response);
 		} catch (error) {
-			console.error('❌ Error al cargar ciudades:', error);
 			toast.error('Error al cargar ciudades');
-			setCities([]);
+			if (departamentOrigin) {
+				setOriginCities([]);
+				return;
+			}
+			setDestinationCities([]);
 		}
 	};
+
+	const loadDepartments = async ()=> {
+		try {
+			const respose: Departament[] = await DepartamentService.getAllDepartaments();
+			setDepartments(respose);
+		} catch (error) {
+			toast.error('Error al cargar departamentos');
+		}
+	}
 
 	const handleEdit = (journey: Journey) => {
 		setJourneyToEdit(journey);
@@ -175,15 +152,13 @@ export function useJourney() {
 
 	useEffect(() => {
 		loadJourneys();
-		loadCities();
 	}, []);
 
 	// Recargar journeys cuando las ciudades estén disponibles para enriquecerlas
-	useEffect(() => {
-		if (cities.length > 0) {
-			loadJourneys();
-		}
-	}, [cities]);
+  useEffect(() => {
+		if (!showForm) return;
+		loadDepartments();
+	}, [showForm])
 
 	return {
 		handleSubmit,
@@ -196,7 +171,10 @@ export function useJourney() {
 		journeyToEdit,
 		showForm,
 		loading,
-		cities,
+		originCities,
+		destinationCities,
+		departments,
+		loadCitiesByDepartment,
 	};
 }
 

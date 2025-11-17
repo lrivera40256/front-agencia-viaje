@@ -2,6 +2,8 @@ import { useJourney } from '../hooks/useJourney';
 import { JourneyForm } from '../components/JourneyForm';
 import { JourneyTable } from '../components/JourneyTable';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+
 
 export function JourneyPage() {
 	const {
@@ -15,7 +17,10 @@ export function JourneyPage() {
 		journeyToEdit,
 		showForm,
 		loading,
-		cities,
+		originCities,
+		destinationCities,
+		departments,
+		loadCitiesByDepartment,
 	} = useJourney();
 
 	return (
@@ -31,16 +36,17 @@ export function JourneyPage() {
 
 			<Dialog open={showForm} onOpenChange={setShowForm}>
 				<DialogContent className="sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>
-							{journeyToEdit ? 'Editar Trayecto' : 'Crear Nuevo Trayecto'}
-						</DialogTitle>
-					</DialogHeader>
+					<VisuallyHidden>
+						<DialogTitle>Formulario</DialogTitle>
+					</VisuallyHidden>
 					<JourneyForm
 						journey={journeyToEdit}
-						cities={cities}
+						originCities={originCities}
+						destinationCities={destinationCities}
+						departments={departments}
 						onSubmit={handleSubmit}
 						onCancel={() => setShowForm(false)}
+						onDepartmentChange={loadCitiesByDepartment}
 					/>
 				</DialogContent>
 			</Dialog>

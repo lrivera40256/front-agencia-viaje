@@ -48,7 +48,11 @@ export function Form<T extends Record<string, any>>({
               <FormFieldItem
                 field={f}
                 value={(values as any)[f.name]}
-                onChange={handleChange}
+                onChange={(name, value, event) => {
+                  f.onChange?.(event)
+
+                  handleChange(name, value)
+                }}
               />
             )}
         </div>
