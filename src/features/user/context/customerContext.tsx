@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { Customer } from "../types/customer.type";
+import { Customer, CustomerFormData } from "../types/customer.type";
 import { CustomerService } from "../services";
 
 
@@ -8,7 +8,7 @@ export interface customerContextType {
     loading: boolean;
     addCustomer: () => void;
     editCustomer: (customer: Customer) => void;
-    onSubmit: (customer: Customer) => Promise<void>;
+    onSubmit: (customerData: CustomerFormData) => Promise<void>;
     customerToEdit: Customer | null;
     showForm: boolean;
     setShowForm: (show: boolean) => void;
@@ -29,7 +29,9 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
     };
     const editCustomer = (customer: Customer) => {
         const customerToEdit = customers?.find((c) => c.id === customer.id);
-        setCustomerToEdit({ ...customerToEdit, birth_date: customerToEdit?.birth_date.toString().slice(0, 10) });
+        if (customerToEdit) {
+            setCustomerToEdit(customerToEdit);
+        }
         setShowForm(true);
     }
     const fetchCustomers = async () => {
@@ -54,15 +56,15 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
             setLoading(false);
         }
     };
-    const onSubmit = async (customer: Customer) => {
+    const onSubmit = async (customerData: CustomerFormData) => {
         try {
-            console.log("Submitting customer:", customer);
+            console.log("Submitting customer:", customerData);
             
             setLoading(true);
-            if (customer.id) {
-                await CustomerService.updateCustomer(customer.id, { ...customer , birth_date: customer.birth_date.toString().slice(0, 10)});
+            if (customerToEdit?.id) {
+                await CustomerService.updateCustomer(customerToEdit.id, customerData);
             } else {
-                await CustomerService.createCustomer(customer);
+                await CustomerService.createCustomer(customerData);
             }
             fetchCustomers();
             setShowForm(false);

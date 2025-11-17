@@ -36,7 +36,7 @@ export default function BankCardPage() {
             { value: "inactive", label: "Inactivo" },
             { value: "blocked", label: "Bloqueado" },
         ] },
-    { name: "customer_id", label: "Cliente (id)", type: "number", required: true },
+    ...(customerId ? [] : [{ name: "customer_id", label: "Cliente (id)", type: "number", required: true }]),
   ] as FormField[];
 
   return (

@@ -11,6 +11,16 @@ export const getBankCards = async (): Promise<BankCard[]> => {
   }
 };
 
+export const getBankCardsByCustomer = async (customerId: number | string): Promise<BankCard[]> => {
+  try {
+    const response = await api.get(`/bank-card/customer/${customerId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching bank cards by customer:', error);
+    throw error;
+  }
+};
+
 export const getBankCardById = async (id: number | string): Promise<BankCard> => {
   try {
     const response = await api.get(`/bank-card/${id}`);
@@ -69,6 +79,7 @@ export const deleteBankCardById = async (id: number | string): Promise<void> => 
 
 export default {
   getBankCards,
+  getBankCardsByCustomer,
   getBankCardById,
   getBankCardByNumber,
   createBankCard,

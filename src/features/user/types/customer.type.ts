@@ -1,9 +1,17 @@
-export interface Customer {
-    id?: number;
+export interface User {
     name: string;
     email: string;
-    phone: string;
-    identification_number: string;
-    document_type: string;
-    birth_date: Date | string;
+}
+
+export interface Customer {
+    id: number;
+    user_id: string;
+    created_at: string;
+    updated_at: string;
+    user: User;
+}
+
+export interface CustomerFormData {
+    name: string;
+    email: string;
 }

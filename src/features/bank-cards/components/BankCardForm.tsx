@@ -8,7 +8,7 @@ export function BankCardForm({ initial, onSubmit, onCancel, fields }: {
   onCancel: () => void;
   fields: FormField[];
 }) {
-  const initialValues = initial || {
+  const defaultValues = {
     card_type: 'debit',
     provider: '',
     card_number: '',
@@ -20,14 +20,16 @@ export function BankCardForm({ initial, onSubmit, onCancel, fields }: {
     customer_id: 0,
   } as any;
 
+  const initialValues = initial ? { ...defaultValues, ...initial } : defaultValues;
+
   return (
     <Form
-      title={initial ? "Editar Tarjeta" : "Nueva Tarjeta"}
+      title={initial?.id ? "Editar Tarjeta" : "Nueva Tarjeta"}
       fields={fields}
       initialValues={initialValues}
       onSubmit={onSubmit}
       onCancel={onCancel}
-      submitText={initial ? "Actualizar" : "Crear"}
+      submitText={initial?.id ? "Actualizar" : "Crear"}
     />
   );
 }
