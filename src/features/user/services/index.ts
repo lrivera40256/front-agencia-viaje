@@ -1,5 +1,5 @@
 import api from "@/interceptors/msLogicInterceptor";
-import { Customer } from "../types/customer.type";
+import { Customer, CustomerFormData } from "../types/customer.type";
 
 export class CustomerService {
     static async getCustomers():Promise<Customer[]> {
@@ -12,14 +12,14 @@ export class CustomerService {
             throw error;
         }
     }
-    static async createCustomer(customerData: Customer) {
+    static async createCustomer(customerData: CustomerFormData) {
         try {
             await api.post("/customer", customerData);
         } catch (error) {
             throw error;
         }
     }
-    static async updateCustomer(customerId: number, customerData: Customer) {
+    static async updateCustomer(customerId: number, customerData: CustomerFormData) {
         try {
              await api.patch(`/customer/${customerId}`, customerData);
         } catch (error) {

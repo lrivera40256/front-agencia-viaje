@@ -6,6 +6,7 @@ import {
   deleteBankCardById,
   getBankCardById,
   getBankCards,
+  getBankCardsByCustomer,
   updateBankCard,
 } from "@/features/bank-cards/services/bankCardService";
 import { useNavigate } from "react-router";
@@ -19,7 +20,7 @@ export function useBankCard(customerId?: number | string) {
   const navigate = useNavigate();
 
   const handleAdd = () => {
-    setCardToEdit(null);
+    setCardToEdit(customerId ? { customer_id: Number(customerId) } as BankCard : null);
     setShowForm(true);
   };
 
@@ -28,7 +29,6 @@ export function useBankCard(customerId?: number | string) {
       toast.error("Por favor completa los campos obligatorios");
       return;
     }
-    
 
     try {
       if (card.id) {
@@ -58,7 +58,7 @@ export function useBankCard(customerId?: number | string) {
   const loadCards = async () => {
     setLoading(true);
     try {
-      const data = await getBankCards();
+      const data = customerId ? await getBankCardsByCustomer(customerId) : await getBankCards();
       const mapped = (data || []).map((c) => ({
         id: c.id,
         card_holder: c.card_holder,
@@ -71,8 +71,7 @@ export function useBankCard(customerId?: number | string) {
         customer_id: c.customer_id,
         cvv: c.cvv,
       }));
-      if (customerId) setCards(mapped.filter((c) => String(c.customer_id) === String(customerId)));
-      else setCards(mapped);
+      setCards(mapped);
     } catch (error) {
       toast.error("Error al cargar tarjetas");
     } finally {
@@ -123,6 +122,7 @@ export function useBankCard(customerId?: number | string) {
     loading,
     navigate,
     loadCards,
+    customerId,
   };
 }
 
