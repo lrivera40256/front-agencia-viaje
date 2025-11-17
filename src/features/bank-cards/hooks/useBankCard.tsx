@@ -29,8 +29,6 @@ export function useBankCard(customerId?: number | string) {
       toast.error("Por favor completa los campos obligatorios");
       return;
     }
-    
-    console.log("Datos a enviar:", card);
 
     try {
       if (card.id) {
@@ -44,9 +42,8 @@ export function useBankCard(customerId?: number | string) {
       }
       await loadCards();
     } catch (error) {
-      console.error("Error completo:", error);
+      console.error(error);
       const serverMsg = (error as any)?.response?.data?.message || (error as any)?.response?.data || null;
-      console.log("Mensaje del servidor:", serverMsg);
       if (serverMsg) toast.error(typeof serverMsg === "string" ? serverMsg : JSON.stringify(serverMsg));
       else toast.error("Error al guardar la tarjeta");
     }
