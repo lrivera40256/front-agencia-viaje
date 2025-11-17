@@ -1,46 +1,79 @@
 import type { FormField } from '@/components/form/types';
 import type { Journey, City } from '../types/Journey';
 import { Form } from '@/components/form/Form';
-import { useEffect } from 'react';
+import { LoaderCircle } from 'lucide-react';
+import { Departament } from '@/models/departaments';
 
 interface JourneyFormProps {
 	journey: Journey | null;
-	cities: City[];
+	originCities: City[];
+	destinationCities: City[];
 	onSubmit: (journey: Journey) => void;
 	onCancel: () => void;
+	departments?: Departament[];
+	onDepartmentChange?: (departamentId: number, departamentOrigin: boolean) => void;
 }
 
-export function JourneyForm({ journey, cities, onSubmit, onCancel }: JourneyFormProps) {
-	useEffect(() => {
-		console.log('🏙️ Ciudades recibidas en formulario:', cities);
-		console.log('🏙️ Cantidad de ciudades:', cities.length);
-		if (journey) {
-			console.log('🏙️ Journey a editar:', journey);
-			console.log('🏙️ origin_id:', journey.origin_id);
-			console.log('🏙️ destination_id:', journey.destination_id);
-		}
-	}, [cities, journey]);
+export function JourneyForm({
+	journey,
+	originCities,
+	destinationCities,
+	onSubmit,
+	onCancel,
+	departments,
+	onDepartmentChange,
+}: JourneyFormProps) {
+
+	console.log({destinationCities});
+	console.log({originCities});
 
 	const fields: FormField[] = [
 		{
-			name: 'origin_id',
-			label: 'Ciudad de Origen',
+			name: 'departament_origin_id',
+			label: 'Departamento de origen',
 			type: 'select',
 			required: true,
-			options: cities.map((city) => ({
-				label: city.name,
-				value: city.id?.toString() || '',
+			options: departments?.map((departament) => ({
+				label: departament.name,
+				value: departament.id?.toString() || '',
 			})),
+			onChange: (e) =>
+				onDepartmentChange && onDepartmentChange(parseInt(e.target.value), true),
+		},
+		{
+			name: 'origin_id',
+			label: 'Ciudad de origen',
+			type: 'select',
+			required: true,
+			options: originCities
+				? originCities.map((city) => ({
+						label: city.name,
+						value: city.id?.toString() || '',
+					}))
+				: [],
+		},
+		{
+			name: 'departament_destination_id',
+			label: 'Departamento de destino',
+			type: 'select',
+			required: true,
+			options: departments.map((departament) => ({
+				label: departament.name,
+				value: departament.id?.toString() || '',
+			})),
+			onChange: (e) => onDepartmentChange(parseInt(e.target.value), false),
 		},
 		{
 			name: 'destination_id',
-			label: 'Ciudad de Destino',
+			label: 'Ciudad de destino',
 			type: 'select',
 			required: true,
-			options: cities.map((city) => ({
-				label: city.name,
-				value: city.id?.toString() || '',
-			})),
+			options: destinationCities
+				? destinationCities.map((city) => ({
+						label: city.name,
+						value: city.id?.toString() || '',
+					}))
+				: [],
 		},
 	];
 
@@ -60,8 +93,10 @@ export function JourneyForm({ journey, cities, onSubmit, onCancel }: JourneyForm
 			onCancel={onCancel}
 			title={journey ? 'Editar Trayecto' : 'Nuevo Trayecto'}
 			initialValues={{
-				origin_id: journey?.origin_id?.toString() || '',
-				destination_id: journey?.destination_id?.toString() || '',
+				departament_origin_id: "",
+				departament_destination_id: "",
+				origin_id:"",
+				destination_id:"",
 			}}
 		/>
 	);
