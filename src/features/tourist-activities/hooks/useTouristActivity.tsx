@@ -10,11 +10,17 @@ import {
   updateTouristActivity,
 } from "@/features/tourist-activities/services/touristActivityService";
 import { useNavigate } from "react-router";
+import { CitiesService } from "@/services/citieService";
+import { DepartamentService } from "@/services/departamentService";
+import { Departament } from "@/models/departaments";
+import type { City } from "@/features/journeys/types/Journey";
 
 export function useTouristActivity() {
   const [showForm, setShowForm] = useState(false);
   const [activityToEdit, setActivityToEdit] = useState<TouristActivity | null>(null);
   const [activities, setActivities] = useState<TouristActivity[]>([]);
+  const [departments, setDepartments] = useState<Departament[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -98,8 +104,28 @@ export function useTouristActivity() {
     }
   };
 
+  const loadDepartments = async () => {
+    try {
+      const response: Departament[] = await DepartamentService.getAllDepartaments();
+      setDepartments(response);
+    } catch (error) {
+      toast.error("Error al cargar departamentos");
+    }
+  };
+
+  const loadCitiesByDepartment = async (departmentId: number) => {
+    try {
+      const response: City[] = await CitiesService.getCitiesByDepartament(departmentId);
+      setCities(response);
+    } catch (error) {
+      toast.error("Error al cargar ciudades");
+      setCities([]);
+    }
+  };
+
   useEffect(() => {
     loadActivities();
+    loadDepartments();
   }, []);
 
   return {
@@ -114,6 +140,9 @@ export function useTouristActivity() {
     showForm,
     loading,
     navigate,
+    departments,
+    cities,
+    loadCitiesByDepartment,
   };
 }
 

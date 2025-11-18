@@ -17,7 +17,7 @@ export function useUser() {
         setShowForm(true)
     }
     const handleSubmit = async (user: User) => {
-        if (user.name.trim() === "" || user.email.trim() === "" || user.password.trim() === "") {
+        if (user.name.trim() === "" || user.email.trim() === "") {
             toast.error("Por favor completa todos los campos obligatorios")
             return
         }

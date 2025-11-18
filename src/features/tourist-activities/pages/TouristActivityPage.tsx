@@ -16,12 +16,35 @@ export default function TouristActivityPage() {
     handleEdit,
     handleSearch,
     setShowForm,
+    departments,
+    cities,
+    loadCitiesByDepartment,
   } = useTouristActivity();
 
   const fields = [
     { name: "name", label: "Nombre", required: true, type: "text" },
     { name: "description", label: "Descripción", type: "textarea" },
-    { name: "city_id", label: "Ciudad (id)", type: "number", required: true },
+    {
+      name: "departament_id",
+      label: "Departamento",
+      type: "select",
+      required: true,
+      options: departments?.map((dept) => ({
+        label: dept.name,
+        value: dept.id?.toString() || "",
+      })),
+      onChange: (e) => loadCitiesByDepartment(parseInt(e.target.value)),
+    },
+    {
+      name: "city_id",
+      label: "Ciudad",
+      type: "select",
+      required: true,
+      options: cities?.map((city) => ({
+        label: city.name,
+        value: city.id?.toString() || "",
+      })) || [],
+    },
     { name: "price", label: "Precio", type: "number" },
     { name: "is_active", label: "Activo", type: "checkbox" },
   ] as FormField[];
