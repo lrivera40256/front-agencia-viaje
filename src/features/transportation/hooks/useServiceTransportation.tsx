@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { ServiceTransportation } from "@/features/transportation/types/ServiceTransportation";
 import { ServiceTransportationService } from "@/features/transportation/services";
+import { toast } from "sonner";
 
 export default function useServiceTransportation() {
   const [items, setItems] = useState<ServiceTransportation[]>([]);
@@ -41,6 +42,11 @@ export default function useServiceTransportation() {
     }
   };
   const handleSubmit = async (values: ServiceTransportation) => {
+		if(values.start_date>values.end_date){
+			toast.error('La fecha de fin debe ser posterior a la fecha de inicio');
+			return;
+		}
+
     setLoading(true);
     try {
       if (values.id) {
