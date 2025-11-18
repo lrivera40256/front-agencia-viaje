@@ -9,10 +9,17 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status;
-    
-    if (status === 401 ) {
-      window.location.href = '/';
+
+    if (status === 403) {
+      // window.location.href = '/';
     }
+  }
+);
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
   }
 );
 
