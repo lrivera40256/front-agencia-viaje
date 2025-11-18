@@ -1,5 +1,6 @@
 import SecurityPage from '@/pages/security';
 import { lazy } from 'react';
+import {CustomerProvider} from '@/features/user/context/customerContext';
 const HomePage = lazy(() => import('../pages/Home'));
 const RolePage = lazy(() => import('../features/roles/pages/RolePage'));
 const PermissionPage = lazy(() => import('../pages/permission'));
@@ -38,6 +39,7 @@ const coreRoutes = [
 		path: '/clientes',
 		title: 'tablaClientes',
 		component: CustomerPage,
+		context: CustomerProvider,
 	},
 	{
 		path: '/tablaPermiso/:id?',

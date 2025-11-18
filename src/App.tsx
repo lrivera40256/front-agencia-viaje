@@ -20,7 +20,6 @@ function App() {
   return (
     <AuthProvider>
       <ProfileProvider>
-        <CustomerProvider>
           <Router>
             <Routes>
               {/* Public pages */}
@@ -41,18 +40,22 @@ function App() {
 
                   {/* ✅ Rutas normales */}
                   {routes
-                    .filter(r => r.path !== "/form") // evita duplicar esta ruta
-                    .map(({ path, component: Component }, index) => (
-                      <Route
-                        key={index}
-                        path={path}
-                        element={
-                          <Suspense fallback={<div>Cargando...</div>}>
+                    .filter(r => r.path !== "/form")
+                    .map(({ path, component: Component, context: Context }, index) => {
+                      const element = (
+                        <Suspense fallback={<div>Cargando...</div>}>
+                          {Context ? (
+                            <Context>
+                              <Component />
+                            </Context>
+                          ) : (
                             <Component />
-                          </Suspense>
-                        }
-                      />
-                    ))}
+                          )}
+                        </Suspense>
+                      );
+
+                      return <Route key={index} path={path} element={element} />;
+                    })}
                   <Route
                     path="/form"
                     element={
@@ -106,7 +109,6 @@ function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Router>
-        </CustomerProvider>
       </ProfileProvider>
     </AuthProvider>
   );
