@@ -10,11 +10,14 @@ import {
   updateBankCard,
 } from "@/features/bank-cards/services/bankCardService";
 import { useNavigate } from "react-router";
+import { CustomerService } from "@/features/user/services";
+import type { Customer } from "@/features/user/types/customer.type";
 
 export function useBankCard(customerId?: number | string) {
   const [showForm, setShowForm] = useState(false);
   const [cardToEdit, setCardToEdit] = useState<BankCard | null>(null);
   const [cards, setCards] = useState<BankCard[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -79,6 +82,15 @@ export function useBankCard(customerId?: number | string) {
     }
   };
 
+  const loadCustomers = async () => {
+    try {
+      const data = await CustomerService.getCustomers();
+      setCustomers(data);
+    } catch (error) {
+      toast.error("Error al cargar clientes");
+    }
+  };
+
   const handleEdit = (card: BankCard) => {
     setCardToEdit(cards.find((c) => c.id === card.id));
     setShowForm(true);
@@ -107,6 +119,9 @@ export function useBankCard(customerId?: number | string) {
 
   useEffect(() => {
     loadCards();
+    if (!customerId) {
+      loadCustomers();
+    }
   }, [customerId]);
 
   return {
@@ -123,6 +138,7 @@ export function useBankCard(customerId?: number | string) {
     navigate,
     loadCards,
     customerId,
+    customers,
   };
 }
 

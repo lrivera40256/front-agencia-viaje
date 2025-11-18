@@ -48,7 +48,9 @@ export function TransportItineraryForm({
 			type: 'select',
 			required: true,
 			options: journeys.map((journey) => ({
-				label: journey.name || `Trayecto ${journey.id}`,
+				label: journey.origin && journey.destination 
+					? `${journey.origin.name} -> ${journey.destination.name}`
+					: `Trayecto ${journey.id}`,
 				value: journey.id?.toString() || '',
 			})),
 		},

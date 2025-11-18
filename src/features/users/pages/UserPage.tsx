@@ -20,7 +20,8 @@ export default function RolePage() {
     } = useUser();
     const fields = [
         { name: "name", label: "Nombre", required: true, type: "text" },
-        { name: "description", label: "Descripción", type: "textarea", required: true },
+        { name: "email", label: "Email", type: "email", required: true },
+        ...(userToEdit ? [] : [{ name: "password", label: "Contraseña", type: "password", required: true }]),
     ] as FormField[];
     console.log(users);
     

@@ -19,6 +19,7 @@ export default function BankCardPage() {
     handleEdit,
     handleSearch,
     setShowForm,
+    customers,
   } = useBankCard(customerId);
 
   const fields = [
@@ -36,7 +37,16 @@ export default function BankCardPage() {
             { value: "inactive", label: "Inactivo" },
             { value: "blocked", label: "Bloqueado" },
         ] },
-    ...(customerId ? [] : [{ name: "customer_id", label: "Cliente (id)", type: "number", required: true }]),
+    ...(customerId ? [] : [{ 
+      name: "customer_id", 
+      label: "Cliente", 
+      type: "select", 
+      required: true,
+      options: customers?.map((customer) => ({
+        label: (customer as any).name || customer.user?.name || `Cliente ${customer.id}`,
+        value: customer.id?.toString() || "",
+      })) || []
+    }]),
   ] as FormField[];
 
   return (
