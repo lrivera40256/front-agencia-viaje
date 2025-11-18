@@ -1,10 +1,12 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { Customer, CustomerFormData } from "../types/customer.type";
 import { CustomerService } from "../services";
+import { User } from "@/features/users/types/User";
 
 
 export interface customerContextType {
     customers: Customer[];
+    usersNoCustomer: User[]
     loading: boolean;
     addCustomer: () => void;
     editCustomer: (customer: Customer) => void;
@@ -21,7 +23,19 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
     const [showForm, setShowForm] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [customerToEdit, setCustomerToEdit] = useState<Customer | null>(null);
+    const [usersNoCustomer, setUsersNoCustomer] = useState<User[]>([]);
 
+    const fetchUsersNoCustomer = async () => {
+        try {
+            setLoading(true);
+            const data = await CustomerService.getUserNoCustomer();
+            setUsersNoCustomer(data)
+        } catch (error) {
+            console.error("Error fetching user no customer", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const addCustomer = () => {
         setCustomerToEdit(null);
@@ -76,12 +90,16 @@ export const CustomerProvider = ({ children }: { children: ReactNode }) => {
     };
 
     useEffect(() => {
-        console.log("Holaaa");
         fetchCustomers();
     }, []);
+
+    useEffect(() => {
+        if (!showForm) return
+        fetchUsersNoCustomer()
+    }, [showForm]);
     return (
         <CustomerContext.Provider
-            value={{ customers, loading, addCustomer, editCustomer, onSubmit, customerToEdit, showForm, setShowForm, onDelete, fetchCustomers }}
+            value={{ customers, loading, addCustomer, editCustomer, onSubmit, customerToEdit, showForm, setShowForm, onDelete, fetchCustomers, usersNoCustomer }}
         >
             {children}
         </CustomerContext.Provider>
