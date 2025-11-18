@@ -31,13 +31,14 @@ export function TransportItineraryTable({
 	const tableData = itineraries.map((i) => {
 		const data: TransportItineraryTableData = {
 			id: i.id?.toString() || '',
-			sequence: i.sequence?.toString() || 'N/A',
-			travel: i.travel?.name || `Viaje ${i.travel_id}`,
-			journey: i.journey?.name || `Trayecto ${i.journey_id}`,
+			sequence: i.sequence?.toString(),
+			travel: i.travel.name,
+			journey: i.journey.origin.name + ' - ' + i.journey.destination.name,
 			serviceTransportation:
-				i.serviceTransportation?.name || `Servicio ${i.service_transportation_id}`,
+				i.serviceTransportation.vehicle.brand + ' - ' + i.serviceTransportation.vehicle.color,
 		};
 		itineraryDataMap.set(i.id?.toString() || '', i);
+		console.log(data);
 		return data;
 	});
 

@@ -1,24 +1,6 @@
-export interface Travel {
-	id?: number;
-	name?: string;
-	createdAt?: string;
-	updatedAt?: string;
-}
-
-export interface Journey {
-	id?: number;
-	name?: string;
-	createdAt?: string;
-	updatedAt?: string;
-}
-
-export interface ServiceTransportation {
-	id?: number;
-	name?: string;
-	type?: string;
-	createdAt?: string;
-	updatedAt?: string;
-}
+import { Journey } from "@/features/journeys";
+import { Travel } from "@/features/travels";
+import { ServiceTransportation } from "@/features/transportation/types/ServiceTransportation";
 
 export interface TransportItinerary {
 	id?: number;
