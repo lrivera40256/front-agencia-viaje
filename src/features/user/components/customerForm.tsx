@@ -1,21 +1,38 @@
-import { Form } from "@/components/form/Form";
-import { FormField } from "@/components/form/types";
-import { useCustomer } from "../context/customerContext";
+import { Form } from '@/components/form/Form';
+import { FormField } from '@/components/form/types';
+import { useCustomer } from '../context/customerContext';
+
+export interface CustomerFormData {
+  user_id: string;
+}
 
 export const CustomerForm = () => {
-    const { customerToEdit,onSubmit,setShowForm  } = useCustomer();
-    const fields = [
-        { name: "name", label: "Nombre", required: true, type: "text" },
-        { name: "email", label: "Email", type: "email", required: true },
-    ] as FormField[];
-    return (
-        <Form
-            title={customerToEdit ? "Editar cliente" : "Nuevo cliente"}
-            fields={fields}
-            initialValues={customerToEdit ? { name: customerToEdit.name, email: customerToEdit.email } : { name: "", email: "" }}
-            onSubmit={onSubmit} 
-            onCancel={() =>setShowForm(false)}
-            submitText={customerToEdit ? "Actualizar" : "Crear"}
-        />
-    )   
-}
+  const { customerToEdit, onSubmit, setShowForm, usersNoCustomer } = useCustomer();
+
+  const fields: FormField[] = [
+    {
+      name: 'user_id',
+      label: 'Usuario (correo)',
+      required: true,
+      type: 'select',
+      options:
+        usersNoCustomer?.map((u) => ({
+          label: u.email,
+          value: u._id,
+        })) || [],
+    },
+  ];
+
+  return (
+    <Form
+      fields={fields}
+      initialValues={{
+        user_id: customerToEdit?.user_id || "",
+      }}
+      onSubmit={onSubmit}
+      onCancel={() => setShowForm(false)}
+      title={customerToEdit ? "Editar cliente" : "Nuevo cliente"}
+    />
+  );
+};
+

@@ -1,7 +1,17 @@
 import api from "@/interceptors/msLogicInterceptor";
 import { Customer, CustomerFormData } from "../types/customer.type";
+import { User } from "@/features/users/types/User";
 
 export class CustomerService {
+    static async getUserNoCustomer():Promise<User[]>{
+        try {
+            const { data } = await api.get("/customer/users-no-customer");
+            return data
+        } catch (error) {
+            throw error;
+        }
+    }
+
     static async getCustomers():Promise<Customer[]> {
         try {
             const { data } = await api.get("/customer");

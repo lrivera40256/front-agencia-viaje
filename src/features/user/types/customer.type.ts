@@ -14,6 +14,5 @@ export interface Customer extends User {
 
 
 export interface CustomerFormData {
-    name: string;
-    email: string;
+    user_id: string
 }
