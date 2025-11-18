@@ -32,6 +32,10 @@ export function useTravel() {
 			toast.error('La descripción es obligatoria');
 			return;
 		}
+		if(travel.start_date>travel.end_date){
+			toast.error('La fecha de fin debe ser posterior a la fecha de inicio');
+			return;
+		}
 		if (!travel.start_date) {
 			toast.error('La fecha de inicio es obligatoria');
 			return;
