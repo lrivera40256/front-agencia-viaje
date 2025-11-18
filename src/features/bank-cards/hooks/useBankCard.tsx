@@ -28,11 +28,63 @@ export function useBankCard(customerId?: number | string) {
   };
 
   const handleSubmit = async (card: BankCard) => {
-    if (!card.card_number?.trim() || !card.card_holder?.trim()) {
-      toast.error("Por favor completa los campos obligatorios");
+    // Validaciones de campos requeridos
+    if (!card.card_holder?.trim()) {
+      toast.error("El nombre del titular es obligatorio");
+      return;
+    }
+    if (!card.provider?.trim()) {
+      toast.error("El proveedor de la tarjeta es obligatorio");
+      return;
+    }
+    if (!card.card_number?.trim()) {
+      toast.error("El número de tarjeta es obligatorio");
+      return;
+    }
+    if (card.card_number.length < 16) {
+      toast.error("El número de tarjeta debe tener al menos 16 dígitos");
+      return;
+    }
+    if (card.card_number.length > 19) {
+      toast.error("El número de tarjeta no puede exceder 19 dígitos");
+      return;
+    }
+    if (!card.expiration_date?.trim()) {
+      toast.error("La fecha de expiración es obligatoria");
+      return;
+    }
+    // Validar formato MM/YY
+    const expirationRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+    if (!expirationRegex.test(card.expiration_date)) {
+      toast.error("La fecha de expiración debe tener el formato MM/YY");
+      return;
+    }
+    if (!card.cvv?.trim()) {
+      toast.error("El CVV es obligatorio");
+      return;
+    }
+    if (card.cvv.length < 3 || card.cvv.length > 4) {
+      toast.error("El CVV debe tener entre 3 y 4 dígitos");
+      return;
+    }
+    if (!card.card_type) {
+      toast.error("El tipo de tarjeta es obligatorio");
+      return;
+    }
+    if (card.card_type !== 'debit' && card.card_type !== 'credit') {
+      toast.error("El tipo de tarjeta debe ser débito o crédito");
+      return;
+    }
+    if (!card.status) {
+      toast.error("El estado de la tarjeta es obligatorio");
+      return;
+    }
+    if (!card.customer_id) {
+      toast.error("El cliente es obligatorio");
       return;
     }
 
+    setLoading(true);
     try {
       if (card.id) {
         await updateBankCard(card);
@@ -43,12 +95,12 @@ export function useBankCard(customerId?: number | string) {
         toast.success("Tarjeta creada exitosamente");
         setShowForm(false);
       }
-      await loadCards();
     } catch (error) {
-      console.error(error);
-      const serverMsg = (error as any)?.response?.data?.message || (error as any)?.response?.data || null;
-      if (serverMsg) toast.error(typeof serverMsg === "string" ? serverMsg : JSON.stringify(serverMsg));
-      else toast.error("Error al guardar la tarjeta");
+      toast.error("Error al guardar la tarjeta");
+      console.log(error);
+    } finally {
+      setLoading(false);
+      loadCards();
     }
   };
 
