@@ -3,7 +3,7 @@ import type { Quota } from '../types/Quota';
 
 export interface QuotaTableData {
 	id: string;
-	travelId: number;
+	travel: string;
 	amount: string;
 	numberPayments: string;
 }
@@ -30,7 +30,7 @@ export function QuotaTable({
 	const tableData = quotas.map((q) => {
 		const data: QuotaTableData = {
 			id: q.id?.toString() || '',
-			travelId: q.travel_id,
+			travel: q.travel?.name || '',
 			amount: `$${q.amount.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
 			numberPayments: q.number_payments.toString(),
 		};
