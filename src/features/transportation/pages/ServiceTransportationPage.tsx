@@ -2,6 +2,8 @@ import { LoadingOverlay } from "@/components/Loader";
 import ServiceTransportationTable from "@/features/transportation/components/ServiceTransportationTable";
 import ServiceTransportationForm from "@/features/transportation/components/ServiceTransportationForm";
 import useServiceTransportation from "@/features/transportation/hooks/useServiceTransportation";
+import { useJourney } from "@/features/journeys";
+import { useVehicle } from "@/features/vehicle-management/hooks/useVehicle";
 
 export default function ServiceTransportationPage() {
   const {
@@ -15,6 +17,10 @@ export default function ServiceTransportationPage() {
     handleSubmit,
     setShowForm,
   } = useServiceTransportation();
+
+  const {journeys} = useJourney()
+
+  const { vehicles } = useVehicle();
 
   return (
     <div>
@@ -35,6 +41,8 @@ export default function ServiceTransportationPage() {
               initial={itemToEdit ?? undefined}
               onSubmit={async (v) => handleSubmit(v as any)}
               onCancel={() => setShowForm(false)}
+              journeys={journeys}
+              vehicles={vehicles}
             />
           </div>
         </div>
