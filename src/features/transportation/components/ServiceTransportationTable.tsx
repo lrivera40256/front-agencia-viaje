@@ -14,13 +14,13 @@ export function ServiceTransportationTable({ items, loading, onAdd, onEdit, onDe
     { label: "Editar", variant: "primary" as const, onClick: onEdit },
     { label: "Eliminar", variant: "danger" as const, onClick: onDelete },
   ];
-
+  console.log(items);
   const rows = items.map((s) => ({
     start_date: s.start_date,
     end_date: s.end_date,
     cost: s.cost,
-    transportation_id: s.transportation_id,
-    journey_id: s.journey_id,
+    transportation_id: s.vehicle.brand + " - " + s.vehicle.color,
+    journey_id: s.journey.origin.name + " -> " + s.journey.destination.name,
     id: s.id,
   }));
 
