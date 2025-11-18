@@ -11,7 +11,7 @@ api.interceptors.response.use(
     const status = error?.response?.status;
 
     if (status === 403) {
-      // window.location.href = '/';
+      window.location.href = '/';
     }
   }
 );
