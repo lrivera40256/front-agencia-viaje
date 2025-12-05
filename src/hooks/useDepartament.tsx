@@ -1,6 +1,7 @@
 import { Departament } from "@/models/departaments";
 import { DepartamentService } from "@/services/departamentService";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export const useDepartament = () => {
     // Hook logic here
@@ -9,6 +10,9 @@ export const useDepartament = () => {
         setLoading(true);
         try {
             const data = await DepartamentService.getDepartmentsWithAvailableHotels();
+            if(data.length==0){
+                toast.error("No hay departamentos con hoteles disponibles");
+            }
             return data;
         } catch (error) {
             console.error("Error fetching departaments:", error);

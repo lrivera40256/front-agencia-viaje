@@ -40,6 +40,7 @@ export const Select = ({ title,data,value,onChange,icon}: SelectProps) => {
           "
           style={{ width: "180px" }}
           value={value}
+          disabled={data.length==0}
           onChange={(e) => {
             const selectedId = Number(e.target.value);
             const selectedItem = data.find(item => item.id === selectedId);
