@@ -2,10 +2,12 @@
 import { useEffect, useState } from "react";
 import type { Segment } from "../types/segment.types";
 import { City, Departament } from "../types/locationTrip.types";
+import { Room } from "@/features/accommodation/types/room.type";
+
 
 export function useTripSegment() {
   const [segment, setSegment] = useState<Segment>();
-  const create = (order: number,dateFrom?: Date,cityFrom?: City,departamentFrom?: Departament): Segment => {
+  const create = (order: number,dateFrom?: Date,cityFrom?: City,departamentFrom?: Departament,rooms?:Room[]): Segment => {
     const newSeg: Segment = {
       order,
       cityFrom: cityFrom || { id: 0, name: "" },
@@ -20,7 +22,7 @@ export function useTripSegment() {
         stars: 0,
         amenities: ""
       },
-      rooms: [],
+      rooms:  rooms || [],
     };
     console.log(newSeg);
     

@@ -7,14 +7,15 @@ export interface wizardContextType {
   next: () => void;
   back: () => void;
   configuration: configuration [];
+  setStep:(step:number)=>void;
 }
 
 const WizardContext = createContext<wizardContextType | undefined>(undefined);
 export const WizardProvider = ({ children }: { children: ReactNode }) => {
-  const {step, next, back,configuration} = useTripWizard();
+  const {step, next, back,configuration,setStep} = useTripWizard();
   return (
     <WizardContext.Provider
-      value={{ step, next, back,configuration }}
+      value={{ step, next, back,configuration ,setStep}}
     >
       {children}
     </WizardContext.Provider>

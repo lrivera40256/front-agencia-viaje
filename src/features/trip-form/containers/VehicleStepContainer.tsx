@@ -10,7 +10,7 @@ import { useSegments } from "../contexts/segmentsContext";
 
 export const VehicleStepContainer = () => {
     const { vehicles, type, setType } = useVehicle();
-    const { next } = useWizard();
+    const { next, setStep } = useWizard();
     const { segment, updateField } = useSegment();
     const { segments, addSegment } = useSegments();
     const initialized = useRef(false);
@@ -20,14 +20,8 @@ export const VehicleStepContainer = () => {
         next();
 
     }
-    useEffect(() => {
-        if (!initialized.current) {
-            addSegment(segment);
-            initialized.current = true;
-        };
-    }, [segment]);
     return (
-        <SectionCard title="Selección de vehículo">
+        <SectionCard onAction={() => setStep(6)} title="Selección de vehículo">
             <VehicleTypeToggle value={type} onChange={setType}>
                 <VehicleList vehicles={vehicles || []} onSelect={handleSelect} />
             </VehicleTypeToggle>

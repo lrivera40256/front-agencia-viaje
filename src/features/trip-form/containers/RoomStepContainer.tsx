@@ -1,9 +1,11 @@
 import { RoomList } from "@/features/accommodation/components/RoomsList";
 import { SectionCard } from "../components/SectionCard";
+import { useWizard } from "../contexts/wizardContext";
 
 export const RoomStepContainer = () => {
+  const { setStep } = useWizard();
   return (
-    <SectionCard title="Selección de habitaciones">
+    <SectionCard onAction={() => setStep(6)} title="Selección de habitaciones">
       <RoomList></RoomList>
     </SectionCard>
   );

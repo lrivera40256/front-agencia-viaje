@@ -1,6 +1,7 @@
 import { DestinationationPicker } from "./LocationPicker";
 import { City, Departament } from "../types/locationTrip.types";
 import { SectionCard } from "./SectionCard";
+import { useWizard } from "../contexts/wizardContext";
 interface DestinationationsPickerProps {
   departamentFrom: Departament;
   departamentTo: Departament;
@@ -29,9 +30,9 @@ export const DestinationationsPicker = ({
   citiesTo,
   departamentsAvailables
 }: DestinationationsPickerProps) => {
-
+  const { setStep } = useWizard();  
   return (
-    <SectionCard title="Selección de Origen y Destino">
+    <SectionCard onAction={() => setStep(6)} title="Selección de Origen y Destino">
       <div className="flex flex-col md:flex-row gap-8">
         <DestinationationPicker
           title="Origen"

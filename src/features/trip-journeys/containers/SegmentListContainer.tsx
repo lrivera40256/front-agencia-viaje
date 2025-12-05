@@ -9,7 +9,6 @@ export const SegmentListContainer = () => {
 
   const isEmpty = segments.length === 0;
 
-  console.log(segments)
   return (
     <div>
       {isEmpty ? (
