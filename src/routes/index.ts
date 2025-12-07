@@ -1,6 +1,6 @@
 import SecurityPage from '@/pages/security';
 import { lazy } from 'react';
-import {CustomerProvider} from '@/features/user/context/customerContext';
+import { CustomerProvider } from '@/features/user/context/customerContext';
 const HomePage = lazy(() => import('../pages/Home'));
 const RolePage = lazy(() => import('../features/roles/pages/RolePage'));
 const PermissionPage = lazy(() => import('../pages/permission'));
@@ -26,6 +26,9 @@ const transportItineraryPage = lazy(
 const ServiceTransportationPage = lazy(
 	() => import('../features/transportation/pages/ServiceTransportationPage')
 );
+const TravelPackagesPage = lazy(
+	() => import('../features/travel-package/pages/TravelPackagesPage')
+);
 const UserLogicPage = lazy(() =>
 	import('../features/user-logic/pages/UserLogicPage').then((m) => ({ default: m.UserLogicPage }))
 );
@@ -40,6 +43,16 @@ const coreRoutes = [
 		path: 'servicio-transporte',
 		title: 'tablaServicios',
 		component: ServiceTransportationPage,
+	},
+	{
+		path: '/travel-packages',
+		title: 'Travel Packages',
+		component: TravelPackagesPage,
+	},
+	{
+		path: '/travel-packages/:customerId',
+		title: 'Travel Packages',
+		component: TravelPackagesPage,
 	},
 	{
 		path: '/clientes',
