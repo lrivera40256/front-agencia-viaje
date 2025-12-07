@@ -3,6 +3,7 @@ import { WizardLayout } from "../components/WizardLayout";
 import { StepperControls } from "../components/steps/StepperControls";
 import { DateStepContainer } from "../containers/DateStepContainer";
 import { DestinationContainer } from "../containers/DestinationContainer";
+import { TouristActivitiesStepContainer } from "../containers/TouristAtivitiesStepContainer";
 import { useEffect, useRef } from "react";
 import { useWizard } from "../contexts/wizardContext";
 import { useSegment } from "../contexts/segmentContext";
@@ -36,7 +37,8 @@ const CreateTripWizard = () => {
                 {step === 3 && <HotelStepContainer />}
                 {step === 4 && <RoomStepContainer />}
                 {step === 5 && <VehicleStepContainer />}
-                {step === 6 && <SegmentListContainer/>}
+                {step === 6 && <TouristActivitiesStepContainer />}
+                {step === 7 && <SegmentListContainer/>}
             </WizardLayout>
             <StepperControls />
         </div>

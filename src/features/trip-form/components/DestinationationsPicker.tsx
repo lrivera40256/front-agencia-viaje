@@ -32,7 +32,7 @@ export const DestinationationsPicker = ({
 }: DestinationationsPickerProps) => {
   const { setStep } = useWizard();  
   return (
-    <SectionCard onAction={() => setStep(6)} title="Selección de Origen y Destino">
+    <SectionCard onAction={() => setStep(7)} title="Selección de Origen y Destino">
       <div className="flex flex-col md:flex-row gap-8">
         <DestinationationPicker
           title="Origen"

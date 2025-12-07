@@ -5,7 +5,7 @@ import { useWizard } from "../contexts/wizardContext";
 export const HotelStepContainer = () => {
     const { setStep } = useWizard();
     return (
-        <SectionCard onAction={() => setStep(6)} title="Selección de alojamiento">
+        <SectionCard onAction={() => setStep(7)} title="Selección de alojamiento">
         <HotelList></HotelList>
         </SectionCard>
     );

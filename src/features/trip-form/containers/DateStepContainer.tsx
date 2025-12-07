@@ -8,7 +8,7 @@ export const DateStepContainer = () => {
     const { segment, updateField } = useSegment();
     const {setStep} = useWizard();
     return (    
-        <SectionCard onAction={() => setStep(6)} title="Selección de Fechas">
+        <SectionCard onAction={() => setStep(7)} title="Selección de Fechas">
             <DatePicker
                 disable={segment?.order > 0}
                 startDate={segment?.dateFrom}

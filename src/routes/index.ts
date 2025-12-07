@@ -19,6 +19,7 @@ const quotaPage = lazy(() => import('../features/quotas/pages/QuotaPage'));
 const journeysPage = lazy(() => import('../features/journeys/pages/JourneyPage'));
 const roomPage = lazy(() => import('../features/rooms/pages/RoomPage'));
 const vehiclePage = lazy(() => import('../features/vehicle-management/pages/VehiclePage'));
+const Dashboard = lazy(() => import('../features/dashboard/pages/dashboard'));
 const transportItineraryPage = lazy(
 	() => import('../features/transport-itinerary/pages/TransportItineraryPage')
 );
@@ -33,6 +34,11 @@ const UserLogicPage = lazy(() =>
 );
 
 const coreRoutes = [
+	{
+		path: 'dashboard',
+		title: 'dashboard',
+		component: Dashboard,
+	},
 	{
 		path: 'servicio-transporte',
 		title: 'tablaServicios',
