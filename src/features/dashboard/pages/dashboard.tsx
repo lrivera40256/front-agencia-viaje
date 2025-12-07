@@ -1,41 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer
 } from "recharts";
+import { DashboardService } from "../services/dashboardService";
+import { set } from "date-fns";
 
 export function dashboard() {
   // 📈 Histórico del dinero recolectado
-  const historico = [
-    { mes: "Enero", total: 2300000 },
-    { mes: "Febrero", total: 1850000 },
-    { mes: "Marzo", total: 3200000 },
-    { mes: "Abril", total: 4100000 },
-    { mes: "Mayo", total: 3800000 },
-    { mes: "Junio", total: 4650000 },
-    { mes: "Julio", total: 5200000 },
-    { mes: "Agosto", total: 4800000 },
-    { mes: "Septiembre", total: 5000000 },
-    { mes: "Octubre", total: 6100000 },
-    { mes: "Noviembre", total: 5700000 },
-    { mes: "Diciembre", total: 6500000 },
-  ];
+  const [historyData, setHistoryData] = useState([]);
+  const [typesVehiclesData, setTypesVehiclesData] = useState([]);
+  const [topDestinationsData, setTopDestinationsData] = useState([]);
+  const getData = async () => {
+    const data = await DashboardService.getHistory();
+    const typesVehicles = await DashboardService.getTypesVehicles();
+    const topDestinations = await DashboardService.getTopDestinations();
+    setHistoryData(data.data);
+    setTypesVehiclesData(typesVehicles.data);
+    setTopDestinationsData(topDestinations.data);
+  }
+  useEffect( () => {
+    getData();
+  }, []);
 
-  // 🏙️ Viajes por municipio
-  const viajesPorMunicipio = [
-    { municipio: "Bogotá", cantidad: 42 },
-    { municipio: "Medellín", cantidad: 38 },
-    { municipio: "Cali", cantidad: 27 },
-    { municipio: "Cartagena", cantidad: 31 },
-    { municipio: "Barranquilla", cantidad: 19 },
-    { municipio: "Santa Marta", cantidad: 22 },
-  ];
 
-  // ✈️ Tipos de transporte (aéreo vs terrestre)
-  const tiposTransporte = [
-    { tipo: "Aéreo", porcentaje: 64 },
-    { tipo: "Terrestre", porcentaje: 36 },
-  ];
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -45,15 +33,15 @@ export function dashboard() {
       <div className="bg-white rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold mb-3 text-gray-700">Histórico de dinero recolectado</h2>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={historico}>
+          <LineChart data={historyData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
+            <XAxis dataKey="month" />
             <YAxis />
             <Tooltip formatter={(v) => `$${v.toLocaleString()}`} />
             <Legend />
             <Line
               type="monotone"
-              dataKey="total"
+              dataKey="total_travels"
               stroke="#8884d8"
               activeDot={{ r: 8 }}
               strokeWidth={3}
@@ -66,13 +54,13 @@ export function dashboard() {
       <div className="bg-white rounded-2xl shadow p-4">
         <h2 className="text-lg font-semibold mb-3 text-gray-700">Viajes por municipio</h2>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={viajesPorMunicipio}>
+          <BarChart data={topDestinationsData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="municipio" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="cantidad" fill="#82ca9d" barSize={40} />
+            <Bar dataKey="quantity" fill="#82ca9d" barSize={40} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -83,16 +71,16 @@ export function dashboard() {
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
-              data={tiposTransporte}
-              dataKey="porcentaje"
-              nameKey="tipo"
+              data={typesVehiclesData}
+              dataKey="value"
+              nameKey="type"
               cx="50%"
               cy="50%"
               outerRadius={100}
               fill="#8884d8"
-              label={(entry) => `${entry.tipo} (${entry.porcentaje}%)`}
+              label={(entry) => `${entry.type}(${entry.value}%)`}
             >
-              {tiposTransporte.map((entry, index) => (
+              {typesVehiclesData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
