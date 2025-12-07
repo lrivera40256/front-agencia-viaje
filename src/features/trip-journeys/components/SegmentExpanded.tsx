@@ -71,7 +71,9 @@ export const SegmentExpanded = ({ segment }: SegmentExpandedProps) => {
           />
 
           <DetailRow onClick={() => setStep(3)} label="Hotel " value={segment.hotel.name} />
-          <DetailRow onClick={() => setStep(4)} label="Habitación " value={segment.rooms.map(room => room.room_number).join(", ")} />
+          <DetailRow onClick={() => setStep(4)} label="Habitaciones " value={segment.rooms.map(room => room.room_number).join(", ")} />
+          <DetailRow onClick={() => setStep(5)} label="Vehículo " value={segment.vehicle.type} />
+          <DetailRow onClick={() => setStep(6)} label="Planes " value={segment.plans.map(plan => plan.name).join(", ")} />
         </div>
       </div>
 

@@ -1,9 +1,9 @@
 import type { TouristActivity } from '@/features/tourist-activities/types/TouristActivity';
 import api from '@/interceptors/msLogicInterceptor';
 
-export const getTouristActivities = async (): Promise<TouristActivity[]> => {
+export const getTouristActivitiesByCity = async (cityId: number ): Promise<TouristActivity[]> => {
   try {
-    const response = await api.get('/tourist-activities');
+    const response = await api.get(`/tourist-activities/city/${cityId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching tourist activities:', error);
@@ -63,7 +63,7 @@ export const deleteTouristActivityById = async (id: number | string): Promise<vo
 };
 
 export default {
-  getTouristActivities,
+  getTouristActivitiesByCity,
   getTouristActivityById,
   getTouristActivityByName,
   createTouristActivity,

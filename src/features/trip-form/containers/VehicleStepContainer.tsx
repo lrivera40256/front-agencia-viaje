@@ -21,7 +21,7 @@ export const VehicleStepContainer = () => {
 
     }
     return (
-        <SectionCard onAction={() => setStep(6)} title="Selección de vehículo">
+        <SectionCard onAction={() => setStep(7)} title="Selección de vehículo">
             <VehicleTypeToggle value={type} onChange={setType}>
                 <VehicleList vehicles={vehicles || []} onSelect={handleSelect} />
             </VehicleTypeToggle>
