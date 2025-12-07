@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { TravelPackage, Journey } from '../types/travel-package.type';
+import { TravelPackage, Itinerary, Plan } from '../types/travel-package.type';
 import {
 	ChevronDown,
 	MapPin,
-	Calendar,
-	Clock,
-	Sun,
-	Moon,
+	Bed,
 	Plane,
 	Bus,
 	Train,
 	Car,
+	DollarSign,
+	Activity,
+	Hotel,
+	Calendar,
 } from 'lucide-react';
 
 interface TravelPackageItemProps {
@@ -20,27 +21,50 @@ interface TravelPackageItemProps {
 export function TravelPackageItem({ package: pkg }: TravelPackageItemProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
+	const formatDate = (dateString: string) => {
+		if (!dateString) return 'N/A';
+		return new Date(dateString).toLocaleDateString('es-ES', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+		});
+	};
+
 	return (
-		<div className="border rounded-lg overflow-hidden shadow-sm">
+		<div className="border rounded-lg overflow-hidden shadow-sm bg-white">
 			<div
-				className="p-4 bg-white cursor-pointer flex justify-between items-center"
+				className="p-4 cursor-pointer flex justify-between items-center"
 				onClick={() => setIsOpen(!isOpen)}
 			>
 				<div>
-					<h3 className="font-bold text-lg">{pkg.name}</h3>
-					<p className="text-sm text-gray-600">{pkg.description}</p>
-					<p className="text-sm font-semibold text-blue-600 mt-1">
-						${pkg.price.toLocaleString()}
-					</p>
+					<h3 className="font-bold text-lg text-gray-800">{pkg.name}</h3>
+					<p className="text-sm text-gray-600">{pkg.description || 'Sin descripción.'}</p>
+					<div className="flex items-center text-gray-500 text-sm mt-2">
+						<Calendar className="h-4 w-4 mr-2" />
+						<span>
+							{formatDate(pkg.start_date)} - {formatDate(pkg.end_date)}
+						</span>
+					</div>
+					<div className="flex items-center text-gray-800 mt-2">
+						<DollarSign className="h-5 w-5 mr-2 text-green-600" />
+						<span className="text-lg font-semibold">
+							{pkg.price != null
+								? `$${Number(pkg.price).toLocaleString()}`
+								: 'Precio no disponible'}
+						</span>
+					</div>
 				</div>
 				<ChevronDown
-					className={`transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
+					className={`transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
 				/>
 			</div>
 			{isOpen && (
-				<div className="p-4 bg-gray-50 border-t">
-					{pkg.journeys.map((journey) => (
-						<JourneyDetails key={journey.id} journey={journey} />
+				<div className="p-4 bg-gray-50 border-t space-y-4">
+					{pkg.itineraries?.map((itinerary, index) => (
+						<ItineraryDetails key={index} itinerary={itinerary} />
+					))}
+					{pkg.plans?.map((plan) => (
+						<PlanDetails key={plan.id} plan={plan} />
 					))}
 				</div>
 			)}
@@ -48,53 +72,62 @@ export function TravelPackageItem({ package: pkg }: TravelPackageItemProps) {
 	);
 }
 
-function JourneyDetails({ journey }: { journey: Journey }) {
+function ItineraryDetails({ itinerary }: { itinerary: Itinerary }) {
 	return (
-		<div className="mb-4 p-3 border rounded-md bg-white">
-			<h4 className="font-semibold text-md mb-2 flex items-center">
-				<MapPin className="w-4 h-4 mr-2" /> {journey.name}
+		<div className="p-3 border rounded-md bg-white shadow-sm">
+			<h4 className="font-semibold text-md mb-2 flex items-center text-gray-700">
+				<MapPin className="w-4 h-4 mr-2 text-blue-500" /> Trayecto: {itinerary.origin} →{' '}
+				{itinerary.destination}
 			</h4>
-			<div className="text-xs text-gray-500 flex items-center mb-2">
-				<Calendar className="w-3 h-3 mr-1" />
-				<span>
-					{journey.start_date} to {journey.end_date}
-				</span>
-			</div>
-			{journey.itineraries.map((itinerary) => (
-				<div key={itinerary.id} className="ml-4 pl-3 border-l-2 my-2">
-					<p className="font-bold text-sm">Day {itinerary.day}</p>
-					<div className="text-sm flex items-center my-1">
-						<Sun className="w-4 h-4 mr-2 text-yellow-500" /> {itinerary.activity.name} (
-						{itinerary.activity.start_time} - {itinerary.activity.end_time})
-					</div>
-					{itinerary.accommodation && (
-						<div className="text-sm flex items-center my-1">
-							<Moon className="w-4 h-4 mr-2 text-blue-500" />{' '}
-							{itinerary.accommodation.name}
-						</div>
-					)}
-					{itinerary.transport && (
-						<div className="text-sm flex items-center my-1">
-							{getTransportIcon(itinerary.transport.type)}
-							{itinerary.transport.details}
-						</div>
-					)}
+			{itinerary.vehicle && (
+				<div className="text-sm flex items-center my-1 text-gray-600">
+					{getTransportIcon(itinerary.vehicle.type)}
+					<span>
+						{itinerary.vehicle.brand} {itinerary.vehicle.model} (
+						{itinerary.vehicle.type})
+					</span>
+				</div>
+			)}
+			{itinerary.rooms?.map((room, index) => (
+				<div key={index} className="text-sm flex items-center my-1 pl-6 text-gray-600">
+					<Bed className="w-4 h-4 mr-2 text-purple-500" />
+					<span>
+						Habitación {room.number} - ${Number(room.price_per_night).toLocaleString()}
+						/noche
+					</span>
 				</div>
 			))}
 		</div>
 	);
 }
 
-function getTransportIcon(type: 'flight' | 'bus' | 'train' | 'car') {
+function PlanDetails({ plan }: { plan: Plan }) {
+	return (
+		<div className="p-3 border rounded-md bg-white shadow-sm">
+			<h4 className="font-semibold text-md mb-2 flex items-center text-gray-700">
+				<Hotel className="w-4 h-4 mr-2 text-orange-500" /> Plan: {plan.name}
+			</h4>
+			<p className="text-sm text-gray-600 mb-2">{plan.description}</p>
+			{plan.activities?.map((activity) => (
+				<div
+					key={activity.id}
+					className="text-sm flex items-center my-1 pl-6 text-gray-600"
+				>
+					<Activity className="w-4 h-4 mr-2 text-teal-500" />
+					<span>
+						{activity.name} en {activity.city}
+					</span>
+				</div>
+			))}
+		</div>
+	);
+}
+
+function getTransportIcon(type: string) {
 	const className = 'w-4 h-4 mr-2 text-gray-600';
-	switch (type) {
-		case 'flight':
-			return <Plane className={className} />;
-		case 'bus':
-			return <Bus className={className} />;
-		case 'train':
-			return <Train className={className} />;
-		case 'car':
-			return <Car className={className} />;
-	}
+	const lowerType = type.toLowerCase();
+	if (lowerType.includes('avión'))
+		return <Plane className={className} />;
+	if (lowerType.includes('carro'))
+		return <Car className={className} />;
 }
