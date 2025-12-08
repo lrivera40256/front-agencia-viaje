@@ -3,6 +3,7 @@ import { AppSidebar } from './AppSidebar';
 import { AppNavbar } from './AppNavbar';
 import { Outlet } from 'react-router-dom';
 import { useAuthContext } from '@/features/auth/contexts/AuthProvider';
+import ChatBot from '@/features/chatbot/components/ChatBot';
 
 export function DashboardLayout() {
 	const {logout,user} = useAuthContext();
@@ -16,6 +17,7 @@ export function DashboardLayout() {
 				<main className="flex-1 p-4">
 					<Outlet />
 				</main>
+				<ChatBot />
 			</SidebarInset>
 		</SidebarProvider>
 	);
