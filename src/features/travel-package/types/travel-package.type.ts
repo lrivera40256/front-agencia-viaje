@@ -7,6 +7,7 @@ export interface TravelPackage {
     price: string | null;
     plans?: Plan[];
     itineraries?: Itinerary[];
+    customers?: User[];
 }
 
 export interface Plan {
@@ -37,6 +38,11 @@ export interface Vehicle {
     brand: string;
     type: string;
     model: number;
+}
+export interface User{
+    name: string;
+    email: string;
+    user_id: string;
 }
 
 export interface Room {

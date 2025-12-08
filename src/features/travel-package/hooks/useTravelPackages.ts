@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import type { TravelPackage } from '../types/travel-package.type';
 import { getTravelPackages } from '../services/travelPackageService';
+import { CustomerService } from '../services/customerService';
 
-export function useTravelPackages(customerId?: number) {
+export function useTravelPackages(customerId?: string) {
 	const [packages, setPackages] = useState<TravelPackage[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -22,6 +23,11 @@ export function useTravelPackages(customerId?: number) {
 			setLoading(false);
 		}
 	};
+	const createCustomer = async (payload: { name: string; email: string; password: string,travel_id:number},) => {
+		await CustomerService.createCustomer(payload);
+		toast.success("Cliente creado exitosamente");
+		loadPackages();
+	};
 
 	useEffect(() => {
 		loadPackages();
@@ -32,5 +38,6 @@ export function useTravelPackages(customerId?: number) {
 		loading,
 		error,
 		refresh: loadPackages,
+		createCustomer,
 	};
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useTravelPackages } from '../hooks/useTravelPackages';
 import { TravelPackageList } from '../components/TravelPackageList';
@@ -7,7 +7,7 @@ import { LoadingOverlay } from '@/components/Loader'; // Assuming you have a Loa
 export default function TravelPackagesPage() {
 	const { customerId } = useParams<{ customerId?: string }>();
 	const { packages, loading, error, refresh } = useTravelPackages(
-		customerId ? Number(customerId) : undefined
+		customerId ? (customerId) : undefined
 	);
 
 	return (
@@ -27,7 +27,7 @@ export default function TravelPackagesPage() {
 
 			{loading && <LoadingOverlay />}
 			{error && <p className="text-red-500 text-center">{error}</p>}
-			{!loading && !error && <TravelPackageList packages={packages} />}
+			{!loading && !error && <TravelPackageList  />}
 		</div>
 	);
 }

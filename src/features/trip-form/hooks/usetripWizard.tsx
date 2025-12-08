@@ -78,7 +78,8 @@ export const useTripWizard = () => {
 					const payload = { items };
 					console.log(payload);
 					await TripService.createTrip(payload);
-
+                    console.log(user);
+                    
 					if (user?.id) {
 						navigate(`/travel-packages/${user.id}`, { state: { from: 'trip-form' } });
 					} else {

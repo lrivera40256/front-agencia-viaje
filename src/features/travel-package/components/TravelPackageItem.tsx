@@ -11,6 +11,8 @@ import {
 import { ItineraryDetails } from './ItineraryDetails';
 import { PlanDetails } from './PlanDetails';
 import { useParams } from 'react-router-dom';
+import { UsersDetails } from './UsersDetails';
+import { useTravelPackages } from '../hooks';
 
 interface TravelPackageItemProps {
 	package: TravelPackage;
@@ -19,6 +21,9 @@ interface TravelPackageItemProps {
 export function TravelPackageItem({ package: pkg }: TravelPackageItemProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const { customerId } = useParams<{ customerId: string }>();
+	const { createCustomer } = useTravelPackages(
+		customerId ? (customerId) : undefined
+	);
 
 	const handlePay = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -27,7 +32,6 @@ export function TravelPackageItem({ package: pkg }: TravelPackageItemProps) {
 
 	const handleSave = (e: React.MouseEvent) => {
 		e.stopPropagation();
-		console.log(`Guardando el viaje ${pkg.id} para el usuario actual`);
 	};
 	const formatDate = (dateString: string) => {
 		if (!dateString) return 'N/A';
@@ -37,6 +41,9 @@ export function TravelPackageItem({ package: pkg }: TravelPackageItemProps) {
 			day: 'numeric',
 		});
 	};
+	const submmitCreateCustomer = (payload: { name: string; email: string; password: string }) => {
+		createCustomer?.({ ...payload, travel_id: pkg.id });
+	}
 
 	return (
 		<div className="border rounded-lg overflow-hidden shadow-sm bg-white">
@@ -92,6 +99,9 @@ export function TravelPackageItem({ package: pkg }: TravelPackageItemProps) {
 					{pkg.plans?.map((plan) => (
 						<PlanDetails key={plan.id} plan={plan} />
 					))}
+					{pkg.customers && (
+						<UsersDetails users={pkg.customers} onCreateUser={submmitCreateCustomer} />
+					)}
 				</div>
 			)}
 		</div>

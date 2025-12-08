@@ -3,7 +3,7 @@ import type { TravelPackage } from '../types/travel-package.type';
 
 const BASE_URL = '/travel/package';
 
-export const getTravelPackages = async (customerId?: number): Promise<TravelPackage[]> => {
+export const getTravelPackages = async (customerId?: string): Promise<TravelPackage[]> => {
 	const url = customerId ? `${BASE_URL}/${customerId}` : BASE_URL;
 	try {
 		const response = await api.get(url);
