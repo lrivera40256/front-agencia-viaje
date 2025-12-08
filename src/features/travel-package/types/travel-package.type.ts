@@ -8,6 +8,7 @@ export interface TravelPackage {
     plans?: Plan[];
     itineraries?: Itinerary[];
     customers?: User[];
+    state: 'draft' | 'inPayment' | 'completed' ;
 }
 
 export interface Plan {

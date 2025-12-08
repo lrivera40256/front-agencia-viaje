@@ -10,6 +10,8 @@ export function useProfileData() {
     try {
       if (localStorage.getItem("token") != null) {
         const data = await getProfile();
+        console.log(data);
+        
         setProfile(data);
       }
     } catch {
@@ -45,9 +47,7 @@ export function useProfileData() {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    refreshProfile();
-  }, []);
+
 
   return { profile, isLoading, updateProfile, refreshProfile, editPhoto };
 }

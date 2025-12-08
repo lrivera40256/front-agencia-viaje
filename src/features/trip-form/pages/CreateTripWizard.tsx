@@ -12,6 +12,7 @@ import { useSegments } from "../contexts/segmentsContext";
 import { SegmentListContainer } from "@/features/trip-journeys/containers/SegmentListContainer";
 import { RoomStepContainer } from "../containers/RoomStepContainer";
 import { VehicleStepContainer } from "../containers/VehicleStepContainer";
+import { useProfile } from "@/features/profile/contexts/ProfileContext";
 
 const CreateTripWizard = () => {
     const { step } = useWizard();
@@ -19,8 +20,15 @@ const CreateTripWizard = () => {
     const list = useSegments();
     const initialized = useRef(false);
     const {segments} = useSegments();
+    const {profile,refreshProfile}=useProfile();
 
     useEffect(() => {
+        const prueba = async () => {   
+            await refreshProfile();
+            console.log(profile);
+        }
+        prueba();
+        
         if (!initialized.current) {
             initialized.current = true;
             console.log(segments.length);

@@ -16,14 +16,13 @@ import { useTravelPackages } from '../hooks';
 
 interface TravelPackageItemProps {
 	package: TravelPackage;
+	createCustomer?: (payload: { name: string; email: string; password: string, travel_id: number }) => void;
 }
 
-export function TravelPackageItem({ package: pkg }: TravelPackageItemProps) {
+export function TravelPackageItem({ package: pkg, createCustomer }: TravelPackageItemProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const { customerId } = useParams<{ customerId: string }>();
-	const { createCustomer } = useTravelPackages(
-		customerId ? (customerId) : undefined
-	);
+	
 
 	const handlePay = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -100,7 +99,7 @@ export function TravelPackageItem({ package: pkg }: TravelPackageItemProps) {
 						<PlanDetails key={plan.id} plan={plan} />
 					))}
 					{pkg.customers && (
-						<UsersDetails users={pkg.customers} onCreateUser={submmitCreateCustomer} />
+						<UsersDetails users={pkg.customers} onCreateUser={pkg.state =="draft" ? submmitCreateCustomer : undefined} />
 					)}
 				</div>
 			)}

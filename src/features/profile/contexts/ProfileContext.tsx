@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode, useEffect } from "react";
 import { useProfileData } from "../hooks/useProfileData";
 import type { Profile } from "../types/profile.types";
 
@@ -14,7 +14,7 @@ const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const { profile, isLoading, updateProfile ,refreshProfile,editPhoto} = useProfileData();
-
+ 
   return (
     <ProfileContext.Provider
       value={{ profile, isLoading, updateProfile ,refreshProfile,editPhoto }}

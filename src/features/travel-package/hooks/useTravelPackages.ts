@@ -23,7 +23,7 @@ export function useTravelPackages(customerId?: string) {
 			setLoading(false);
 		}
 	};
-	const createCustomer = async (payload: { name: string; email: string; password: string,travel_id:number},) => {
+	const createCustomer = async (payload: { name: string; email: string; password: string,travel_id},) => {
 		await CustomerService.createCustomer(payload);
 		toast.success("Cliente creado exitosamente");
 		loadPackages();
