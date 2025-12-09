@@ -3,7 +3,7 @@ import './App.css';
 import { Suspense } from 'react';
 import routes from './routes/index';
 import { DashboardLayout } from './components/layout/DashboardLayout';
-import { LoginPage, RegisterPage } from "@/features/auth/pages";
+import { LoginPage, RegisterPage, ForgotPasswordPage } from "@/features/auth/pages";
 import { AuthProvider } from "@/features/auth/contexts/AuthProvider";
 import ProtectedRoute from './auth/ProtectedRoute';
 import { ProfileProvider } from '@/features/profile/contexts/ProfileContext';
@@ -25,6 +25,8 @@ function App() {
               {/* Public pages */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ForgotPasswordPage />} />
 
               {/* Dashboard layout */}
               <Route element={<DashboardLayout />}>

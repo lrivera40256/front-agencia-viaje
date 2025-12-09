@@ -12,20 +12,15 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Search, Bell, User, Settings, LogOut, Plane, MapPin } from 'lucide-react';
+import { Search, User, Settings, LogOut, Plane, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/features/auth/contexts/AuthProvider';
+import NotificationBell from '@/components/NotificationBell';
 
 export function AppNavbar() {
 	const { profile, isLoading } = useProfile();
-	const [notifications, setNotifications] = useState(3);
 	const navigate = useNavigate();
 	const { logout } = useAuthContext();
-	
-
-	useEffect(() => {
-		
-	}, []);
 	return (
 		<header className="h-16 border-b bg-white/95 backdrop-blur-sm sticky top-0 z-50">
 			<div className="flex items-center justify-between h-full px-4">
@@ -66,21 +61,8 @@ export function AppNavbar() {
 						<Search className="w-4 h-4" />
 					</Button>
 
-					{/* Notifications */}
-					<Button
-						variant="ghost"
-						size="icon"
-						className="relative text-travel-navy hover:bg-travel-ocean-light hover:text-travel-ocean"
-					>
-						<Bell className="w-4 h-4" />
-						{notifications > 0 && (
-							<span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-								{notifications}
-							</span>
-						)}
-					</Button>
-
-					{/* User Menu */}
+				{/* Notifications */}
+				<NotificationBell />					{/* User Menu */}
 					<DropdownMenu>
 						  <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
