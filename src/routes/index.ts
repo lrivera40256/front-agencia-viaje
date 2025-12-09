@@ -32,6 +32,11 @@ const TravelPackagesPage = lazy(
 const UserLogicPage = lazy(() =>
 	import('../features/user-logic/pages/UserLogicPage').then((m) => ({ default: m.UserLogicPage }))
 );
+const CustomerPaymentsPage = lazy(() =>
+	import('@/features/customer-payments/pages/CustomerPaymentsPage').then((m) => ({
+		default: m.CustomerPaymentsPage,
+	}))
+);
 
 const coreRoutes = [
 	{
@@ -161,6 +166,11 @@ const coreRoutes = [
 		title: 'Perfil',
 		component: ProfilePage,
 	},
+	{
+		path: '/pagos-clientes/:customerId?',
+		title: 'Pagos Clientes',
+		component: CustomerPaymentsPage,
+	}
 ];
 const routes = [...coreRoutes];
 export default routes;
