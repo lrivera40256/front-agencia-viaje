@@ -16,6 +16,9 @@ import { useTravelPackages } from '../hooks';
 import { useQuota } from '../hooks/useQuota';
 import { createMultipleQuotas, createQuota } from '../services/quotaService';
 import usePayQuota from './payQuota';
+import { createCustomerTravel } from '../services/travelPackageService';
+import { useProfile } from '@/features/profile/contexts/ProfileContext';
+import { toast } from 'sonner';
 interface TravelPackageItemProps {
 	package: TravelPackage;
 	createCustomer?: (payload: { name: string; email: string; password: string, travel_id: number }) => void;
@@ -28,6 +31,7 @@ export function TravelPackageItem({ package: pkg, createCustomer }: TravelPackag
 	const { customerId } = useParams<{ customerId: string }>();
 	const { numCuotas, setNumCuotas, quotas, calculateQuotas } = useQuota();
 	const {handlePayQuota}= usePayQuota();
+	const {profile}= useProfile();
 
 	const handlePay = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -35,8 +39,15 @@ export function TravelPackageItem({ package: pkg, createCustomer }: TravelPackag
 		setModalFinanciacion(true);
 	};
 
-	const handleSave = (e: React.MouseEvent) => {
+	const handleSave = async (e: React.MouseEvent) => {
 		e.stopPropagation();
+		const response =await createCustomerTravel(profile.user._id, pkg.id);
+		if(!response){
+			toast.error("Error al guardar el viaje");
+			return;
+		}	
+		toast.success("Viaje guardado exitosamente");
+		
 	};
 
 	const handleChangeModalFinanciacion = () => {
