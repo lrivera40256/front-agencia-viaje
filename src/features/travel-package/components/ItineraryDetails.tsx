@@ -10,7 +10,7 @@ export function ItineraryDetails({ itinerary }: { itinerary: Itinerary }) {
 	if (lowerType.includes('carro'))
 		return <Car className={className} />;
 }
-
+	
 	return (
 		<div className="p-3 border rounded-md bg-white shadow-sm">
 			<h4 className="font-semibold text-md mb-2 flex items-center text-gray-700">

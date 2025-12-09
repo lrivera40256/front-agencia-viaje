@@ -6,7 +6,6 @@ import {
   deleteTouristActivityById,
   getTouristActivityById,
   getTouristActivityByName,
-  getTouristActivities,
   updateTouristActivity,
 } from "@/features/tourist-activities/services/touristActivityService";
 import { useNavigate } from "react-router";
@@ -62,8 +61,9 @@ export function useTouristActivity() {
   const loadActivities = async () => {
     setLoading(true);
     try {
-      const data = await getTouristActivities();
-      setActivities(data.map((item) => ({ id: item.id, name: item.name, description: item.description, city_id: item.city_id, price: item.price, is_active: item.is_active })));
+      // const data = await getTouristActivities();
+      setActivities([]);
+      // setActivities(data.map((item) => ({ id: item.id, name: item.name, description: item.description, city_id: item.city_id, price: item.price, is_active: item.is_active })));
     } catch (error) {
       toast.error("Error al cargar actividades");
     } finally {

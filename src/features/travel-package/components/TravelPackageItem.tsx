@@ -13,6 +13,7 @@ import { PlanDetails } from './PlanDetails';
 import { useParams } from 'react-router-dom';
 import { UsersDetails } from './UsersDetails';
 import { useTravelPackages } from '../hooks';
+import PayQuotaButton from './payQuota';
 
 interface TravelPackageItemProps {
 	package: TravelPackage;
@@ -70,12 +71,7 @@ export function TravelPackageItem({ package: pkg, createCustomer }: TravelPackag
 				</div>
 				<div className="flex flex-col items-end flex-shrink-0">
 					{customerId ? (
-						<button
-							onClick={handlePay}
-							className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors text-sm font-semibold mb-2"
-						>
-							Pagar
-						</button>
+						<PayQuotaButton quotaId={2} />
 					) : (
 						<button
 							onClick={handleSave}
