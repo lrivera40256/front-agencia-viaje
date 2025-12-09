@@ -1,11 +1,14 @@
 import api from '@/interceptors/msLogicInterceptor';
 import type { Quota } from '../types/travel-package.type';
+import usePayQuota from '../components/payQuota';
 const BASE_URL = '/quota';
 
 export const createQuota = async (
-  data: Quota) => {
+  data: Quota,isPayQuota :boolean) => {
   try {
-    const response = await api.post(`${BASE_URL}`, data);
+    const payload = isPayQuota ? { ...data, isPayQuota } : data;
+    console.log(payload);
+    const response = await api.post(`${BASE_URL}`, payload);
     return response.data;
   } catch (error) {
     console.error('Error creating quota:', error);
@@ -14,8 +17,12 @@ export const createQuota = async (
 }
 
 export const createMultipleQuotas = async (data: { data: Quota; numQuotas: number }) => {
+  let flag=false;
   for (let i = 0; i < data.numQuotas; i++) {
-    await createQuota({ ...data.data, number_payments: i + 1, due_date: calculateDueDate(data.data.due_date, i) });
+    if(i===data.numQuotas-1){
+      flag=true;
+    }
+    await createQuota({ ...data.data, number_payments: i + 1, due_date: calculateDueDate(data.data.due_date, i) }, flag);
   }
 }
 

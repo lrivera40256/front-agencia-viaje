@@ -15,6 +15,7 @@ import { UsersDetails } from './UsersDetails';
 import { useTravelPackages } from '../hooks';
 import { useQuota } from '../hooks/useQuota';
 import { createMultipleQuotas, createQuota } from '../services/quotaService';
+import usePayQuota from './payQuota';
 interface TravelPackageItemProps {
 	package: TravelPackage;
 	createCustomer?: (payload: { name: string; email: string; password: string, travel_id: number }) => void;
@@ -26,6 +27,7 @@ export function TravelPackageItem({ package: pkg, createCustomer }: TravelPackag
 	const [modalCuotas, setModalCuotas] = useState(false);
 	const { customerId } = useParams<{ customerId: string }>();
 	const { numCuotas, setNumCuotas, quotas, calculateQuotas } = useQuota();
+	const {handlePayQuota}= usePayQuota();
 
 	const handlePay = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -154,9 +156,10 @@ export function TravelPackageItem({ package: pkg, createCustomer }: TravelPackag
 							Financiar
 						</button>
 						<button
-							onClick={() => {
+							onClick={async() => {
 								console.log("Realizando pago...");
-								createQuota(quotas[0]);
+								const body = await createQuota(quotas[0], true);
+								handlePayQuota(body);
 								handleChangeModalFinanciacion();
 							}}
 							className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
