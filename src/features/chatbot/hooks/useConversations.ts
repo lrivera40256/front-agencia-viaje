@@ -22,7 +22,10 @@ export const useConversations = () => {
 
     const loadParticipants = async () => {
       const conversations = await chatService.getConversationsByUser(profile?.user._id || '');
-
+      if (conversations.length === 0) {
+        setParticipants([]);
+        return;
+      }
       const mappedParticipants: Participant[] = conversations.map((conv) => {
         const other = conv.participants.find((p) => p.user_info.id !== profile?.user._id) || conv.participants[0];
         const last = conv.messages?.[conv.messages.length - 1];

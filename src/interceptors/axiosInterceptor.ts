@@ -4,7 +4,10 @@ import axios from 'axios';
 const EXCLUDED_ROUTES = [
   '/public/security/login',
   '/public/security/validate-2fa',
-  '/public/security/register'
+  '/public/security/register',
+  '/public/security/forgot-password',
+  '/public/security/reset-password',
+
 ];
 
 const api = axios.create({
@@ -52,7 +55,7 @@ api.interceptors.response.use(
       // localStorage.removeItem('token');
       window.location.href = '/';
     }
-        if (status === 401 && !isExcluded) {
+    if (status === 401 && !isExcluded) {
       // Mantengo limpieza de token que ya tenías
       localStorage.removeItem('token');
       window.location.href = '/login';

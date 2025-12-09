@@ -30,4 +30,24 @@ export async function registerUser(data: any) {
   return res.data;
 }
 
+export async function requestPasswordReset(email: string) {
+  try {
+    const { data } = await api.post('/public/security/forgot-password', { email });
+    console.log(data);
+    
+    return data;
+  } catch (err: any) {
+    throw new Error(err?.response?.data?.message || 'No se pudo enviar el enlace de recuperación');
+  }
+}
+
+export async function resetPassword(token: string, newPassword: string) {
+  try {
+    const { data } = await api.post('/public/security/reset-password', { token, newPassword });
+    return data;
+  } catch (err: any) {
+    throw new Error(err?.response?.data?.message || 'No se pudo restablecer la contraseña');
+  }
+}
+
 

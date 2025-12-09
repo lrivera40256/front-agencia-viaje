@@ -104,6 +104,12 @@ export function LoginForm() {
                   </button>
                 </div>
 
+                <div className="flex justify-end">
+                  <Link to="/forgot-password" className="text-xs text-primary hover:underline font-medium">
+                    Olvidé mi contraseña
+                  </Link>
+                </div>
+
                 <div className="flex justify-center">
                   <ReCAPTCHA ref={captcha} sitekey={import.meta.env.VITE_CAPTCHA} />
                 </div>
