@@ -6,6 +6,9 @@ export interface Message {
   // Optional id of the participant for person-to-person chats
   participantId?: string;
   timestamp: Date;
+  senderId?: string;
+  receiverId?: string;
+  conversationId?: string | number;
 }
 
 export interface ChatResponse {
@@ -13,13 +16,36 @@ export interface ChatResponse {
 }
 
 export interface Participant {
-  id: string;
-  name: string;
+  id: string; // participant user id
+  name?: string;
+  email?: string;
+  role?: string;
   avatar?: string;
   lastMessage?: string;
+  conversationId?: string | number;
+  userId?: string; // alias for id if needed downstream
+}
+
+export interface UserInfo {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface ConversationParticipant {
+  role: string;
+  user_info: UserInfo;
 }
 
 export interface Conversation {
-  participant: Participant;
+  id: number;
+  type: string;
+  participants: ConversationParticipant[];
   messages: Message[];
+}
+
+export interface ConversationApiResponse {
+  status: string;
+  count: number;
+  data: Conversation[];
 }

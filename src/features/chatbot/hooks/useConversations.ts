@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Participant, Message } from '../types';
 import * as chatService from '../services/chatService';
+import { useProfile } from '@/features/profile/contexts/ProfileContext';
 
 export const useConversations = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
@@ -8,41 +9,77 @@ export const useConversations = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+const {profile,refreshProfile}= useProfile();
   useEffect(() => {
+    refreshProfile();
+  }, []);
+  useEffect(() => {
+    console.log(profile?.user._id);
+    
     const loadParticipants = async () => {
-      const data = await chatService.getParticipants();
-      setParticipants(data);
+      console.log("hola");
+      
+      const conversations = await chatService.getConversationsByUser(profile?.user._id || '');
+
+      // Derivar lista de participantes (tomamos el "otro" participante por conversación)
+      const mappedParticipants: Participant[] = conversations.map((conv) => {
+        const other = conv.participants.find((p) => p.user_info.id !== profile?.user._id) || conv.participants[0];
+        const last = conv.messages?.[conv.messages.length - 1];
+        return {
+          id: other?.user_info.id || conv.id.toString(),
+          userId: other?.user_info.id || conv.id.toString(),
+          name: other?.user_info.name || 'Participante',
+          email: other?.user_info.email,
+          role: other?.role,
+          conversationId: conv.id,
+          lastMessage: last?.content,
+        };
+      });
+
+      setParticipants(mappedParticipants);
     };
     loadParticipants();
-  }, []);
+  }, [profile]);
 
   const selectParticipant = async (p: Participant) => {
     setActiveParticipant(p);
     setIsLoading(true);
-    const conv = await chatService.getConversation(p.id);
-    setMessages(conv);
+
+    const conversations = await chatService.getConversationsByUser(profile?.user._id || '');
+    const conv = conversations.find((c) => String(c.id) === String(p.conversationId));
+    const msgs = conv ? chatService.mapConversationToMessages(conv, profile?.user._id || '') : [];
+
+    setMessages(msgs);
     setIsLoading(false);
   };
 
   const sendMessage = async (text: string) => {
-    if (!activeParticipant) return null;
+    
+    if (!activeParticipant || !profile?.user._id) return null;
 
-    // Crear mensaje localmente para UI responsiva
+    // Local echo
     const localMessage: Message = {
       id: Date.now().toString(),
       text,
       sender: 'user',
       participantId: activeParticipant.id,
       timestamp: new Date(),
+      senderId: profile?.user._id,
+      receiverId: activeParticipant.id,
+      conversationId: activeParticipant.conversationId,
     };
 
     setMessages((prev) => [...prev, localMessage]);
 
-    // Enviar al backend
-    const saved = await chatService.sendMessageToPerson(activeParticipant.id, text);
+    const saved = await chatService.sendMessageToPerson({
+      conversationId: Number(activeParticipant.conversationId),
+      senderId: profile?.user._id || '',
+      receiverId: activeParticipant.id,
+      content: text,
+    });
+
     if (saved) {
-      // Usualmente el backend devolverá el mensaje con id / timestamp. Reemplazamos el local si llega.
-      setMessages((prev) => [...prev.filter(m => m.id !== localMessage.id), saved]);
+      setMessages((prev) => [...prev.filter((m) => m.id !== localMessage.id), saved]);
     }
 
     return saved;
