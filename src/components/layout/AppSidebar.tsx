@@ -34,6 +34,7 @@ import {
 	ChevronRight,
 	Package,
 	Briefcase,
+	Wand2,
 } from 'lucide-react';
 import { useProfile } from '@/features/profile/contexts/ProfileContext';
 import { useState } from 'react';
@@ -199,6 +200,16 @@ export function AppSidebar() {
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							)}
+
+							{/* Personalizar Viaje - Standalone */}
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild>
+									<NavLink to="/form" className={getNavCls('/form')}>
+										<Wand2 className="h-4 w-4 min-w-4" />
+										{!isCollapsed && <span>Personalizar Viaje</span>}
+									</NavLink>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
 
 							{/* Gestión de Viajes - Collapsible */}
 							<SidebarMenuItem>
