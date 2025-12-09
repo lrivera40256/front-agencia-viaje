@@ -63,11 +63,20 @@ export default function ChatBot() {
 				</button>
 			)}
 
-			{/* Ventana del chat */}
+			{/* Overlay - Cierra el chat al clickear fuera */}
 			{isOpen && (
-				<div className="fixed bottom-6 right-6 w-[450px] h-[650px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden">
+				<div
+					className="fixed inset-0 bg-black/0 z-40"
+					onClick={() => setIsOpen(false)}
+					aria-label="Cerrar chat"
+				/>
+			)}
+
+			{/* Ventana del chat - Centrada verticalmente con máximo 90% de altura */}
+			{isOpen && (
+				<div className="fixed top-1/2 right-6 -translate-y-1/2 w-[550px] h-[750px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden">
 					{/* Header mejorado */}
-					<div className="bg-gradient-to-r from-primary via-blue-600 to-blue-700 text-white p-4 flex flex-col gap-2">
+					<div className="bg-gradient-to-r from-primary via-blue-600 to-blue-700 text-white p-5 flex flex-col gap-3">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-3">
 								<div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -82,35 +91,36 @@ export default function ChatBot() {
 							</div>
 							<button
 								onClick={() => setIsOpen(false)}
-								className="hover:bg-white/20 rounded-lg p-2 transition-all hover:scale-105"
+								className="hover:bg-white/20 rounded-lg p-2 transition-all hover:scale-110 active:scale-95"
 								aria-label="Cerrar chat"
+								title="Cerrar chat"
 							>
-								<X size={22} />
+								<X size={24} strokeWidth={3} />
 							</button>
 						</div>
 						
 						{/* Tabs mejorados */}
-						<div className="flex gap-2 bg-white/10 rounded-lg p-1 backdrop-blur-sm">
+						<div className="flex gap-2 bg-white/10 rounded-lg p-1.5 backdrop-blur-sm mt-2">
 							<button
 								onClick={() => setActiveTab('bot')}
-								className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all ${
+								className={`flex-1 px-4 py-2 text-sm font-semibold rounded-md transition-all whitespace-nowrap ${
 									activeTab === 'bot' 
 										? 'bg-white text-primary shadow-md' 
-										: 'text-white/80 hover:text-white hover:bg-white/10'
+										: 'text-white/90 hover:text-white hover:bg-white/15'
 								}`}
 							>
-								<Bot size={16} className="inline mr-2" />
+								<Bot size={16} className="inline mr-1.5" />
 								Asistente
 							</button>
 							<button
 								onClick={() => setActiveTab('messages')}
-								className={`flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all ${
+								className={`flex-1 px-4 py-2 text-sm font-semibold rounded-md transition-all whitespace-nowrap ${
 									activeTab === 'messages' 
 										? 'bg-white text-primary shadow-md' 
-										: 'text-white/80 hover:text-white hover:bg-white/10'
+										: 'text-white/90 hover:text-white hover:bg-white/15'
 								}`}
 							>
-								<User size={16} className="inline mr-2" />
+								<User size={16} className="inline mr-1.5" />
 								Mensajes
 							</button>
 						</div>
@@ -286,7 +296,7 @@ export default function ChatBot() {
 						)}
 					</div>
 					{/* Input mejorado */}
-					<div className="p-4 border-t border-gray-200 bg-white">
+					<div className="p-4 border-t border-gray-200 bg-white rounded-b-xl">
 						<div className="flex gap-2 items-end">
 							<div className="flex-1 relative">
 								<input
@@ -306,8 +316,9 @@ export default function ChatBot() {
 							<button
 								onClick={handleSendMessage}
 								disabled={!inputMessage.trim()}
-								className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary hover:to-blue-700 text-white rounded-xl p-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg hover:scale-105 disabled:hover:scale-100"
+								className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary hover:to-blue-700 text-white rounded-xl p-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg hover:scale-105 disabled:hover:scale-100 active:scale-95"
 								aria-label="Enviar mensaje"
+								title="Enviar (Enter)"
 							>
 								<Send size={20} />
 							</button>
