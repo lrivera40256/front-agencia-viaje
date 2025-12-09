@@ -8,6 +8,9 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
+	SidebarMenuSub,
+	SidebarMenuSubItem,
+	SidebarMenuSubButton,
 	useSidebar,
 } from '@/components/ui/sidebar';
 import {
@@ -28,21 +31,35 @@ import {
 	CreditCard,
 	Users,
 	Compass,
+	ChevronRight,
+	Package,
+	Briefcase,
 } from 'lucide-react';
+import { useProfile } from '@/features/profile/contexts/ProfileContext';
+import { useState } from 'react';
 
 const mainItems = [
 	{ title: 'Inicio', url: '/', icon: Home },
 	{ title: 'Seguridad', url: '/seguridad', icon: Shield },
 ];
 
-const crudItems = [
-	{ title: 'Viajes', url: '/viajes', icon: Plane },
+const travelManagementItems = [
+	{ title: 'Viajes', url: '/viajes', icon: Briefcase },
 	{ title: 'Trayectos', url: '/trayectos', icon: MapPin },
 	{ title: 'Cuotas', url: '/cuotas', icon: Star },
+];
+
+const accommodationItems = [
 	{ title: 'Habitaciones', url: '/habitaciones', icon: Hotel },
+];
+
+const transportItems = [
 	{ title: 'Vehículos', url: '/vehiculos', icon: Car },
 	{ title: 'Itinerarios Transporte', url: '/itinerarios-transporte', icon: Truck },
 	{ title: 'Servicios Transporte', url: '/servicio-transporte', icon: Zap },
+];
+
+const otherItems = [
 	{ title: 'Actividades', url: '/actividades', icon: Activity },
 	{ title: 'Planes', url: '/plan', icon: Calendar },
 	{ title: 'Clientes', url: '/clientes', icon: Users },
@@ -65,6 +82,17 @@ export function AppSidebar() {
 	const { state } = useSidebar();
 	const location = useLocation();
 	const currentPath = location.pathname;
+	const { profile } = useProfile();
+	const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+		travelManagement: false,
+		accommodation: false,
+		transport: false,
+		others: false,
+	});
+
+	const toggleSection = (section: string) => {
+		setOpenSections(prev => ({ ...prev, [section]: !prev[section] }));
+	};
 
 	const isRouteActive = (path: string) => {
 		return currentPath === path || currentPath.startsWith(path + '/');
@@ -150,16 +178,155 @@ export function AppSidebar() {
 					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
-							{crudItems.map((item) => (
-								<SidebarMenuItem key={item.title}>
+							{/* Paquetes de Viaje - Standalone */}
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild>
+									<NavLink to="/travel-packages" className={getNavCls('/travel-packages')}>
+										<Package className="h-4 w-4 min-w-4" />
+										{!isCollapsed && <span>Paquetes de Viaje</span>}
+									</NavLink>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+
+							{/* Mis Viajes - Standalone */}
+							{profile?.user?._id && (
+								<SidebarMenuItem>
 									<SidebarMenuButton asChild>
-										<NavLink to={item.url} className={getNavCls(item.url)}>
-											<item.icon className="h-4 w-4 min-w-4" />
-											{!isCollapsed && <span>{item.title}</span>}
+										<NavLink to={`/travel-packages/${profile.user._id}`} className={getNavCls(`/travel-packages/${profile.user._id}`)}>
+											<Plane className="h-4 w-4 min-w-4" />
+											{!isCollapsed && <span>Mis Viajes</span>}
 										</NavLink>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
-							))}
+							)}
+
+							{/* Gestión de Viajes - Collapsible */}
+							<SidebarMenuItem>
+								<SidebarMenuButton 
+									onClick={() => toggleSection('travelManagement')}
+									className="cursor-pointer"
+								>
+									<Briefcase className="h-4 w-4 min-w-4" />
+									{!isCollapsed && (
+										<>
+											<span>Gestión de Viajes</span>
+											<ChevronRight 
+												className={`ml-auto h-4 w-4 transition-transform ${openSections.travelManagement ? 'rotate-90' : ''}`} 
+											/>
+										</>
+									)}
+								</SidebarMenuButton>
+								{!isCollapsed && openSections.travelManagement && (
+									<SidebarMenuSub>
+										{travelManagementItems.map((item) => (
+											<SidebarMenuSubItem key={item.title}>
+												<SidebarMenuSubButton asChild>
+													<NavLink to={item.url} className={getNavCls(item.url)}>
+														<item.icon className="h-4 w-4" />
+														<span>{item.title}</span>
+													</NavLink>
+												</SidebarMenuSubButton>
+											</SidebarMenuSubItem>
+										))}
+									</SidebarMenuSub>
+								)}
+							</SidebarMenuItem>
+
+							{/* Alojamiento - Collapsible */}
+							<SidebarMenuItem>
+								<SidebarMenuButton 
+									onClick={() => toggleSection('accommodation')}
+									className="cursor-pointer"
+								>
+									<Hotel className="h-4 w-4 min-w-4" />
+									{!isCollapsed && (
+										<>
+											<span>Alojamiento</span>
+											<ChevronRight 
+												className={`ml-auto h-4 w-4 transition-transform ${openSections.accommodation ? 'rotate-90' : ''}`} 
+											/>
+										</>
+									)}
+								</SidebarMenuButton>
+								{!isCollapsed && openSections.accommodation && (
+									<SidebarMenuSub>
+										{accommodationItems.map((item) => (
+											<SidebarMenuSubItem key={item.title}>
+												<SidebarMenuSubButton asChild>
+													<NavLink to={item.url} className={getNavCls(item.url)}>
+														<item.icon className="h-4 w-4" />
+														<span>{item.title}</span>
+													</NavLink>
+												</SidebarMenuSubButton>
+											</SidebarMenuSubItem>
+										))}
+									</SidebarMenuSub>
+								)}
+							</SidebarMenuItem>
+
+							{/* Transporte - Collapsible */}
+							<SidebarMenuItem>
+								<SidebarMenuButton 
+									onClick={() => toggleSection('transport')}
+									className="cursor-pointer"
+								>
+									<Car className="h-4 w-4 min-w-4" />
+									{!isCollapsed && (
+										<>
+											<span>Transporte</span>
+											<ChevronRight 
+												className={`ml-auto h-4 w-4 transition-transform ${openSections.transport ? 'rotate-90' : ''}`} 
+											/>
+										</>
+									)}
+								</SidebarMenuButton>
+								{!isCollapsed && openSections.transport && (
+									<SidebarMenuSub>
+										{transportItems.map((item) => (
+											<SidebarMenuSubItem key={item.title}>
+												<SidebarMenuSubButton asChild>
+													<NavLink to={item.url} className={getNavCls(item.url)}>
+														<item.icon className="h-4 w-4" />
+														<span>{item.title}</span>
+													</NavLink>
+												</SidebarMenuSubButton>
+											</SidebarMenuSubItem>
+										))}
+									</SidebarMenuSub>
+								)}
+							</SidebarMenuItem>
+
+							{/* Otros - Collapsible */}
+							<SidebarMenuItem>
+								<SidebarMenuButton 
+									onClick={() => toggleSection('others')}
+									className="cursor-pointer"
+								>
+									<Settings className="h-4 w-4 min-w-4" />
+									{!isCollapsed && (
+										<>
+											<span>Otros</span>
+											<ChevronRight 
+												className={`ml-auto h-4 w-4 transition-transform ${openSections.others ? 'rotate-90' : ''}`} 
+											/>
+										</>
+									)}
+								</SidebarMenuButton>
+								{!isCollapsed && openSections.others && (
+									<SidebarMenuSub>
+										{otherItems.map((item) => (
+											<SidebarMenuSubItem key={item.title}>
+												<SidebarMenuSubButton asChild>
+													<NavLink to={item.url} className={getNavCls(item.url)}>
+														<item.icon className="h-4 w-4" />
+														<span>{item.title}</span>
+													</NavLink>
+												</SidebarMenuSubButton>
+											</SidebarMenuSubItem>
+										))}
+									</SidebarMenuSub>
+								)}
+							</SidebarMenuItem>
 						</SidebarMenu>
 					</SidebarGroupContent>
 				</SidebarGroup>
