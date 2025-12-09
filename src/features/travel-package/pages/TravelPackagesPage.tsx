@@ -14,14 +14,14 @@ export default function TravelPackagesPage() {
 		<div className="container mx-auto p-4">
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-2xl font-bold">
-					{customerId ? 'My Travel Packages' : 'All Travel Packages'}
+					{customerId ? 'Mis viajes' : 'Todos los paquetes de viaje'}
 				</h1>
 				<button
 					onClick={refresh}
 					className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
 					disabled={loading}
 				>
-					{loading ? 'Refreshing...' : 'Refresh'}
+					{loading ? 'Cargando...' : 'Refrescar'}
 				</button>
 			</div>
 

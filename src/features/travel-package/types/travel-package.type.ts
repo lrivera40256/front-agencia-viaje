@@ -1,5 +1,6 @@
 export interface TravelPackage {
     id: number;
+    travel_customer_id: number;
     name: string;
     description: string | null;
     start_date: string;
@@ -49,4 +50,11 @@ export interface User{
 export interface Room {
     number: string;
     price_per_night: string;
+}
+
+export interface Quota {
+    amount: number;
+    number_payments: number;
+    travel_customer_id: number;
+    due_date: string;
 }
