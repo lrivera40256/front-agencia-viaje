@@ -72,11 +72,11 @@ export default function ChatBot() {
 				/>
 			)}
 
-			{/* Ventana del chat - Centrada verticalmente con máximo 90% de altura */}
+			{/* Ventana del chat - Responsive con altura adaptable */}
 			{isOpen && (
-				<div className="fixed top-1/2 right-6 -translate-y-1/2 w-[550px] h-[750px] bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden">
+				<div className="fixed top-4 right-4 bottom-4 w-full max-w-[95vw] sm:max-w-md lg:max-w-lg bg-white rounded-xl shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden sm:top-1/2 sm:-translate-y-1/2 sm:bottom-auto sm:h-[85vh] sm:max-h-[750px]">
 					{/* Header mejorado */}
-					<div className="bg-gradient-to-r from-primary via-blue-600 to-blue-700 text-white p-5 flex flex-col gap-3">
+					<div className="bg-gradient-to-r from-primary via-blue-600 to-blue-700 text-white p-3 sm:p-5 flex flex-col gap-2 sm:gap-3 flex-shrink-0">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center gap-3">
 								<div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -131,7 +131,7 @@ export default function ChatBot() {
 						{activeTab === 'messages' ? (
 							<div className="h-full flex">
 								{/* Lista de participantes mejorada */}
-								<div className="w-44 border-r border-gray-200 overflow-y-auto bg-white">
+								<div className="w-36 sm:w-44 border-r border-gray-200 overflow-y-auto bg-white flex-shrink-0">
 									<div className="p-3 border-b border-gray-200 bg-gray-50">
 										<h4 className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Contactos</h4>
 									</div>
@@ -186,7 +186,7 @@ export default function ChatBot() {
 											</div>
 											
 											{/* Mensajes */}
-											<div className="flex-1 p-4 overflow-y-auto space-y-3">
+											<div className="flex-1 p-3 sm:p-4 overflow-y-auto space-y-3 min-h-0">
 												{personMessages.map((message) => (
 													<div key={message.id} className={`flex gap-2 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
 														{message.sender !== 'user' && (
@@ -235,7 +235,7 @@ export default function ChatBot() {
 						) : (
 							/* Vista del asistente bot mejorada */
 							<div className="flex flex-col h-full">
-								<div className="flex-1 overflow-y-auto p-4 space-y-3">
+								<div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
 									{botMessages.length === 0 && (
 										<div className="text-center mt-12">
 											<div className="w-20 h-20 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -295,8 +295,8 @@ export default function ChatBot() {
 							</div>
 						)}
 					</div>
-					{/* Input mejorado */}
-					<div className="p-4 border-t border-gray-200 bg-white rounded-b-xl">
+					{/* Input mejorado - Siempre visible */}
+					<div className="p-3 sm:p-4 border-t border-gray-200 bg-white rounded-b-xl flex-shrink-0">
 						<div className="flex gap-2 items-end">
 							<div className="flex-1 relative">
 								<input
@@ -304,10 +304,11 @@ export default function ChatBot() {
 									value={inputMessage}
 									onChange={(e) => setInputMessage(e.target.value)}
 									onKeyDown={handleKeyDown}
-									placeholder={activeTab === 'bot' ? 'Pregunta algo al asistente...' : 'Escribe un mensaje...'}
-									className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-sm shadow-sm transition-all"
+									placeholder={activeTab === 'bot' ? 'Pregunta algo...' : 'Escribe un mensaje...'}
+									className="w-full px-3 py-2.5 sm:px-4 sm:py-3 pr-10 sm:pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed text-sm shadow-sm transition-all"
+									disabled={activeTab === 'messages' && !activeParticipant}
 								/>
-								<div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+								<div className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-400">
 									{inputMessage.length > 0 && (
 										<span className="text-xs">{inputMessage.length}</span>
 									)}
@@ -315,12 +316,13 @@ export default function ChatBot() {
 							</div>
 							<button
 								onClick={handleSendMessage}
-								disabled={!inputMessage.trim()}
-								className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary hover:to-blue-700 text-white rounded-xl p-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg hover:scale-105 disabled:hover:scale-100 active:scale-95"
+								disabled={!inputMessage.trim() || (activeTab === 'messages' && !activeParticipant)}
+								className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary hover:to-blue-700 text-white rounded-xl p-2.5 sm:p-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg hover:scale-105 disabled:hover:scale-100 active:scale-95"
 								aria-label="Enviar mensaje"
 								title="Enviar (Enter)"
 							>
-								<Send size={20} />
+								<Send size={18} className="sm:hidden" />
+								<Send size={20} className="hidden sm:block" />
 							</button>
 						</div>
 					</div>
