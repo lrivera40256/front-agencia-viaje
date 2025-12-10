@@ -3,13 +3,13 @@ import type { TravelPackage } from '../types/travel-package.type';
 import { toast } from 'sonner';
 import { log } from 'node:console';
 
-const BASE_URL = '/travel/package';
+const BASE_URL = '/travel/travel-package';
 
-export const getTravelPackages = async (customerId?: string): Promise<TravelPackage[]> => {
-	const url = customerId ? `${BASE_URL}/${customerId}` : BASE_URL;
+export const getTravelPackages = async (customerId: string,owsnTravel:boolean,profile): Promise<TravelPackage[]> => {
 	try {
-		const response = await api.get(url);
-		return response.data;
+		
+		const response = await api.post(BASE_URL, { userId: customerId ,owsnTravel});
+		return response?response.data:[];
 	} catch (error) {
 		console.error('Error fetching travel packages:', error);
 		throw error;

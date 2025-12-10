@@ -11,7 +11,6 @@ export function useProfileData() {
       if (localStorage.getItem("token") != null) {
         const data = await getProfile();
         console.log(data);
-        
         setProfile(data);
       }
     } catch {
@@ -20,6 +19,12 @@ export function useProfileData() {
       setLoading(false);
     }
   };
+  const getProfileData = async () => {  
+    if (!profile) {
+      await refreshProfile();
+    }
+    return profile;
+  }
   const updateProfile = async (updatedProfile: Profile) => {
     try {
       setLoading(true);
@@ -49,5 +54,5 @@ export function useProfileData() {
   };
 
 
-  return { profile, isLoading, updateProfile, refreshProfile, editPhoto };
+  return { profile, isLoading, updateProfile, refreshProfile, editPhoto ,getProfileData};
 }

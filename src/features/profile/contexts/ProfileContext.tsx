@@ -8,16 +8,17 @@ interface ProfileContextType {
   refreshProfile: () => void;
   editPhoto: (file: File) => void;
   updateProfile: (updated: Profile) => void;
+  getProfileData: () => Promise<Profile >;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
-  const { profile, isLoading, updateProfile ,refreshProfile,editPhoto} = useProfileData();
+  const { profile, isLoading, updateProfile ,refreshProfile,editPhoto,getProfileData} = useProfileData();
  
   return (
     <ProfileContext.Provider
-      value={{ profile, isLoading, updateProfile ,refreshProfile,editPhoto }}
+      value={{ profile, isLoading, updateProfile ,refreshProfile,editPhoto,getProfileData}} 
     >
       {children}
     </ProfileContext.Provider>

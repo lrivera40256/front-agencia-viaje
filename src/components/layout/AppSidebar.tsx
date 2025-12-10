@@ -85,6 +85,8 @@ export function AppSidebar() {
 	const currentPath = location.pathname;
 	const { profile } = useProfile();
 	const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+		travels: false,
+		myTravels: false,
 		travelManagement: false,
 		accommodation: false,
 		transport: false,
@@ -96,6 +98,11 @@ export function AppSidebar() {
 	};
 
 	const isRouteActive = (path: string) => {
+		// Para rutas exactas sin parámetros
+		if (!path.includes(':')) {
+			return currentPath === path;
+		}
+		// Para rutas con parámetros
 		return currentPath === path || currentPath.startsWith(path + '/');
 	};
 
@@ -179,36 +186,86 @@ export function AppSidebar() {
 					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
-							{/* Paquetes de Viaje - Standalone */}
+							{/* Viajes - Collapsible con subsecciones */}
 							<SidebarMenuItem>
-								<SidebarMenuButton asChild>
-									<NavLink to="/travel-packages" className={getNavCls('/travel-packages')}>
-										<Package className="h-4 w-4 min-w-4" />
-										{!isCollapsed && <span>Paquetes de Viaje</span>}
-									</NavLink>
+								<SidebarMenuButton 
+									onClick={() => toggleSection('travels')}
+									className="cursor-pointer"
+								>
+									<Package className="h-4 w-4 min-w-4" />
+									{!isCollapsed && (
+										<>
+											<span>Viajes</span>
+											<ChevronRight 
+												className={`ml-auto h-4 w-4 transition-transform ${openSections.travels ? 'rotate-90' : ''}`} 
+											/>
+										</>
+									)}
 								</SidebarMenuButton>
-							</SidebarMenuItem>
+								{!isCollapsed && openSections.travels && (
+									<SidebarMenuSub>
+										{/* Todos los viajes */}
+										<SidebarMenuSubItem>
+											<SidebarMenuSubButton asChild>
+												<NavLink to="/travel-packages" className={getNavCls('/travel-packages')}>
+													<Package className="h-4 w-4" />
+													<span>Todos los Viajes</span>
+												</NavLink>
+											</SidebarMenuSubButton>
+										</SidebarMenuSubItem>
 
-							{/* Mis Viajes - Standalone */}
-							{profile?.user?._id && (
-								<SidebarMenuItem>
-									<SidebarMenuButton asChild>
-										<NavLink to={`/travel-packages/${profile.user._id}`} className={getNavCls(`/travel-packages/${profile.user._id}`)}>
-											<Plane className="h-4 w-4 min-w-4" />
-											{!isCollapsed && <span>Mis Viajes</span>}
-										</NavLink>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							)}
+										{/* Mis Viajes - Collapsible submenu */}
+										{profile?.user?._id && (
+											<SidebarMenuSubItem>
+												<SidebarMenuSubButton
+													onClick={() => toggleSection('myTravels')}
+													className="cursor-pointer p-0"
+												>
+													<div className="flex items-center gap-2 w-full px-2 py-1.5">
+														<Plane className="h-4 w-4 flex-shrink-0" />
+														<span className="text-sm flex-1">Mis Viajes</span>
+														<ChevronRight 
+															className={`h-3 w-3 transition-transform flex-shrink-0 ${openSections.myTravels ? 'rotate-90' : ''}`} 
+														/>
+													</div>
+												</SidebarMenuSubButton>
+												
+												{/* Subsecciones de Mis Viajes */}
+												{openSections.myTravels && (
+													<SidebarMenuSub className="ml-2">
+														<SidebarMenuSubItem>
+															<SidebarMenuSubButton asChild>
+																<NavLink to={`/travel-packages/${profile.user._id}`} className={getNavCls(`/travel-packages/${profile.user._id}`)}>
+																	<Briefcase className="h-4 w-4" />
+																	<span>Viajes Activos</span>
+																</NavLink>
+															</SidebarMenuSubButton>
+														</SidebarMenuSubItem>
 
-							{/* Personalizar Viaje - Standalone */}
-							<SidebarMenuItem>
-								<SidebarMenuButton asChild>
-									<NavLink to="/form" className={getNavCls('/form')}>
-										<Wand2 className="h-4 w-4 min-w-4" />
-										{!isCollapsed && <span>Personalizar Viaje</span>}
-									</NavLink>
-								</SidebarMenuButton>
+														<SidebarMenuSubItem>
+															<SidebarMenuSubButton asChild>
+																<NavLink to={`/pagos-clientes/${profile.user._id}`} className={getNavCls(`/pagos-clientes/${profile.user._id}`)}>
+																	<CreditCard className="h-4 w-4" />
+																	<span>Viajes Pagando</span>
+																</NavLink>
+															</SidebarMenuSubButton>
+														</SidebarMenuSubItem>
+													</SidebarMenuSub>
+												)}
+											</SidebarMenuSubItem>
+										)}
+
+										{/* Personalizar Viaje */}
+										<SidebarMenuSubItem>
+											<SidebarMenuSubButton asChild>
+												<NavLink to="/form" className={getNavCls('/form')}>
+													<Wand2 className="h-4 w-4" />
+													<span>Personalizar Viaje</span>
+												</NavLink>
+											</SidebarMenuSubButton>
+										</SidebarMenuSubItem>
+									</SidebarMenuSub>
+								)}
 							</SidebarMenuItem>
 
 							{/* Gestión de Viajes - Collapsible */}

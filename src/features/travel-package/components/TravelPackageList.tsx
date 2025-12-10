@@ -9,6 +9,7 @@ export function TravelPackageList() {
 	const { packages, createCustomer } = useTravelPackages(
 		customerId ? (customerId) : undefined
 	);
+	
 	if (packages.length === 0) {
 		return <p className="text-center text-gray-500">No travel packages found.</p>;
 	}
