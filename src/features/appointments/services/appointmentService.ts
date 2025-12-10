@@ -1,7 +1,7 @@
 import api from '@/interceptors/msRagInterceptor';
 
 interface AppointmentResponse {
-  answer: string;
+  output: string;
 }
 
 export const sendAppointmentRequest = async (message: string): Promise<string> => {
@@ -10,7 +10,7 @@ export const sendAppointmentRequest = async (message: string): Promise<string> =
       question: message
     });
     
-    return response.data.answer || 'No se recibió respuesta del agente';
+    return response.data.output || 'No se recibió respuesta del agente';
   } catch (error) {
     console.error('Error sending appointment request:', error);
     throw error;
