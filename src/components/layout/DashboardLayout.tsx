@@ -4,6 +4,7 @@ import { AppNavbar } from './AppNavbar';
 import { Outlet } from 'react-router-dom';
 import { useAuthContext } from '@/features/auth/contexts/AuthProvider';
 import ChatBot from '@/features/chatbot/components/ChatBot';
+import AppointmentChat from '@/features/appointments/components/AppointmentChat';
 
 export function DashboardLayout() {
 	const {logout,user} = useAuthContext();
@@ -18,6 +19,7 @@ export function DashboardLayout() {
 					<Outlet />
 				</main>
 				<ChatBot />
+				<AppointmentChat />
 			</SidebarInset>
 		</SidebarProvider>
 	);
