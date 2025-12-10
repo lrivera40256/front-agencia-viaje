@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { payQuota } from '../services/quotaService';
 
 declare global {
 	interface Window {
@@ -80,6 +81,36 @@ export default function usePayQuota() {
 			throw error;
 		}
 	}, []);
+  const handlePayByQuotaId = useCallback(async (id: any) => {
+		
+		try {
+      const data = await payQuota(id);
+			const handler = window.ePayco.checkout.configure({
+				key: data.publicKey,
+				test: data.test,
+			});
 
-	return { handlePayQuota, isScriptLoaded };
+			console.log('Opening ePayco checkout with data:', data);
+
+			handler.open({
+				name: 'Agencia de Viajes',
+				description: data.description,
+				invoice: data.invoice,
+				currency: data.currency,
+				amount: 20000,
+				tax_base: '0',
+				tax: '0',
+				country: 'CO',
+				lang: 'es',
+				response: data.responseUrl || window.location.href,
+				confirmation: data.confirmationUrl,
+				methodconfirmation: 'POST',
+			});
+		} catch (error) {
+			console.error('Error opening ePayco checkout:', error);
+			throw error;
+		}
+	}, []);
+
+	return { handlePayQuota, isScriptLoaded,handlePayByQuotaId };
 }

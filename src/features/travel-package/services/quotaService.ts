@@ -15,6 +15,16 @@ export const createQuota = async (
     throw error;
   }
 }
+export const payQuota = async (quotaId: number) => {
+  try {
+    const response = await api.post(`${BASE_URL}/pay/${quotaId}`);  
+    return response.data;
+  } catch (error) {
+    console.error('Error paying quota:', error);
+    throw error;
+  }
+}
+
 
 export const createMultipleQuotas = async (data: { data: Quota; numQuotas: number }) => {
   let flag=true;

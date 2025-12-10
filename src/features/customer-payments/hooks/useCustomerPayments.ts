@@ -14,7 +14,7 @@ export function useCustomerPayments() {
 	const [selectedTravel, setSelectedTravel] = useState<TravelCustomer | null>(null);
 	const [isPaymentLoading, setIsPaymentLoading] = useState(false);
 	const [payingQuotaId, setPayingQuotaId] = useState<number | null>(null);
-
+	const { handlePayByQuotaId } = usePayQuota();
 	const { profile } = useProfile();
 	const { handlePayQuota } = usePayQuota();
 
@@ -67,15 +67,7 @@ export function useCustomerPayments() {
 			setPayingQuotaId(quota.id);
 
 			try {
-				const paymentData = await CustomerPaymentsService.payQuota(quota.id);
-
-				if (!paymentData?.publicKey) {
-					throw new Error(
-						'La respuesta del servidor no contiene los datos de pago necesarios'
-					);
-				}
-
-				await handlePayQuota(paymentData);
+				await handlePayByQuotaId(quota.id);
 			} catch (err) {
 				const errorMessage =
 					err instanceof Error ? err.message : 'Error al procesar el pago';
