@@ -7,7 +7,8 @@ import { TravelPackageContent } from './TravelPackageContent';
 import { FinancingModal, QuotasSelectionModal } from './modals';
 import { toast } from 'sonner';
 import { createCustomerTravel } from '../services/travelPackageService';
-
+import { useProfile } from '@/features/profile/contexts/ProfileContext';
+import { useNavigate } from 'react-router-dom';
 interface TravelPackageItemProps {
 	package: TravelPackage;
 	createCustomer?: (payload: {
@@ -24,6 +25,8 @@ export function TravelPackageItem({
 }: TravelPackageItemProps) {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const { customerId } = useParams<{ customerId: string }>();
+	const { profile } = useProfile();
+const navigate = useNavigate();
 
 	const {
 		isFinancingModalOpen,
@@ -40,6 +43,7 @@ export function TravelPackageItem({
 		isLoading,
 	} = useTravelPackagePayment({ travelPackage });
 
+
 	const handleToggleExpand = useCallback(() => {
 		setIsExpanded((prev) => !prev);
 	}, []);
@@ -52,23 +56,19 @@ export function TravelPackageItem({
 		[openFinancingModal]
 	);
 
-	const handleSaveClick = useCallback((e: React.MouseEvent) => {
+	const handleSaveClick = useCallback(async (e: React.MouseEvent) => {
 		e.stopPropagation();
-		// TODO: Implement save functionality
+		const response = await createCustomerTravel(profile.user._id, travelPackage.id);
+		if(!response){
+			toast.error("Error al guardar el viaje");
+			return;
+		}	
+		navigate(`/travel-packages/${profile.user._id}`);
+		toast.success("Viaje guardado exitosamente");
+		
 	}, []);
 
-	const handleSave = async (e: React.MouseEvent) => {
-		e.stopPropagation();
-		console.log(travelPackage);
-		
-		// const response =await createCustomerTravel(profile.user._id, travelPackage.id);
-		// if(!response){
-		// 	toast.error("Error al guardar el viaje");
-		// 	return;
-		// }	
-		// toast.success("Viaje guardado exitosamente");
-		
-	};
+	
 	const handleCreateCustomer = useCallback(
 		(payload: { name: string; email: string; password: string }) => {
 			createCustomer?.({ ...payload, travel_id: travelPackage.id });

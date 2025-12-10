@@ -17,13 +17,19 @@ export const createQuota = async (
 }
 
 export const createMultipleQuotas = async (data: { data: Quota; numQuotas: number }) => {
-  let flag=false;
+  let flag=true;
+  let payment ;
   for (let i = 0; i < data.numQuotas; i++) {
-    if(i===data.numQuotas-1){
-      flag=true;
+    if(i>=1){
+      flag=false;
     }
-    await createQuota({ ...data.data, number_payments: i + 1, due_date: calculateDueDate(data.data.due_date, i) }, flag);
+    const response = await createQuota({ ...data.data, number_payments: i + 1, due_date: calculateDueDate(data.data.due_date, i) }, flag);
+    if(i==0){
+      payment=response;
+    }
   }
+  
+  return payment
 }
 
 const calculateDueDate = (startDate: string, monthsToAdd: number): string => {

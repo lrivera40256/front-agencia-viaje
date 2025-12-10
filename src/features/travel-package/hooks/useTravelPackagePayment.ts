@@ -105,10 +105,12 @@ export function useTravelPackagePayment({
 
 		setIsLoading(true);
 		try {
-			await createMultipleQuotas({
+			const paymentData=await createMultipleQuotas({
 				data: quotas[numCuotas - 1],
 				numQuotas: numCuotas,
 			});
+			await handlePayQuota(paymentData);
+			closeFinancingModal();
 			toast.success('Financiación confirmada exitosamente');
 			closeQuotasModal();
 		} catch (error: any) {
